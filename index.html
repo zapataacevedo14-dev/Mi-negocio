@@ -52,6 +52,12 @@
 
       <!-- Action Buttons -->
       <div class="header-actions">
+        <!-- User Account / Login Button -->
+        <button class="icon-btn auth-btn" id="authBtn" aria-label="Iniciar sesión o registrarse" title="Mi Cuenta / Iniciar Sesión">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span class="user-logged-dot" id="userLoggedDot" style="display: none;" title="Sesión activa"></span>
+        </button>
+
         <!-- Quick Search Toggle -->
         <button class="icon-btn" id="searchToggleBtn" aria-label="Buscar fragancias" title="Buscar">
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -760,6 +766,123 @@
             </button>
             <button class="modal-fav-btn" id="modalToggleFavBtn" aria-label="Añadir a lista de deseos">
               <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Login & Registration Modal -->
+  <div class="modal-backdrop" id="authModalBackdrop" aria-hidden="true">
+    <div class="auth-modal" id="authModal" role="dialog" aria-labelledby="authModalTitle" aria-modal="true">
+      <button class="modal-close-btn" id="closeAuthModalBtn" aria-label="Cerrar ventana de autenticación">&times;</button>
+      
+      <!-- Guest View: Tabs for Login & Register -->
+      <div id="authGuestView">
+        <header class="auth-modal-header">
+          <span class="auth-modal-eyebrow">CLUB PRIVADO ESSENZA</span>
+          <h2 class="auth-modal-title" id="authModalTitle">Acceso de Clientes</h2>
+          <p class="auth-modal-subtitle">Inicia sesión o regístrate para disfrutar de beneficios exclusivos, seguimiento y atención prioritaria.</p>
+          
+          <div class="auth-tabs" role="tablist" aria-label="Opciones de cuenta">
+            <button type="button" class="auth-tab-btn active" id="tabLoginBtn" role="tab" aria-selected="true">Iniciar Sesión</button>
+            <button type="button" class="auth-tab-btn" id="tabRegisterBtn" role="tab" aria-selected="false">Crear Cuenta</button>
+          </div>
+        </header>
+
+        <!-- Login Form -->
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail" class="form-label">Correo Electrónico</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="tucorreo@ejemplo.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="loginPassword" class="form-label">Contraseña</label>
+              <a href="#" class="form-forgot-link" id="forgotPassLink">¿Olvidaste tu contraseña?</a>
+            </div>
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <div class="form-checkbox-row">
+            <input type="checkbox" id="rememberMe" class="form-checkbox" checked>
+            <label for="rememberMe" class="checkbox-label">Recordar mi cuenta en este navegador</label>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit-btn" id="loginSubmitBtn">
+            <span>Acceder a mi Cuenta</span>
+          </button>
+          <div class="auth-switch-prompt">
+            ¿Nuevo en ESSENZA? <button type="button" class="link-inline" id="switchToRegister">Crear cuenta exclusiva</button>
+          </div>
+        </form>
+
+        <!-- Registration Form -->
+        <form class="auth-form" id="registerForm" style="display: none;">
+          <div class="form-group">
+            <label for="regName" class="form-label">Nombre Completo</label>
+            <input type="text" id="regName" class="form-input" placeholder="Ej. Camila Morales" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="regEmail" class="form-label">Correo Electrónico</label>
+            <input type="email" id="regEmail" class="form-input" placeholder="camila@ejemplo.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="regPhone" class="form-label">Teléfono o WhatsApp</label>
+            <input type="tel" id="regPhone" class="form-input" placeholder="Ej. 311 254 9053" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label for="regPassword" class="form-label">Contraseña</label>
+            <input type="password" id="regPassword" class="form-input" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="regPasswordConfirm" class="form-label">Confirmar Contraseña</label>
+            <input type="password" id="regPasswordConfirm" class="form-input" placeholder="Repite tu contraseña" required minlength="6" autocomplete="new-password">
+          </div>
+          <div class="form-checkbox-row">
+            <input type="checkbox" id="regNewsletter" class="form-checkbox" checked>
+            <label for="regNewsletter" class="checkbox-label">Recibir notas privadas del perfumista y un 10% en mi primera orden</label>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit-btn" id="registerSubmitBtn">
+            <span>Registrar mi Cuenta de Cliente</span>
+          </button>
+          <div class="auth-switch-prompt">
+            ¿Ya tienes una cuenta registrada? <button type="button" class="link-inline" id="switchToLogin">Iniciar sesión</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Logged In User Profile View -->
+      <div id="authProfileView" style="display: none;">
+        <div class="profile-card">
+          <div class="profile-avatar" id="profileAvatar">E</div>
+          <div class="profile-header-info">
+            <span class="profile-badge">✦ MIEMBRO CÍRCULO PRIVADO</span>
+            <h3 class="profile-name" id="profileName">Cliente ESSENZA</h3>
+            <p class="profile-email" id="profileEmail">cliente@correo.com</p>
+          </div>
+          <div class="profile-details-grid">
+            <div class="profile-stat-box">
+              <span class="p-stat-label">Estado de Cuenta:</span>
+              <span class="p-stat-val">Cliente VIP Activo</span>
+            </div>
+            <div class="profile-stat-box">
+              <span class="p-stat-label">Beneficio de Bienvenida:</span>
+              <span class="p-stat-val">10% de Cortesía</span>
+            </div>
+            <div class="profile-stat-box">
+              <span class="p-stat-label">WhatsApp Asociado:</span>
+              <span class="p-stat-val" id="profilePhoneDisplay">+57 311 254 9053</span>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button type="button" class="btn btn-outline" id="profileViewFavsBtn">
+              Ver Mis Fragancias Favoritas
+            </button>
+            <button type="button" class="btn btn-primary" id="profileGoShoppingBtn">
+              Continuar Comprando
+            </button>
+            <button type="button" class="btn-logout" id="logoutBtn">
+              Cerrar Sesión
             </button>
           </div>
         </div>

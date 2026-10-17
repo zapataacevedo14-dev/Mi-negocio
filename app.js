@@ -249,6 +249,7 @@ const PRODUCTS = [
 const STATE = {
   cart: [],
   favorites: new Set(),
+  currentUser: null,
   filters: {
     family: 'all',
     search: '',
@@ -266,7 +267,9 @@ const STATE = {
 
 const STORAGE_KEYS = {
   cart: 'essenza_cart_v2',
-  favorites: 'essenza_favorites_v2'
+  favorites: 'essenza_favorites_v2',
+  users: 'essenza_users_v2',
+  currentUser: 'essenza_current_user_v2'
 };
 
 const FREE_SHIPPING_THRESHOLD = 350000; // $350.000 COP
@@ -374,6 +377,11 @@ function loadStateFromStorage() {
     const savedFavs = localStorage.getItem(STORAGE_KEYS.favorites);
     if (savedFavs) {
       STATE.favorites = new Set(JSON.parse(savedFavs));
+    }
+
+    const savedUser = localStorage.getItem(STORAGE_KEYS.currentUser) || sessionStorage.getItem(STORAGE_KEYS.currentUser);
+    if (savedUser) {
+      STATE.currentUser = JSON.parse(savedUser);
     }
   } catch (e) {
     console.warn('No se pudo acceder al LocalStorage:', e);
@@ -993,6 +1001,204 @@ function setupNewsletter() {
 }
 
 /* ==========================================================================
+   10.5 Gestión de Autenticación y Registro de Clientes
+   ========================================================================== */
+function getRegisteredUsers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.users);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Error leyendo usuarios:', e);
+  }
+
+  // Cuentas de demostración iniciales
+  const defaultUsers = [
+    {
+      id: 'usr-1',
+      name: 'Santiago Zapata',
+      email: 'santiago@essenza.co',
+      phone: '311 254 9053',
+      password: 'password123',
+      createdAt: new Date().toISOString()
+    }
+  ];
+  saveRegisteredUsers(defaultUsers);
+  return defaultUsers;
+}
+
+function saveRegisteredUsers(users) {
+  try {
+    localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
+  } catch (e) {
+    console.warn('Error guardando usuarios:', e);
+  }
+}
+
+function openAuthModal() {
+  const backdrop = document.getElementById('authModalBackdrop');
+  const guestView = document.getElementById('authGuestView');
+  const profileView = document.getElementById('authProfileView');
+
+  if (STATE.currentUser) {
+    if (guestView) guestView.style.display = 'none';
+    if (profileView) profileView.style.display = 'block';
+  } else {
+    if (guestView) guestView.style.display = 'block';
+    if (profileView) profileView.style.display = 'none';
+    switchAuthTab('login');
+  }
+
+  backdrop?.classList.add('active');
+  document.body.classList.add('no-scroll');
+}
+
+function closeAuthModal() {
+  document.getElementById('authModalBackdrop')?.classList.remove('active');
+  document.body.classList.remove('no-scroll');
+}
+
+function switchAuthTab(tab) {
+  const tabLoginBtn = document.getElementById('tabLoginBtn');
+  const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+
+  if (tab === 'login') {
+    tabLoginBtn?.classList.add('active');
+    tabLoginBtn?.setAttribute('aria-selected', 'true');
+    tabRegisterBtn?.classList.remove('active');
+    tabRegisterBtn?.setAttribute('aria-selected', 'false');
+    if (loginForm) loginForm.style.display = 'flex';
+    if (registerForm) registerForm.style.display = 'none';
+  } else {
+    tabRegisterBtn?.classList.add('active');
+    tabRegisterBtn?.setAttribute('aria-selected', 'true');
+    tabLoginBtn?.classList.remove('active');
+    tabLoginBtn?.setAttribute('aria-selected', 'false');
+    if (registerForm) registerForm.style.display = 'flex';
+    if (loginForm) loginForm.style.display = 'none';
+  }
+}
+
+function handleLoginSubmit(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPassword');
+  const rememberMe = document.getElementById('rememberMe')?.checked;
+
+  const email = emailInput?.value.trim().toLowerCase();
+  const pass = passInput?.value;
+
+  const users = getRegisteredUsers();
+  const user = users.find(u => u.email.toLowerCase() === email && u.password === pass);
+
+  if (user) {
+    STATE.currentUser = user;
+    if (rememberMe) {
+      localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
+    } else {
+      sessionStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
+    }
+    updateAuthUI();
+    closeAuthModal();
+    showToast(`¡Bienvenido/a de nuevo, ${user.name.split(' ')[0]}!`, '✨');
+    document.getElementById('loginForm')?.reset();
+  } else {
+    showToast('Correo o contraseña incorrectos. Por favor verifica tus datos.', '⚠️');
+  }
+}
+
+function handleRegisterSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName')?.value.trim();
+  const email = document.getElementById('regEmail')?.value.trim().toLowerCase();
+  const phone = document.getElementById('regPhone')?.value.trim() || '311 254 9053';
+  const pass = document.getElementById('regPassword')?.value;
+  const passConfirm = document.getElementById('regPasswordConfirm')?.value;
+
+  if (!name || !email || !pass) {
+    showToast('Por favor completa todos los campos requeridos.', '⚠️');
+    return;
+  }
+
+  if (pass.length < 6) {
+    showToast('La contraseña debe tener mínimo 6 caracteres.', '⚠️');
+    return;
+  }
+
+  if (pass !== passConfirm) {
+    showToast('Las contraseñas no coinciden.', '⚠️');
+    return;
+  }
+
+  const users = getRegisteredUsers();
+  const existing = users.find(u => u.email.toLowerCase() === email);
+  if (existing) {
+    showToast('Ya existe una cuenta registrada con este correo electrónico.', '⚠️');
+    return;
+  }
+
+  const newUser = {
+    id: 'usr-' + Date.now(),
+    name,
+    email,
+    phone,
+    password: pass,
+    createdAt: new Date().toISOString()
+  };
+
+  users.push(newUser);
+  saveRegisteredUsers(users);
+
+  // Iniciar sesión automáticamente
+  STATE.currentUser = newUser;
+  localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(newUser));
+
+  updateAuthUI();
+  closeAuthModal();
+  showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${name.split(' ')[0]}`, '👑');
+  document.getElementById('registerForm')?.reset();
+}
+
+function handleLogout() {
+  STATE.currentUser = null;
+  localStorage.removeItem(STORAGE_KEYS.currentUser);
+  sessionStorage.removeItem(STORAGE_KEYS.currentUser);
+  updateAuthUI();
+  closeAuthModal();
+  showToast('Has cerrado sesión correctamente.', '👋');
+}
+
+function updateAuthUI() {
+  const dot = document.getElementById('userLoggedDot');
+  const authBtn = document.getElementById('authBtn');
+
+  if (STATE.currentUser) {
+    if (dot) dot.style.display = 'block';
+    if (authBtn) {
+      authBtn.title = `Mi Perfil: ${STATE.currentUser.name}`;
+      authBtn.setAttribute('aria-label', `Perfil de ${STATE.currentUser.name}`);
+    }
+
+    const pAvatar = document.getElementById('profileAvatar');
+    const pName = document.getElementById('profileName');
+    const pEmail = document.getElementById('profileEmail');
+    const pPhone = document.getElementById('profilePhoneDisplay');
+
+    if (pAvatar) pAvatar.textContent = STATE.currentUser.name.trim().charAt(0).toUpperCase();
+    if (pName) pName.textContent = STATE.currentUser.name;
+    if (pEmail) pEmail.textContent = STATE.currentUser.email;
+    if (pPhone) pPhone.textContent = STATE.currentUser.phone || '+57 311 254 9053';
+  } else {
+    if (dot) dot.style.display = 'none';
+    if (authBtn) {
+      authBtn.title = 'Mi Cuenta / Iniciar Sesión';
+      authBtn.setAttribute('aria-label', 'Iniciar sesión o registrarse');
+    }
+  }
+}
+
+/* ==========================================================================
    11. Event Listeners y Delegación de Eventos
    ========================================================================== */
 function setupEventListeners() {
@@ -1249,17 +1455,49 @@ function setupEventListeners() {
     }
   });
 
-  // 14. Cerrar con tecla Escape
+  // 14. Autenticación y Registro de Clientes
+  document.getElementById('authBtn')?.addEventListener('click', openAuthModal);
+  document.getElementById('closeAuthModalBtn')?.addEventListener('click', closeAuthModal);
+  document.getElementById('authModalBackdrop')?.addEventListener('click', (e) => {
+    if (e.target.id === 'authModalBackdrop') closeAuthModal();
+  });
+
+  document.getElementById('tabLoginBtn')?.addEventListener('click', () => switchAuthTab('login'));
+  document.getElementById('tabRegisterBtn')?.addEventListener('click', () => switchAuthTab('register'));
+  document.getElementById('switchToRegister')?.addEventListener('click', () => switchAuthTab('register'));
+  document.getElementById('switchToLogin')?.addEventListener('click', () => switchAuthTab('login'));
+
+  document.getElementById('loginForm')?.addEventListener('submit', handleLoginSubmit);
+  document.getElementById('registerForm')?.addEventListener('submit', handleRegisterSubmit);
+  document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+
+  document.getElementById('profileViewFavsBtn')?.addEventListener('click', () => {
+    closeAuthModal();
+    openFavoritesDrawer();
+  });
+
+  document.getElementById('profileGoShoppingBtn')?.addEventListener('click', () => {
+    closeAuthModal();
+    document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('forgotPassLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    showToast('Para restablecer tu contraseña, contáctanos vía WhatsApp o correo.', '🔑');
+  });
+
+  // 15. Cerrar con tecla Escape
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeProductModal();
+      closeAuthModal();
       closeCartDrawer();
       closeFavoritesDrawer();
       mainNav?.classList.remove('active');
     }
   });
 
-  // 15. Efecto de cabecera translúcida al hacer scroll
+  // 16. Efecto de cabecera translúcida al hacer scroll
   const siteHeader = document.getElementById('header');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 30) {
@@ -1278,6 +1516,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCatalog();
   updateCartUI();
   updateFavoritesUI();
+  updateAuthUI();
   setupQuiz();
   setupNewsletter();
   setupEventListeners();

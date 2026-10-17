@@ -2272,6 +2272,299 @@ h1, h2, h3, h4, h5 {
 }
 
 /* --------------------------------------------------------------------------
+   16.5 Customer Auth Modal & Profile Dashboard
+   -------------------------------------------------------------------------- */
+.user-logged-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 9px;
+  height: 9px;
+  background-color: var(--color-dorado);
+  border-radius: 50%;
+  border: 1.5px solid var(--color-marfil);
+  box-shadow: 0 0 8px rgba(178, 138, 86, 0.8);
+}
+
+.auth-modal {
+  background-color: var(--color-marfil-light);
+  border: 1px solid var(--color-arena-dark);
+  border-radius: var(--radius-lg);
+  max-width: 480px;
+  width: 100%;
+  padding: var(--space-2xl) var(--space-xl);
+  position: relative;
+  box-shadow: var(--shadow-dark);
+  transform: scale(0.95);
+  transition: transform var(--transition-normal);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-backdrop.active .auth-modal {
+  transform: scale(1);
+}
+
+.auth-modal-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.auth-modal-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--color-dorado);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.auth-modal-title {
+  font-size: 1.85rem;
+  font-family: var(--font-serif);
+  margin-bottom: var(--space-2xs);
+}
+
+.auth-modal-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-gris);
+  line-height: 1.45;
+  margin-bottom: var(--space-lg);
+}
+
+.auth-tabs {
+  display: flex;
+  background-color: var(--color-arena);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  gap: 4px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  text-align: center;
+  color: var(--color-gris);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.auth-tab-btn.active {
+  background-color: var(--color-negro);
+  color: var(--color-marfil);
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-negro);
+}
+
+.form-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.form-forgot-link {
+  font-size: 0.75rem;
+  color: var(--color-dorado-dark);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-arena-dark);
+  border-radius: var(--radius-xs);
+  font-size: 0.9rem;
+  background-color: var(--color-blanco);
+  color: var(--color-negro);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-input:focus {
+  border-color: var(--color-dorado);
+  box-shadow: 0 0 0 2px rgba(178, 138, 86, 0.18);
+  outline: none;
+}
+
+.form-checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.form-checkbox {
+  margin-top: 3px;
+  accent-color: var(--color-dorado);
+  cursor: pointer;
+}
+
+.checkbox-label {
+  font-size: 0.78rem;
+  color: var(--color-gris);
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  margin-top: var(--space-2xs);
+  padding: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.auth-switch-prompt {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-gris);
+  margin-top: var(--space-xs);
+}
+
+.link-inline {
+  background: none;
+  border: none;
+  color: var(--color-dorado-dark);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0 4px;
+}
+
+.link-inline:hover {
+  color: var(--color-negro);
+}
+
+/* Customer Profile View */
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-sm) 0;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-negro), #3D352E);
+  border: 2px solid var(--color-dorado);
+  color: var(--color-dorado-light);
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-gold);
+}
+
+.profile-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--color-dorado);
+  background: rgba(178, 138, 86, 0.14);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 6px;
+}
+
+.profile-name {
+  font-size: 1.6rem;
+  font-family: var(--font-serif);
+  color: var(--color-negro);
+  margin-bottom: 2px;
+}
+
+.profile-email {
+  font-size: 0.85rem;
+  color: var(--color-gris);
+  margin-bottom: var(--space-lg);
+}
+
+.profile-details-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xl);
+}
+
+.profile-stat-box {
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-arena);
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-xs);
+  display: flex;
+  flex-direction: column;
+}
+
+.p-stat-label {
+  font-size: 0.68rem;
+  color: var(--color-gris-light);
+}
+
+.p-stat-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-negro);
+  margin-top: 3px;
+}
+
+.profile-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.profile-actions .btn {
+  width: 100%;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px;
+  margin-top: 4px;
+}
+
+.btn-logout:hover {
+  opacity: 0.8;
+}
+
+/* --------------------------------------------------------------------------
    17. Floating Toast Notifications
    -------------------------------------------------------------------------- */
 .toast-container {
