@@ -688,7 +688,7 @@ function checkoutViaWhatsApp() {
   message += `Por favor indíquenme las opciones de pago (PSE / Transferencia) y datos de entrega. ¡Gracias!`;
 
   const encoded = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/573000000000?text=${encoded}`;
+  const whatsappUrl = `https://wa.me/573112549053?text=${encoded}`;
 
   window.open(whatsappUrl, '_blank');
   showToast('Redirigiendo a WhatsApp con tu pedido...', '💬');
