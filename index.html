@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ESSENZA - Perfumería de lujo y alta concentración. Descubre fragancias exclusivas inspiradas en la alta perfumería con notas aromáticas sublimes.">
+  <title>ESSENZA | Haute Parfumerie & Fragancias Premium</title>
+
+  <!-- Google Fonts: Playfair Display & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Announcement Bar -->
+  <aside class="announcement-bar" role="region" aria-label="Aviso promocional">
+    <div class="announcement-container">
+      <span class="announcement-text">
+        ✨ <strong>Cortesía de la Maison:</strong> 3 muestras exclusivas en cada pedido &amp; Envío asegurado a toda Colombia
+      </span>
+      <span class="announcement-divider" aria-hidden="true">•</span>
+      <span class="announcement-highlight">Extrait de Parfum de Alta Concentración</span>
+    </div>
+  </aside>
+
+  <!-- Main Navigation Header -->
+  <header class="site-header" id="header">
+    <div class="header-container">
+      <!-- Mobile Menu Button -->
+      <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mainNav">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+
+      <!-- Brand Logo -->
+      <a href="#inicio" class="brand-logo" aria-label="ESSENZA Perfumería Inicio">
+        <span class="logo-title">ESSENZA</span>
+        <span class="logo-subtitle">HAUTE PARFUMERIE</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+          <li><a href="#catalogo" class="nav-link">Catálogo</a></li>
+          <li><a href="#recomendador" class="nav-link">Descubridor Olfativo</a></li>
+          <li><a href="#historia" class="nav-link">La Maison</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <!-- Quick Search Toggle -->
+        <button class="icon-btn" id="searchToggleBtn" aria-label="Buscar fragancias" title="Buscar">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+
+        <!-- Wishlist Button -->
+        <button class="icon-btn" id="favoritesBtn" aria-label="Ver lista de favoritos" title="Favoritos">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span class="badge-count" id="favoritesCount" aria-label="0 favoritos guardados">0</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button class="icon-btn cart-btn" id="cartBtn" aria-label="Abrir carrito de compras" title="Carrito">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span class="badge-count" id="cartCount" aria-label="0 productos en carrito">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <!-- Hero Section -->
+    <section class="hero-section" id="inicio">
+      <div class="hero-bg-overlay"></div>
+      <div class="hero-container">
+        <div class="hero-content">
+          <span class="hero-eyebrow">COLECCIÓN PRIVADA 2026</span>
+          <h1 class="hero-title">El arte sublime de vestir el alma con aromas eternos</h1>
+          <p class="hero-description">
+            Fragancias de autor creadas con los extractos naturales más selectos del mundo. Cada gota encierra una historia de magnetismo, elegancia y distinción artesanal.
+          </p>
+          <div class="hero-cta-group">
+            <a href="#catalogo" class="btn btn-primary" id="heroCtaCatalog">
+              <span>Explorar Colección</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <a href="#recomendador" class="btn btn-outline-light" id="heroCtaFinder">
+              <span>Descubrir mi Fragancia</span>
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-num">30%</span>
+              <span class="stat-label">Concentración Extrait</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">100%</span>
+              <span class="stat-label">Esencias Naturales</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">+12h</span>
+              <span class="stat-label">Fijación en Piel</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="bottle-stage">
+            <div class="halo-glow"></div>
+            <div class="hero-bottle-card">
+              <div class="bottle-visual bottle-oud-nocturne">
+                <!-- Perfume Bottle SVG graphic with luxury facets and liquid reflection -->
+                <svg viewBox="0 0 200 320" class="bottle-svg" role="img" aria-label="Botella Oud Nocturne">
+                  <defs>
+                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#E9D5AA"/>
+                      <stop offset="50%" stop-color="#B28A56"/>
+                      <stop offset="100%" stop-color="#6E4F23"/>
+                    </linearGradient>
+                    <linearGradient id="amberLiquid" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#3A2A1A"/>
+                      <stop offset="40%" stop-color="#5C3B18"/>
+                      <stop offset="100%" stop-color="#1B120B"/>
+                    </linearGradient>
+                    <linearGradient id="glassShine" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="white" stop-opacity="0.35"/>
+                      <stop offset="35%" stop-color="white" stop-opacity="0.05"/>
+                      <stop offset="85%" stop-color="white" stop-opacity="0.15"/>
+                      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Cap: Solid heavy gold rectangular faceted stopper -->
+                  <rect x="75" y="20" width="50" height="42" rx="4" fill="url(#goldGradient)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))"/>
+                  <rect x="80" y="24" width="40" height="6" fill="#FBF5E8" opacity="0.6"/>
+                  <!-- Collar / Atomizer Neck -->
+                  <rect x="88" y="62" width="24" height="12" fill="url(#goldGradient)"/>
+                  <ellipse cx="100" cy="74" rx="14" ry="3" fill="#D4AF7A"/>
+                  <!-- Main Glass Flask -->
+                  <rect x="36" y="74" width="128" height="200" rx="16" fill="url(#amberLiquid)" stroke="#B28A56" stroke-width="1.5"/>
+                  <!-- Liquid highlight gradient inside glass -->
+                  <rect x="42" y="80" width="116" height="188" rx="12" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+                  <path d="M48 84 L72 84 L56 264 L44 264 Z" fill="url(#glassShine)"/>
+                  <!-- Luxury Plaque Label -->
+                  <rect x="58" y="145" width="84" height="65" rx="3" fill="#14100E" stroke="url(#goldGradient)" stroke-width="1"/>
+                  <text x="100" y="167" font-family="'Playfair Display', serif" font-size="12" fill="#E8D5B5" text-anchor="middle" font-weight="bold" letter-spacing="2">ESSENZA</text>
+                  <text x="100" y="183" font-family="'DM Sans', sans-serif" font-size="8.5" fill="#B28A56" text-anchor="middle" letter-spacing="1">OUD NOCTURNE</text>
+                  <text x="100" y="198" font-family="'DM Sans', sans-serif" font-size="6.5" fill="#A89E92" text-anchor="middle" letter-spacing="0.5">EXTRAIT DE PARFUM</text>
+                  <!-- Bottle Base thickness -->
+                  <rect x="42" y="260" width="116" height="10" rx="4" fill="rgba(255,255,255,0.12)"/>
+                </svg>
+              </div>
+              <div class="bottle-caption">
+                <span class="bottle-tag">Creación Insignia</span>
+                <span class="bottle-name">Oud Nocturne</span>
+                <span class="bottle-meta">Oud de Camboya • Ámbar Negro • Cuero</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust & Quality Pillars Bar -->
+    <section class="trust-bar" aria-label="Ventajas y garantías">
+      <div class="trust-container">
+        <div class="trust-pillar">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">30% Extrait de Parfum</h3>
+            <p class="pillar-text">Máxima concentración y estela duradera.</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          </div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Envíos Asegurados</h3>
+            <p class="pillar-text">Cobertura exprés a nivel nacional en Colombia.</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Muestras de Cortesía</h3>
+            <p class="pillar-text">Recibe 3 decants de regalo en cada pedido.</p>
+          </div>
+        </div>
+
+        <div class="trust-pillar">
+          <div class="pillar-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          </div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Asesoría Olfativa</h3>
+            <p class="pillar-text">Orientación personalizada vía WhatsApp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section class="catalog-section" id="catalogo">
+      <div class="catalog-container">
+        <!-- Section Title & Description -->
+        <header class="section-header">
+          <span class="section-eyebrow">CATÁLOGO EXCLUSIVO</span>
+          <h2 class="section-title">Nuestra Colección de Fragancias</h2>
+          <p class="section-subtitle">
+            Explora creaciones sensoriales concebidas para despertar emociones inolvidables. Filtra por familia olfativa o encuentra tu firma aromática.
+          </p>
+        </header>
+
+        <!-- Catalog Toolbar: Search, Filters & Sorting -->
+        <div class="catalog-toolbar" role="search" aria-label="Filtros del catálogo">
+          <!-- Search Box -->
+          <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, nota (vainilla, sándalo)..." aria-label="Buscar fragancias">
+            <button class="clear-search-btn" id="clearSearchBtn" aria-label="Limpiar búsqueda" style="display: none;">&times;</button>
+          </div>
+
+          <!-- Olfactory Family Filters -->
+          <div class="family-filters" role="tablist" aria-label="Filtrar por familia olfativa">
+            <button class="filter-btn active" data-family="all" role="tab" aria-selected="true">Todas</button>
+            <button class="filter-btn" data-family="amaderada" role="tab" aria-selected="false">Amaderadas</button>
+            <button class="filter-btn" data-family="floral" role="tab" aria-selected="false">Florales</button>
+            <button class="filter-btn" data-family="oriental" role="tab" aria-selected="false">Orientales</button>
+            <button class="filter-btn" data-family="citrica" role="tab" aria-selected="false">Cítricas</button>
+            <button class="filter-btn" data-family="acuatica" role="tab" aria-selected="false">Acuáticas</button>
+            <button class="filter-btn" data-family="gourmand" role="tab" aria-selected="false">Gourmand</button>
+          </div>
+
+          <!-- Sort Select -->
+          <div class="sort-box">
+            <label for="sortSelect" class="sort-label">Ordenar:</label>
+            <select id="sortSelect" class="sort-select" aria-label="Ordenar productos">
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Precio: menor a mayor</option>
+              <option value="price-desc">Precio: mayor a menor</option>
+              <option value="name-asc">Nombre: A a la Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Catalog Status Bar -->
+        <div class="catalog-status">
+          <span id="resultsCount" class="results-count">Mostrando 8 fragancias</span>
+          <div class="active-filter-tags" id="activeFilterTags"></div>
+        </div>
+
+        <!-- Products Grid Container -->
+        <div class="products-grid" id="productsGrid" aria-live="polite">
+          <!-- Dynamically injected via JavaScript -->
+        </div>
+
+        <!-- Empty State Message -->
+        <div class="empty-catalog-state" id="emptyCatalogState" style="display: none;">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+          </div>
+          <h3>No encontramos fragancias con esos criterios</h3>
+          <p>Prueba buscando con otra palabra clave o restablece los filtros para ver la colección completa.</p>
+          <button class="btn btn-primary" id="resetFiltersBtn">Restablecer filtros</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Aroma Discovery / Fragrance Finder Section -->
+    <section class="fragrance-finder-section" id="recomendador">
+      <div class="finder-container">
+        <div class="finder-card">
+          <header class="finder-header">
+            <span class="finder-eyebrow">EXPERIENCIA GUIADA</span>
+            <h2 class="finder-title">Descubre tu Firma Olfativa</h2>
+            <p class="finder-subtitle">
+              Elegir un aroma sin probarlo es un arte. Responde 3 sencillas preguntas sobre tus gustos y nuestra asesoría algorítmica te revelará la fragancia ideal para ti.
+            </p>
+          </header>
+
+          <!-- Step Indicators -->
+          <div class="finder-steps" aria-label="Pasos del descubridor">
+            <div class="step-indicator active" id="stepIndicator1">
+              <span class="step-number">1</span>
+              <span class="step-label">Ocasión</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-indicator" id="stepIndicator2">
+              <span class="step-number">2</span>
+              <span class="step-label">Sensación</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step-indicator" id="stepIndicator3">
+              <span class="step-number">3</span>
+              <span class="step-label">Intensidad</span>
+            </div>
+          </div>
+
+          <!-- Wizard Form Container -->
+          <div class="finder-body" id="finderWizard">
+            <!-- Step 1: Occasion -->
+            <div class="wizard-step active" id="step1">
+              <h3 class="wizard-question">¿En qué momento te gustaría llevar tu fragancia?</h3>
+              <div class="options-grid">
+                <button type="button" class="quiz-option-btn" data-step="1" data-value="diario">
+                  <div class="option-icon">☀️</div>
+                  <div class="option-title">Uso Diario &amp; Oficina</div>
+                  <div class="option-desc">Elegancia discreta, pulcritud y frescura versátil.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="1" data-value="noche">
+                  <div class="option-icon">🌙</div>
+                  <div class="option-title">Noche &amp; Ocasiones Especiales</div>
+                  <div class="option-desc">Misterio, magnetismo y calidez envolvente.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="1" data-value="calor">
+                  <div class="option-icon">🌊</div>
+                  <div class="option-title">Clima Cálido &amp; Vacaciones</div>
+                  <div class="option-desc">Brisa marina, cítricos revitalizantes y frescura pura.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="1" data-value="gala">
+                  <div class="option-icon">✨</div>
+                  <div class="option-title">Eventos de Gala &amp; Distinción</div>
+                  <div class="option-desc">Presencia imponente, estela opulenta y lujo supremo.</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 2: Sensation / Mood -->
+            <div class="wizard-step" id="step2">
+              <h3 class="wizard-question">¿Qué emoción deseas proyectar en quienes te rodean?</h3>
+              <div class="options-grid">
+                <button type="button" class="quiz-option-btn" data-step="2" data-value="seduccion">
+                  <div class="option-icon">🔥</div>
+                  <div class="option-title">Sensualidad &amp; Magnetismo</div>
+                  <div class="option-desc">Especias cálidas, maderas oscuras y acordes ambarados.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="2" data-value="frescura">
+                  <div class="option-icon">🍃</div>
+                  <div class="option-title">Vitalidad &amp; Energía Luminosa</div>
+                  <div class="option-desc">Cítricos chispeantes y notas acuáticas vivificantes.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="2" data-value="romance">
+                  <div class="option-icon">🌸</div>
+                  <div class="option-title">Romanticismo &amp; Sofisticación</div>
+                  <div class="option-desc">Flores nobles, rosas majestuosas y suavidad atalcada.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="2" data-value="confort">
+                  <div class="option-icon">☕</div>
+                  <div class="option-title">Calidez &amp; Dulzura Reconfortante</div>
+                  <div class="option-desc">Vainilla bourbon, caramelo tostado y haba tonka.</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: Intensity -->
+            <div class="wizard-step" id="step3">
+              <h3 class="wizard-question">¿Qué nivel de estela e intensidad prefieres?</h3>
+              <div class="options-grid">
+                <button type="button" class="quiz-option-btn" data-step="3" data-value="moderada">
+                  <div class="option-icon">🌿</div>
+                  <div class="option-title">Sutil &amp; Íntima</div>
+                  <div class="option-desc">Se percibe al acercarse, delicada y no invasiva.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="3" data-value="notable">
+                  <div class="option-icon">💎</div>
+                  <div class="option-title">Equilibrada &amp; Distinguida</div>
+                  <div class="option-desc">Deja una estela elegante a tu paso durante todo el día.</div>
+                </button>
+                <button type="button" class="quiz-option-btn" data-step="3" data-value="intensa">
+                  <div class="option-icon">👑</div>
+                  <div class="option-title">Potente &amp; Memorable</div>
+                  <div class="option-desc">Máxima fijación, presencia imborrable y personalidad audaz.</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Wizard Result Card -->
+            <div class="wizard-result" id="finderResult" style="display: none;">
+              <div class="result-badge">✨ TU COMBINACIÓN PERFECTA</div>
+              <div class="result-content-wrap">
+                <div class="result-bottle-display" id="resultBottleDisplay">
+                  <!-- Bottle visual injected here -->
+                </div>
+                <div class="result-info">
+                  <span class="result-family-tag" id="resultFamilyTag">Amaderada Especiada</span>
+                  <h3 class="result-name" id="resultPerfumeName">Santal Néctar</h3>
+                  <p class="result-price" id="resultPerfumePrice">$420.000 COP</p>
+                  <p class="result-desc" id="resultPerfumeDesc">
+                    Una armonía majestuosa con notas de sándalo de Mysore y cardamomo que proyecta sofisticación impecable.
+                  </p>
+                  <div class="result-notes-list" id="resultNotesList">
+                    <!-- Note tags -->
+                  </div>
+                  <div class="result-actions">
+                    <button class="btn btn-primary" id="resultAddToCartBtn">
+                      <span>Añadir a mi Carrito</span>
+                    </button>
+                    <button class="btn btn-outline" id="resultViewDetailsBtn">
+                      <span>Ver Notas Completas</span>
+                    </button>
+                    <button class="btn-link" id="restartFinderBtn">
+                      ↺ Repetir el test
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Story / About Us Section -->
+    <section class="brand-story-section" id="historia">
+      <div class="story-container">
+        <div class="story-grid">
+          <div class="story-image-column">
+            <div class="story-frame">
+              <div class="story-illustration">
+                <div class="story-gold-circle"></div>
+                <div class="story-inner-badge">
+                  <span class="story-est">DEPUIS 2026</span>
+                  <span class="story-motto">HAUTE PARFUMERIE</span>
+                </div>
+              </div>
+              <div class="story-caption-card">
+                <p>«El perfume es la forma más intensa del recuerdo y la melodía invisible de tu elegancia.»</p>
+                <cite>— Maestro Perfumista ESSENZA</cite>
+              </div>
+            </div>
+          </div>
+
+          <div class="story-content-column">
+            <span class="story-eyebrow">NUESTRA FILOSOFÍA</span>
+            <h2 class="story-title">El Renacimiento de la Alta Perfumería</h2>
+            <p class="story-paragraph">
+              En <strong>ESSENZA</strong> creemos que una fragancia no es un simple accesorio, sino una extensión tangible del espíritu. En un mercado inundado por producciones industriales apresuradas, nacimos con el compromiso de preservar el oficio de la perfumería de autor.
+            </p>
+            <p class="story-paragraph">
+              Cada una de nuestras fórmulas es madurada durante meses en barricas especiales para permitir que las moléculas olfativas alcancen su máxima plenitud. Trabajamos con extractos puros provenientes de cosechas responsables en Grasse, Madagascar, Camboya e Italia.
+            </p>
+            <div class="story-highlights">
+              <div class="highlight-item">
+                <div class="hl-number">01</div>
+                <div class="hl-text">
+                  <strong>Maceración Artesanal:</strong> Periodo mínimo de 90 días para amalgamar aceites esenciales sin prisas.
+                </div>
+              </div>
+              <div class="highlight-item">
+                <div class="hl-number">02</div>
+                <div class="hl-text">
+                  <strong>Sostenibilidad Ética:</strong> Cero pruebas en animales y abastecimiento con respeto a las comunidades recolectoras.
+                </div>
+              </div>
+              <div class="highlight-item">
+                <div class="hl-number">03</div>
+                <div class="hl-text">
+                  <strong>Ediciones Numeradas:</strong> Lotes limitados que garantizan exclusividad y pureza en cada frasco.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIP Newsletter Subscription -->
+    <section class="newsletter-section">
+      <div class="newsletter-container">
+        <div class="newsletter-box">
+          <div class="newsletter-ornament" aria-hidden="true">✦</div>
+          <h2 class="newsletter-title">Únete al Círculo Privado ESSENZA</h2>
+          <p class="newsletter-subtitle">
+            Recibe invitaciones a lanzamientos de cosechas privadas, notas del perfumista y un <strong>10% de cortesía</strong> en tu primera adquisición.
+          </p>
+          <form class="newsletter-form" id="newsletterForm" novalidate>
+            <div class="newsletter-input-group">
+              <input type="email" id="newsletterEmail" class="newsletter-input" placeholder="Tu correo electrónico de preferencia..." required aria-label="Correo electrónico para boletín">
+              <button type="submit" class="btn btn-primary" id="newsletterSubmitBtn">
+                <span>Suscribirme</span>
+              </button>
+            </div>
+            <p class="newsletter-disclaimer">
+              🔒 Valoramos tu privacidad. No enviamos spam y puedes cancelar tu suscripción en cualquier instante.
+            </p>
+          </form>
+          <div class="newsletter-feedback" id="newsletterFeedback" style="display: none;" role="status"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contacto">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <!-- Brand Summary -->
+        <div class="footer-column brand-col">
+          <span class="footer-brand-title">ESSENZA</span>
+          <span class="footer-brand-sub">HAUTE PARFUMERIE</span>
+          <p class="footer-about">
+            Creaciones olfativas que fusionan el rigor de la alta perfumería con acordes contemporáneos. Elevamos cada instante cotidiano a una experiencia de lujo inolvidable.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-link" aria-label="Instagram ESSENZA" title="Instagram">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook ESSENZA" title="Facebook">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+            <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp ESSENZA" title="WhatsApp Concierge">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.8" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="footer-column">
+          <h4 class="footer-heading">Colecciones</h4>
+          <ul class="footer-links">
+            <li><a href="#catalogo" data-filter="all">Todas las Fragancias</a></li>
+            <li><a href="#catalogo" data-filter="amaderada">Maderas Nobles</a></li>
+            <li><a href="#catalogo" data-filter="oriental">Orientales &amp; Ámbar</a></li>
+            <li><a href="#catalogo" data-filter="floral">Florales Preciosos</a></li>
+            <li><a href="#catalogo" data-filter="citrica">Cítricos de Calabria</a></li>
+          </ul>
+        </div>
+
+        <!-- Service & Experience -->
+        <div class="footer-column">
+          <h4 class="footer-heading">Experiencia</h4>
+          <ul class="footer-links">
+            <li><a href="#recomendador">Descubridor Olfativo</a></li>
+            <li><a href="#historia">Maceración y Artesanía</a></li>
+            <li><a href="#catalogo">Cofres y Muestrarios</a></li>
+            <li><a href="#mainContent" id="footerCartLink">Mi Carrito de Compra</a></li>
+            <li><a href="#mainContent" id="footerFavLink">Mis Fragancias Favoritas</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact & Concierge -->
+        <div class="footer-column">
+          <h4 class="footer-heading">Concierge &amp; Asesoría</h4>
+          <ul class="footer-contact-list">
+            <li>
+              <strong>Atención personalizada:</strong>
+              <span>Lunes a Sábado, 9:00 - 19:00</span>
+            </li>
+            <li>
+              <strong>WhatsApp:</strong>
+              <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">+57 (300) 000-0000</a>
+            </li>
+            <li>
+              <strong>Correo:</strong>
+              <a href="mailto:concierge@essenzaparfum.co">concierge@essenzaparfum.co</a>
+            </li>
+            <li>
+              <strong>Ubicación:</strong>
+              <span>Bogotá D.C., Colombia</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Payment & Copyright Bottom Bar -->
+      <div class="footer-bottom">
+        <div class="payment-methods" aria-label="Medios de pago aceptados">
+          <span class="payment-badge">PSE</span>
+          <span class="payment-badge">Visa</span>
+          <span class="payment-badge">Mastercard</span>
+          <span class="payment-badge">Nequi</span>
+          <span class="payment-badge">Daviplata</span>
+        </div>
+        <p class="copyright-text">
+          &copy; 2026 ESSENZA Haute Parfumerie. Todos los derechos reservados. Interfaz de comercio electrónico frontend de demostración.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shopping Cart Slide-over Drawer -->
+  <div class="cart-drawer-overlay" id="cartOverlay" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-labelledby="cartDrawerTitle" aria-modal="true" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h3 id="cartDrawerTitle" class="drawer-title">Bolsa de Compra</h3>
+        <span class="drawer-count" id="cartDrawerItemCount">(0 productos)</span>
+      </div>
+      <button class="icon-btn close-drawer-btn" id="closeCartBtn" aria-label="Cerrar bolsa de compra">
+        &times;
+      </button>
+    </div>
+
+    <!-- Free Shipping Progress Indicator -->
+    <div class="shipping-progress-box" id="shippingProgressBar">
+      <div class="shipping-text" id="shippingStatusText">
+        Envío gratuito a partir de <strong>$350.000 COP</strong>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progressFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Cart Items Scrollable List -->
+    <div class="drawer-body" id="cartItemsList">
+      <!-- Items dynamically populated via JS -->
+    </div>
+
+    <!-- Empty Cart Notification -->
+    <div class="empty-cart-view" id="emptyCartView">
+      <div class="empty-cart-icon">
+        <svg viewBox="0 0 24 24" width="44" height="44" stroke="currentColor" stroke-width="1.2" fill="none"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+      <h4>Tu bolsa de compra está vacía</h4>
+      <p>Aún no has agregado ninguna fragancia a tu selección.</p>
+      <button class="btn btn-primary" id="continueShoppingBtn">
+        Explorar Colección
+      </button>
+    </div>
+
+    <!-- Drawer Footer: Subtotal and Checkout -->
+    <div class="drawer-footer" id="cartDrawerFooter" style="display: none;">
+      <!-- Gift packaging checkbox -->
+      <div class="gift-option-row">
+        <input type="checkbox" id="giftPackagingCheckbox" class="gift-checkbox">
+        <label for="giftPackagingCheckbox" class="gift-label">
+          🎁 Añadir empaque de regalo y tarjeta personalizada sin costo
+        </label>
+      </div>
+
+      <div class="subtotal-row">
+        <span class="subtotal-label">Subtotal estimado:</span>
+        <span class="subtotal-amount" id="cartSubtotalAmount">$0 COP</span>
+      </div>
+      <p class="taxes-notice">Impuestos y muestras de cortesía incluidos en el valor.</p>
+
+      <div class="cart-action-buttons">
+        <button class="btn btn-whatsapp" id="checkoutWhatsappBtn">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span>Ordenar por WhatsApp</span>
+        </button>
+        <button class="btn btn-primary" id="checkoutSimulateBtn">
+          <span>Finalizar Compra Segura</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Favorites Wishlist Slide-over Drawer -->
+  <div class="favorites-overlay" id="favoritesOverlay" aria-hidden="true"></div>
+  <aside class="favorites-drawer" id="favoritesDrawer" role="dialog" aria-labelledby="favDrawerTitle" aria-modal="true" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <h3 id="favDrawerTitle" class="drawer-title">Lista de Deseos</h3>
+        <span class="drawer-count" id="favoritesDrawerCount">(0)</span>
+      </div>
+      <button class="icon-btn close-drawer-btn" id="closeFavoritesBtn" aria-label="Cerrar favoritos">
+        &times;
+      </button>
+    </div>
+    <div class="drawer-body" id="favoritesList">
+      <!-- Items dynamically injected -->
+    </div>
+    <div class="empty-fav-view" id="emptyFavoritesView">
+      <div class="empty-cart-icon">
+        <svg viewBox="0 0 24 24" width="44" height="44" stroke="currentColor" stroke-width="1.2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </div>
+      <h4>Aún no tienes favoritos</h4>
+      <p>Marca con el corazón las fragancias que desees recordar para tus próximas órdenes.</p>
+    </div>
+  </aside>
+
+  <!-- Product Detail Modal -->
+  <div class="modal-backdrop" id="productModalBackdrop" aria-hidden="true">
+    <div class="product-modal" id="productModal" role="dialog" aria-labelledby="modalProductTitle" aria-modal="true">
+      <button class="modal-close-btn" id="closeProductModalBtn" aria-label="Cerrar detalle de producto">&times;</button>
+      <div class="modal-grid">
+        <div class="modal-visual-column">
+          <div class="modal-bottle-container" id="modalBottleVisual">
+            <!-- Illustrated Bottle injected -->
+          </div>
+          <span class="modal-family-badge" id="modalFamilyBadge">Amaderada</span>
+        </div>
+
+        <div class="modal-info-column">
+          <span class="modal-brand-label">ESSENZA HAUTE PARFUMERIE</span>
+          <h2 class="modal-product-title" id="modalProductTitle">Santal Néctar</h2>
+          <div class="modal-meta-row">
+            <span class="modal-concentration" id="modalConcentration">Extrait de Parfum</span>
+            <span class="modal-meta-separator">•</span>
+            <span class="modal-size" id="modalSize">100 ml / 3.4 FL. OZ.</span>
+          </div>
+          <div class="modal-price" id="modalPrice">$420.000 COP</div>
+          <p class="modal-description" id="modalDescription">
+            Una sinfonía amaderada profunda inspirada en las noches templadas de Oriente.
+          </p>
+
+          <!-- Olfactory Pyramid Breakdown -->
+          <div class="olfactory-pyramid">
+            <h4 class="pyramid-title">Pirámide Olfativa</h4>
+            <div class="pyramid-layers">
+              <div class="pyramid-layer">
+                <span class="layer-name">Notas de Salida:</span>
+                <span class="layer-notes" id="modalTopNotes">Cardamomo, Canela, Bergamota</span>
+              </div>
+              <div class="pyramid-layer">
+                <span class="layer-name">Notas de Corazón:</span>
+                <span class="layer-notes" id="modalHeartNotes">Sándalo de Mysore, Cedro Atlas</span>
+              </div>
+              <div class="pyramid-layer">
+                <span class="layer-name">Notas de Fondo:</span>
+                <span class="layer-notes" id="modalBaseNotes">Vainilla Bourbon, Ámbar Negro, Almizcle</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance details -->
+          <div class="modal-specs-grid">
+            <div class="spec-cell">
+              <span class="spec-label">Fijación en piel:</span>
+              <span class="spec-val" id="modalLongevity">+12 Horas</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-label">Estela proyectada:</span>
+              <span class="spec-val" id="modalSillage">Intensa y Elegante</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-label">Ocasión sugerida:</span>
+              <span class="spec-val" id="modalBestFor">Noche, Ocasiones de gala</span>
+            </div>
+          </div>
+
+          <!-- Modal Action Row -->
+          <div class="modal-purchase-controls">
+            <div class="quantity-stepper" aria-label="Cantidad">
+              <button type="button" class="stepper-btn" id="modalQtyMinus" aria-label="Disminuir cantidad">-</button>
+              <span class="stepper-count" id="modalQtyCount">1</span>
+              <button type="button" class="stepper-btn" id="modalQtyPlus" aria-label="Aumentar cantidad">+</button>
+            </div>
+            <button class="btn btn-primary modal-add-cart-btn" id="modalAddToCartBtn">
+              <span>Añadir al Carrito</span>
+            </button>
+            <button class="modal-fav-btn" id="modalToggleFavBtn" aria-label="Añadir a lista de deseos">
+              <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toastContainer" aria-live="assertive"></div>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
