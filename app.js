@@ -1,35 +1,35 @@
 ﻿/**
- * ALABASTRO â€” Haute Parfumerie
- * LÃ³gica Frontend Principal (app.js)
- * Cumpliendo con la especificaciÃ³n tÃ©cnica UI/UX:
- * - CatÃ¡logo de 8 fragancias premium
- * - BÃºsqueda, filtros y ordenamiento en tiempo real
- * - Carrito de compras con cÃ¡lculo dinÃ¡mico y persistencia en LocalStorage
+ * ALABASTRO �” Haute Parfumerie
+ * Lógica Frontend Principal (app.js)
+ * Cumpliendo con la especificación técnica UI/UX:
+ * - Catálogo de 8 fragancias premium
+ * - Búsqueda, filtros y ordenamiento en tiempo real
+ * - Carrito de compras con cálculo dinámico y persistencia en LocalStorage
  * - Lista de favoritos interactiva
- * - Modal de detalle con pirÃ¡mide olfativa
+ * - Modal de detalle con pirámide olfativa
  * - Recomendador interactivo de aromas
- * - IntegraciÃ³n de pedido para WhatsApp y checkout frontend
+ * - Integración de pedido para WhatsApp y checkout frontend
  */
 
 'use strict';
 
 /* ==========================================================================
-   1. Datos de CatÃ¡logo (8 Fragancias Ilustrativas Premium)
+   1. Datos de Catálogo (8 Fragancias Ilustrativas Premium)
    ========================================================================== */
 const PRODUCTS = [
   {
     id: 'santal-nectar',
-    name: 'Santal NÃ©ctar',
-    subtitle: 'Extrait de Parfum â€” 100ml',
+    name: 'Santal Néctar',
+    subtitle: 'Extrait de Parfum �” 100ml',
     family: 'amaderada',
     familyDisplay: 'Amaderada Especiada',
     price: 420000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (30% concentraciÃ³n)',
-    description: 'Una composiciÃ³n majestuosa y cÃ¡lida donde el sÃ¡ndalo de Mysore se entrelaza con cardamomo verde y maderas ahumadas, dejando una estela embriagadora y distinguida.',
-    topNotes: ['Cardamomo de CeilÃ¡n', 'Bergamota dorada', 'Pimienta Rosa'],
-    heartNotes: ['SÃ¡ndalo de Mysore', 'Cedro Atlas', 'Iris de Florencia'],
-    baseNotes: ['Vainilla Bourbon', 'Ãmbar CÃ¡lido', 'Almizcle Blanco'],
+    concentration: 'Extrait de Parfum (30% concentración)',
+    description: 'Una composición majestuosa y cálida donde el sándalo de Mysore se entrelaza con cardamomo verde y maderas ahumadas, dejando una estela embriagadora y distinguida.',
+    topNotes: ['Cardamomo de Ceilán', 'Bergamota dorada', 'Pimienta Rosa'],
+    heartNotes: ['Sándalo de Mysore', 'Cedro Atlas', 'Iris de Florencia'],
+    baseNotes: ['Vainilla Bourbon', 'Ãmbar Cálido', 'Almizcle Blanco'],
     longevity: '+12 Horas garantizadas',
     sillage: 'Intensa & Envolvente',
     bestFor: 'Noches templadas, cenas exclusivas, firmas personales',
@@ -47,20 +47,20 @@ const PRODUCTS = [
   },
   {
     id: 'rose-imperiale',
-    name: 'Rose ImpÃ©riale',
-    subtitle: 'Eau de Parfum â€” 100ml',
+    name: 'Rose Impériale',
+    subtitle: 'Eau de Parfum �” 100ml',
     family: 'floral',
     familyDisplay: 'Floral Sofisticada',
     price: 390000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (24% concentraciÃ³n)',
-    description: 'El tributo definitivo a la rosa centifolia de Grasse. Una apertura radiante de lichi silvestre da paso a pÃ©talos aterciopelados sobre un fondo limpio y seductor.',
+    concentration: 'Eau de Parfum (24% concentración)',
+    description: 'El tributo definitivo a la rosa centifolia de Grasse. Una apertura radiante de lichi silvestre da paso a pétalos aterciopelados sobre un fondo limpio y seductor.',
     topNotes: ['Rosa de Damasco', 'Lichi Silvestre', 'Mandarina'],
-    heartNotes: ['Rosa Centifolia de Grasse', 'PeonÃ­a Rosa', 'Magnolia'],
+    heartNotes: ['Rosa Centifolia de Grasse', 'Peonía Rosa', 'Magnolia'],
     baseNotes: ['Almizcle Blanco', 'Madera de Cachemira', 'Ãmbar Gris'],
     longevity: '8 a 10 Horas',
-    sillage: 'Moderada & RomÃ¡ntica',
-    bestFor: 'Primavera, eventos de dÃ­a, citas romÃ¡nticas',
+    sillage: 'Moderada & Romántica',
+    bestFor: 'Primavera, eventos de día, citas románticas',
     gradient: {
       liquid1: '#6E2A36',
       liquid2: '#331017',
@@ -76,19 +76,19 @@ const PRODUCTS = [
   {
     id: 'oud-nocturne',
     name: 'Oud Nocturne',
-    subtitle: 'Extrait de Parfum â€” 100ml',
+    subtitle: 'Extrait de Parfum �” 100ml',
     family: 'oriental',
     familyDisplay: 'Oriental Amaderada',
     price: 480000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (32% concentraciÃ³n)',
-    description: 'La joya mÃ¡s opulenta de ALABASTRO. Resina de Oud puro de Camboya envejecido en roble francÃ©s, fundido con cuero negro y acordes de humo sagrado.',
-    topNotes: ['AzafrÃ¡n EspaÃ±ol', 'Incienso de OmÃ¡n', 'Nuez Moscada'],
-    heartNotes: ['Oud de Camboya Macerado', 'Cuero Ruso', 'PachulÃ­ Oscuro'],
-    baseNotes: ['Ãmbar Negro', 'BenjuÃ­ de Laos', 'Vetiver Ahumado'],
-    longevity: '+16 Horas de fijaciÃ³n',
+    concentration: 'Extrait de Parfum (32% concentración)',
+    description: 'La joya más opulenta de ALABASTRO. Resina de Oud puro de Camboya envejecido en roble francés, fundido con cuero negro y acordes de humo sagrado.',
+    topNotes: ['Azafrán Español', 'Incienso de Omán', 'Nuez Moscada'],
+    heartNotes: ['Oud de Camboya Macerado', 'Cuero Ruso', 'Pachulí Oscuro'],
+    baseNotes: ['Ãmbar Negro', 'Benjuí de Laos', 'Vetiver Ahumado'],
+    longevity: '+16 Horas de fijación',
     sillage: 'Poderosa & Memorable',
-    bestFor: 'Galas nocturnas, clima frÃ­o, presencia imponente',
+    bestFor: 'Galas nocturnas, clima frío, presencia imponente',
     gradient: {
       liquid1: '#3D2214',
       liquid2: '#140A06',
@@ -104,19 +104,19 @@ const PRODUCTS = [
   {
     id: 'bergamote-sauvage',
     name: 'Bergamote Sauvage',
-    subtitle: 'Eau de Parfum â€” 100ml',
+    subtitle: 'Eau de Parfum �” 100ml',
     family: 'citrica',
-    familyDisplay: 'CÃ­trica AromÃ¡tica',
+    familyDisplay: 'Cítrica Aromática',
     price: 350000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (22% concentraciÃ³n)',
-    description: 'La frescura deslumbrante del amanecer en Calabria. CÃ­tricos prensados en frÃ­o combinados con salvia aromÃ¡tica y un toque mineral ultramoderno.',
+    concentration: 'Eau de Parfum (22% concentración)',
+    description: 'La frescura deslumbrante del amanecer en Calabria. Cítricos prensados en frío combinados con salvia aromática y un toque mineral ultramoderno.',
     topNotes: ['Bergamota de Calabria', 'Pomelo Rosado', 'Lima Kaffir'],
     heartNotes: ['Salvia Esclarea', 'Pimienta de Sichuan', 'Romero Silvestre'],
-    baseNotes: ['Vetiver de HaitÃ­', 'Cedro Claro', 'Almizcle Solar'],
+    baseNotes: ['Vetiver de Haití', 'Cedro Claro', 'Almizcle Solar'],
     longevity: '7 a 9 Horas',
     sillage: 'Vibrante & Limpia',
-    bestFor: 'Uso diario, oficina ejecutiva, maÃ±anas soleadas',
+    bestFor: 'Uso diario, oficina ejecutiva, mañanas soleadas',
     gradient: {
       liquid1: '#3C4E34',
       liquid2: '#1C2619',
@@ -131,20 +131,20 @@ const PRODUCTS = [
   },
   {
     id: 'ambre-dore',
-    name: 'Ambre DorÃ©',
-    subtitle: 'Extrait de Parfum â€” 100ml',
+    name: 'Ambre Doré',
+    subtitle: 'Extrait de Parfum �” 100ml',
     family: 'oriental',
-    familyDisplay: 'Oriental CÃ¡lida',
+    familyDisplay: 'Oriental Cálida',
     price: 440000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (30% concentraciÃ³n)',
-    description: 'Un abrazo lÃ­quido de Ã¡mbar resinoso y especias dulces. Una caricia cÃ¡lida que evoca salones de terciopelo y veladas inolvidables.',
-    topNotes: ['Canela de CeilÃ¡n', 'Coriandro Dulce', 'Naranja Amarga'],
-    heartNotes: ['Ãmbar Gris Natural', 'Haba Tonka Tostada', 'BenjuÃ­ de Siam'],
-    baseNotes: ['Resina de LÃ¡dano', 'Vainilla Ahumada', 'SÃ¡ndalo'],
+    concentration: 'Extrait de Parfum (30% concentración)',
+    description: 'Un abrazo líquido de ámbar resinoso y especias dulces. Una caricia cálida que evoca salones de terciopelo y veladas inolvidables.',
+    topNotes: ['Canela de Ceilán', 'Coriandro Dulce', 'Naranja Amarga'],
+    heartNotes: ['Ãmbar Gris Natural', 'Haba Tonka Tostada', 'Benjuí de Siam'],
+    baseNotes: ['Resina de Ládano', 'Vainilla Ahumada', 'Sándalo'],
     longevity: '+12 Horas',
-    sillage: 'CÃ¡lida & AristocrÃ¡tica',
-    bestFor: 'Noche, otoÃ±o, invierno, momentos Ã­ntimos',
+    sillage: 'Cálida & Aristocrática',
+    bestFor: 'Noche, otoño, invierno, momentos íntimos',
     gradient: {
       liquid1: '#5A3515',
       liquid2: '#281507',
@@ -160,16 +160,16 @@ const PRODUCTS = [
   {
     id: 'fleur-blanche',
     name: 'Fleur Blanche',
-    subtitle: 'Eau de Parfum â€” 100ml',
+    subtitle: 'Eau de Parfum �” 100ml',
     family: 'floral',
     familyDisplay: 'Floral Luminosa',
     price: 370000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (22% concentraciÃ³n)',
-    description: 'La danza hipnÃ³tica de las flores blancas mÃ¡s nobles: nardos de la India y jazmines recolectados a medianoche con un velo solar y sedoso.',
-    topNotes: ['Azahar de TÃºnez', 'Neroli', 'Pera Nashi'],
-    heartNotes: ['Tuberosa de la India', 'JazmÃ­n Sambac', 'Gardenia'],
-    baseNotes: ['Madera de SÃ¡ndalo Rubio', 'Almizcle de Seda', 'Vainilla Cristal'],
+    concentration: 'Eau de Parfum (22% concentración)',
+    description: 'La danza hipnótica de las flores blancas más nobles: nardos de la India y jazmines recolectados a medianoche con un velo solar y sedoso.',
+    topNotes: ['Azahar de Túnez', 'Neroli', 'Pera Nashi'],
+    heartNotes: ['Tuberosa de la India', 'Jazmín Sambac', 'Gardenia'],
+    baseNotes: ['Madera de Sándalo Rubio', 'Almizcle de Seda', 'Vainilla Cristal'],
     longevity: '8 a 10 Horas',
     sillage: 'Luminosa & Radiante',
     bestFor: 'Bodas, celebraciones diurnas, firmas femeninas',
@@ -188,14 +188,14 @@ const PRODUCTS = [
   {
     id: 'marina-profonda',
     name: 'Marina Profonda',
-    subtitle: 'Eau de Parfum â€” 100ml',
+    subtitle: 'Eau de Parfum �” 100ml',
     family: 'acuatica',
-    familyDisplay: 'AcuÃ¡tica Marina Fresca',
+    familyDisplay: 'Acuática Marina Fresca',
     price: 360000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (22% concentraciÃ³n)',
-    description: 'Las profundidades indÃ³mitas del mar MediterrÃ¡neo. RocÃ­o salino sobre acantilados rocosos, algas azules y madera de deriva acariciada por el sol.',
-    topNotes: ['Brisa Marina Mineral', 'LimÃ³n Amalfi', 'Calone Cristal'],
+    concentration: 'Eau de Parfum (22% concentración)',
+    description: 'Las profundidades indómitas del mar Mediterráneo. Rocío salino sobre acantilados rocosos, algas azules y madera de deriva acariciada por el sol.',
+    topNotes: ['Brisa Marina Mineral', 'Limón Amalfi', 'Calone Cristal'],
     heartNotes: ['Salvia Marina', 'Algas Azules', 'Lavanda Costera'],
     baseNotes: ['Madera de Deriva', 'Ãmbar Gris', 'Musgo de Roble Marino'],
     longevity: '8 a 10 Horas',
@@ -215,20 +215,20 @@ const PRODUCTS = [
   },
   {
     id: 'vanille-celeste',
-    name: 'Vanille CÃ©leste',
-    subtitle: 'Extrait de Parfum â€” 100ml',
+    name: 'Vanille Céleste',
+    subtitle: 'Extrait de Parfum �” 100ml',
     family: 'gourmand',
     familyDisplay: 'Gourmand Sofisticada',
     price: 410000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (28% concentraciÃ³n)',
-    description: 'Lejos de lo infantil, esta es una vainilla oscura y licorosa. Vainilla de Madagascar macerada en coÃ±ac, cafÃ© tostado y flor de almendro.',
-    topNotes: ['Almendra Amarga', 'Grano de CafÃ© Tostado', 'Ron AÃ±ejo'],
+    concentration: 'Extrait de Parfum (28% concentración)',
+    description: 'Lejos de lo infantil, esta es una vainilla oscura y licorosa. Vainilla de Madagascar macerada en coñac, café tostado y flor de almendro.',
+    topNotes: ['Almendra Amarga', 'Grano de Café Tostado', 'Ron Añejo'],
     heartNotes: ['Vaina de Vainilla Bourbon', 'Caramelo Salado', 'Heliotropo'],
-    baseNotes: ['Haba Tonka Negra', 'SÃ¡ndalo Cremoso', 'Ãmbar Resinoso'],
-    longevity: '+12 Horas de duraciÃ³n',
-    sillage: 'Adictiva & MagnÃ©tica',
-    bestFor: 'Noches frÃ­as, citas Ã­ntimas, amantes de notas dulces sofisticadas',
+    baseNotes: ['Haba Tonka Negra', 'Sándalo Cremoso', 'Ãmbar Resinoso'],
+    longevity: '+12 Horas de duración',
+    sillage: 'Adictiva & Magnética',
+    bestFor: 'Noches frías, citas íntimas, amantes de notas dulces sofisticadas',
     gradient: {
       liquid1: '#4F2E1B',
       liquid2: '#231209',
@@ -244,7 +244,7 @@ const PRODUCTS = [
 ];
 
 /* ==========================================================================
-   2. Estado de la AplicaciÃ³n (State Management)
+   2. Estado de la Aplicación (State Management)
    ========================================================================== */
 const STATE = {
   cart: [],
@@ -278,7 +278,7 @@ const FREE_SHIPPING_THRESHOLD = 350000; // $350.000 COP
    3. Helpers y Utilidades
    ========================================================================== */
 /**
- * Formatea un nÃºmero a divisa de Pesos Colombianos (COP)
+ * Formatea un número a divisa de Pesos Colombianos (COP)
  */
 function formatCOP(amount) {
   return new Intl.NumberFormat('es-CO', {
@@ -289,7 +289,7 @@ function formatCOP(amount) {
 }
 
 /**
- * Genera el vector grÃ¡fico SVG de la botella con la paleta de la fragancia
+ * Genera el vector gráfico SVG de la botella con la paleta de la fragancia
  */
 function createBottleSvg(product, width = 130, height = 210) {
   const gradId = `liq-${product.id}`;
@@ -336,7 +336,7 @@ function createBottleSvg(product, width = 130, height = 210) {
       <text x="80" y="151" font-family="'DM Sans', sans-serif" font-size="6.5" fill="${product.gradient.accent}" text-anchor="middle" font-weight="600" letter-spacing="0.6">${product.name.toUpperCase()}</text>
       <text x="80" y="162" font-family="'DM Sans', sans-serif" font-size="4.8" fill="#A89E92" text-anchor="middle" letter-spacing="0.4">EXTRAIT</text>
 
-      <!-- Fondo reforzado de cristal sÃ³lido -->
+      <!-- Fondo reforzado de cristal sólido -->
       <rect x="34" y="210" width="92" height="8" rx="3" fill="rgba(255,255,255,0.14)" />
     </svg>
   `;
@@ -405,7 +405,7 @@ function saveFavoritesToStorage() {
 }
 
 /* ==========================================================================
-   5. Renderizado del CatÃ¡logo de Productos
+   5. Renderizado del Catálogo de Productos
    ========================================================================== */
 function filterAndSortProducts() {
   let list = [...PRODUCTS];
@@ -415,7 +415,7 @@ function filterAndSortProducts() {
     list = list.filter(p => p.family === STATE.filters.family);
   }
 
-  // BÃºsqueda por texto (nombre, notas, descripciÃ³n)
+  // Búsqueda por texto (nombre, notas, descripción)
   if (STATE.filters.search.trim() !== '') {
     const q = STATE.filters.search.toLowerCase().trim();
     list = list.filter(p => {
@@ -440,7 +440,7 @@ function filterAndSortProducts() {
       break;
     case 'featured':
     default:
-      // Mantener orden curado de la colecciÃ³n
+      // Mantener orden curado de la colección
       break;
   }
 
@@ -478,7 +478,7 @@ function renderCatalog() {
           <button type="button" class="card-fav-btn ${isFav ? 'is-favorite' : ''}" 
                   data-action="toggle-fav" 
                   data-id="${product.id}" 
-                  aria-label="${isFav ? 'Quitar de favoritos' : 'AÃ±adir a favoritos'}"
+                  aria-label="${isFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}"
                   title="${isFav ? 'Quitar de favoritos' : 'Guardar en favoritos'}">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="${isFav ? 'currentColor' : 'none'}">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -490,7 +490,7 @@ function renderCatalog() {
           </div>
 
           <button type="button" class="card-quick-view-btn" data-action="quick-view" data-id="${product.id}">
-            Vista RÃ¡pida
+            Vista Rápida
           </button>
         </div>
 
@@ -502,7 +502,7 @@ function renderCatalog() {
 
           <h3 class="card-title">${product.name}</h3>
 
-          <div class="card-notes-chips" aria-label="Notas aromÃ¡ticas principales">
+          <div class="card-notes-chips" aria-label="Notas aromáticas principales">
             ${product.topNotes.slice(0, 2).map(n => `<span class="note-chip">${n}</span>`).join('')}
             <span class="note-chip">+ notas</span>
           </div>
@@ -510,7 +510,7 @@ function renderCatalog() {
           <div class="card-footer">
             <span class="card-price">${formatCOP(product.price)}</span>
             <button type="button" class="card-add-btn" data-action="add-cart" data-id="${product.id}">
-              + AÃ±adir
+              + Añadir
             </button>
           </div>
         </div>
@@ -520,7 +520,7 @@ function renderCatalog() {
 }
 
 /* ==========================================================================
-   6. GestiÃ³n del Carrito de Compras
+   6. Gestión del Carrito de Compras
    ========================================================================== */
 function addToCart(productId, quantity = 1) {
   const product = PRODUCTS.find(p => p.id === productId);
@@ -542,7 +542,7 @@ function addToCart(productId, quantity = 1) {
 
   saveCartToStorage();
   updateCartUI();
-  showToast(`Â«${product.name}Â» aÃ±adido a la bolsa`, 'ðŸ›ï¸');
+  showToast(`«${product.name}» añadido a la bolsa`, 'ðŸ›ï¸');
 }
 
 function updateCartItemQuantity(productId, newQty) {
@@ -565,7 +565,7 @@ function removeFromCart(productId) {
   STATE.cart = STATE.cart.filter(i => i.id !== productId);
   saveCartToStorage();
   updateCartUI();
-  showToast(`Â«${name}Â» eliminado de la bolsa`, 'âœ•');
+  showToast(`«${name}» eliminado de la bolsa`, 'âœ•');
 }
 
 function updateCartUI() {
@@ -597,20 +597,20 @@ function updateCartUI() {
     cartSubtotalAmount.textContent = formatCOP(subtotal);
   }
 
-  // Barra de progreso de envÃ­o gratuito
+  // Barra de progreso de envío gratuito
   if (progressFill && shippingStatusText) {
     if (subtotal >= FREE_SHIPPING_THRESHOLD) {
       progressFill.style.width = '100%';
-      shippingStatusText.innerHTML = 'ðŸŽ‰ <strong>Â¡Felicidades!</strong> Tu pedido califica para <strong>EnvÃ­o Nacional Gratuito</strong>';
+      shippingStatusText.innerHTML = 'ðŸŽ‰ <strong>¡Felicidades!</strong> Tu pedido califica para <strong>Envío Nacional Gratuito</strong>';
     } else {
       const percentage = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
       const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
       progressFill.style.width = `${percentage}%`;
-      shippingStatusText.innerHTML = `Agrega <strong>${formatCOP(remaining)}</strong> mÃ¡s para obtener <strong>EnvÃ­o Gratuito</strong>`;
+      shippingStatusText.innerHTML = `Agrega <strong>${formatCOP(remaining)}</strong> más para obtener <strong>Envío Gratuito</strong>`;
     }
   }
 
-  // Vistas vacÃ­a o con productos
+  // Vistas vacía o con productos
   if (STATE.cart.length === 0) {
     if (emptyCartView) emptyCartView.style.display = 'block';
     if (cartDrawerFooter) cartDrawerFooter.style.display = 'none';
@@ -621,7 +621,7 @@ function updateCartUI() {
   if (emptyCartView) emptyCartView.style.display = 'none';
   if (cartDrawerFooter) cartDrawerFooter.style.display = 'block';
 
-  // Renderizar Ã­tems del carrito
+  // Renderizar ítems del carrito
   if (cartItemsList) {
     cartItemsList.innerHTML = STATE.cart.map(item => {
       const product = PRODUCTS.find(p => p.id === item.id);
@@ -634,7 +634,7 @@ function updateCartUI() {
           </div>
           <div class="cart-item-info">
             <span class="cart-item-name">${item.name}</span>
-            <span class="cart-item-meta">${item.size} â€¢ ${item.familyDisplay.split(' ')[0]}</span>
+            <span class="cart-item-meta">${item.size} • ${item.familyDisplay.split(' ')[0]}</span>
             <span class="cart-item-price">${formatCOP(item.price)}</span>
           </div>
           <div class="cart-item-controls">
@@ -670,30 +670,30 @@ function closeCartDrawer() {
  */
 function checkoutViaWhatsApp() {
   if (STATE.cart.length === 0) {
-    showToast('Tu bolsa de compra estÃ¡ vacÃ­a', 'âš ï¸');
+    showToast('Tu bolsa de compra está vacía', 'âš ï¸');
     return;
   }
 
   const isGift = document.getElementById('giftPackagingCheckbox')?.checked;
   const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingText = subtotal >= FREE_SHIPPING_THRESHOLD ? 'GRATUITO (PromociÃ³n nacional)' : 'A coordinar';
+  const shippingText = subtotal >= FREE_SHIPPING_THRESHOLD ? 'GRATUITO (Promoción nacional)' : 'A coordinar';
 
-  let message = `*SOLICITUD DE PEDIDO â€” ALABASTRO HAUTE PARFUMERIE*\n`;
+  let message = `*SOLICITUD DE PEDIDO �” ALABASTRO HAUTE PARFUMERIE*\n`;
   message += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
-  message += `Â¡Hola Concierge de ALABASTRO! Deseo realizar el siguiente pedido:\n\n`;
+  message += `¡Hola Concierge de ALABASTRO! Deseo realizar el siguiente pedido:\n\n`;
 
   STATE.cart.forEach((item, idx) => {
     message += `${idx + 1}. *${item.name}* (x${item.quantity})\n`;
-    message += `   â€¢ TamaÃ±o: ${item.size}\n`;
-    message += `   â€¢ Valor: ${formatCOP(item.price * item.quantity)}\n\n`;
+    message += `   • Tamaño: ${item.size}\n`;
+    message += `   • Valor: ${formatCOP(item.price * item.quantity)}\n\n`;
   });
 
   message += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n`;
   message += `*Subtotal:* ${formatCOP(subtotal)}\n`;
-  message += `*EnvÃ­o:* ${shippingText}\n`;
-  message += `*Empaque de regalo:* ${isGift ? 'SÃ­, por favor (incluir tarjeta)' : 'No necesario'}\n`;
-  message += `*Muestras de cortesÃ­a:* 3 decants incluidos\n\n`;
-  message += `Por favor indÃ­quenme las opciones de pago (PSE / Transferencia) y datos de entrega. Â¡Gracias!`;
+  message += `*Envío:* ${shippingText}\n`;
+  message += `*Empaque de regalo:* ${isGift ? 'Sí, por favor (incluir tarjeta)' : 'No necesario'}\n`;
+  message += `*Muestras de cortesía:* 3 decants incluidos\n\n`;
+  message += `Por favor indíquenme las opciones de pago (PSE / Transferencia) y datos de entrega. ¡Gracias!`;
 
   const encoded = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/573112549053?text=${encoded}`;
@@ -703,7 +703,7 @@ function checkoutViaWhatsApp() {
 }
 
 /* ==========================================================================
-   7. GestiÃ³n de Lista de Deseos / Favoritos
+   7. Gestión de Lista de Deseos / Favoritos
    ========================================================================== */
 function toggleFavorite(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
@@ -711,17 +711,17 @@ function toggleFavorite(productId) {
 
   if (STATE.favorites.has(productId)) {
     STATE.favorites.delete(productId);
-    showToast(`Â«${product.name}Â» retirado de tus favoritos`, 'â™¡');
+    showToast(`«${product.name}» retirado de tus favoritos`, 'â™¡');
   } else {
     STATE.favorites.add(productId);
-    showToast(`Â«${product.name}Â» guardado en tus favoritos`, 'â¤ï¸');
+    showToast(`«${product.name}» guardado en tus favoritos`, 'â¤ï¸');
   }
 
   saveFavoritesToStorage();
   updateFavoritesUI();
   renderCatalog();
 
-  // Si el modal estÃ¡ abierto para este producto, sincronizar el botÃ³n de favorito
+  // Si el modal está abierto para este producto, sincronizar el botón de favorito
   if (STATE.activeModalProduct && STATE.activeModalProduct.id === productId) {
     const modalFavBtn = document.getElementById('modalToggleFavBtn');
     if (modalFavBtn) {
@@ -882,7 +882,7 @@ function setupQuiz() {
 function advanceQuizStep(nextStep) {
   STATE.currentQuizStep = nextStep;
 
-  // Actualizar indicadores numÃ©ricos
+  // Actualizar indicadores numéricos
   for (let i = 1; i <= 3; i++) {
     const indicator = document.getElementById(`stepIndicator${i}`);
     if (indicator) {
@@ -901,7 +901,7 @@ function advanceQuizStep(nextStep) {
 }
 
 function calculateAndDisplayQuizResult() {
-  // PuntuaciÃ³n segÃºn coincidencia con las respuestas
+  // Puntuación según coincidencia con las respuestas
   const { occasion, sensation, intensity } = STATE.quizAnswers;
 
   let bestMatch = PRODUCTS[0];
@@ -966,7 +966,7 @@ function resetQuiz() {
 }
 
 /* ==========================================================================
-   10. Formulario de SuscripciÃ³n VIP (Newsletter)
+   10. Formulario de Suscripción VIP (Newsletter)
    ========================================================================== */
 function setupNewsletter() {
   const form = document.getElementById('newsletterForm');
@@ -979,29 +979,29 @@ function setupNewsletter() {
     e.preventDefault();
     const email = input.value.trim();
 
-    // ValidaciÃ³n sencilla de email
+    // Validación sencilla de email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-      feedback.textContent = 'Por favor ingresa un correo electrÃ³nico vÃ¡lido.';
+      feedback.textContent = 'Por favor ingresa un correo electrónico válido.';
       feedback.className = 'newsletter-feedback error';
       feedback.style.display = 'block';
       return;
     }
 
-    // SimulaciÃ³n de suscripciÃ³n exitosa
+    // Simulación de suscripción exitosa
     feedback.innerHTML = `
-      âœ¨ <strong>Â¡Bienvenido al CÃ­rculo Privado!</strong> Hemos enviado a <em>${email}</em> tu cÃ³digo de bienvenida: <strong>ALABASTRO10</strong> (10% de cortesÃ­a).
+      âœ¨ <strong>¡Bienvenido al Círculo Privado!</strong> Hemos enviado a <em>${email}</em> tu código de bienvenida: <strong>ALABASTRO10</strong> (10% de cortesía).
     `;
     feedback.className = 'newsletter-feedback success';
     feedback.style.display = 'block';
     input.value = '';
 
-    showToast('Â¡SuscripciÃ³n exitosa! CupÃ³n: ALABASTRO10', 'ðŸ’Ž');
+    showToast('¡Suscripción exitosa! Cupón: ALABASTRO10', 'ðŸ’Ž');
   });
 }
 
 /* ==========================================================================
-   10.5 GestiÃ³n de AutenticaciÃ³n y Registro de Clientes
+   10.5 Gestión de Autenticación y Registro de Clientes
    ========================================================================== */
 function getRegisteredUsers() {
   try {
@@ -1011,7 +1011,7 @@ function getRegisteredUsers() {
     console.warn('Error leyendo usuarios:', e);
   }
 
-  // Cuentas de demostraciÃ³n iniciales
+  // Cuentas de demostración iniciales
   const defaultUsers = [
     {
       id: 'usr-1',
@@ -1101,10 +1101,10 @@ function handleLoginSubmit(e) {
     }
     updateAuthUI();
     closeAuthModal();
-    showToast(`Â¡Bienvenido/a de nuevo, ${user.name.split(' ')[0]}!`, 'âœ¨');
+    showToast(`¡Bienvenido/a de nuevo, ${user.name.split(' ')[0]}!`, 'âœ¨');
     document.getElementById('loginForm')?.reset();
   } else {
-    showToast('Correo o contraseÃ±a incorrectos. Por favor verifica tus datos.', 'âš ï¸');
+    showToast('Correo o contraseña incorrectos. Por favor verifica tus datos.', 'âš ï¸');
   }
 }
 
@@ -1122,19 +1122,19 @@ function handleRegisterSubmit(e) {
   }
 
   if (pass.length < 6) {
-    showToast('La contraseÃ±a debe tener mÃ­nimo 6 caracteres.', 'âš ï¸');
+    showToast('La contraseña debe tener mínimo 6 caracteres.', 'âš ï¸');
     return;
   }
 
   if (pass !== passConfirm) {
-    showToast('Las contraseÃ±as no coinciden.', 'âš ï¸');
+    showToast('Las contraseñas no coinciden.', 'âš ï¸');
     return;
   }
 
   const users = getRegisteredUsers();
   const existing = users.find(u => u.email.toLowerCase() === email);
   if (existing) {
-    showToast('Ya existe una cuenta registrada con este correo electrÃ³nico.', 'âš ï¸');
+    showToast('Ya existe una cuenta registrada con este correo electrónico.', 'âš ï¸');
     return;
   }
 
@@ -1150,13 +1150,13 @@ function handleRegisterSubmit(e) {
   users.push(newUser);
   saveRegisteredUsers(users);
 
-  // Iniciar sesiÃ³n automÃ¡ticamente
+  // Iniciar sesión automáticamente
   STATE.currentUser = newUser;
   localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(newUser));
 
   updateAuthUI();
   closeAuthModal();
-  showToast(`Â¡Cuenta creada con Ã©xito! Bienvenido al CÃ­rculo Privado, ${name.split(' ')[0]}`, 'ðŸ‘‘');
+  showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${name.split(' ')[0]}`, 'ðŸ‘‘');
   document.getElementById('registerForm')?.reset();
 }
 
@@ -1166,7 +1166,7 @@ function handleLogout() {
   sessionStorage.removeItem(STORAGE_KEYS.currentUser);
   updateAuthUI();
   closeAuthModal();
-  showToast('Has cerrado sesiÃ³n correctamente.', 'ðŸ‘‹');
+  showToast('Has cerrado sesión correctamente.', 'ðŸ‘‹');
 }
 
 function updateAuthUI() {
@@ -1192,23 +1192,23 @@ function updateAuthUI() {
   } else {
     if (dot) dot.style.display = 'none';
     if (authBtn) {
-      authBtn.title = 'Mi Cuenta / Iniciar SesiÃ³n';
-      authBtn.setAttribute('aria-label', 'Iniciar sesiÃ³n o registrarse');
+      authBtn.title = 'Mi Cuenta / Iniciar Sesión';
+      authBtn.setAttribute('aria-label', 'Iniciar sesión o registrarse');
     }
   }
 }
 
 /* ==========================================================================
-   11. Event Listeners y DelegaciÃ³n de Eventos
+   11. Event Listeners y Delegación de Eventos
    ========================================================================== */
 function setupEventListeners() {
-  // 1. DelegaciÃ³n de clics en el catÃ¡logo de productos
+  // 1. Delegación de clics en el catálogo de productos
   const productsGrid = document.getElementById('productsGrid');
   if (productsGrid) {
     productsGrid.addEventListener('click', (e) => {
       const target = e.target;
 
-      // BotÃ³n AÃ±adir al carrito
+      // Botón Añadir al carrito
       const addBtn = target.closest('[data-action="add-cart"]');
       if (addBtn) {
         const id = addBtn.dataset.id;
@@ -1216,7 +1216,7 @@ function setupEventListeners() {
         return;
       }
 
-      // BotÃ³n Favorito
+      // Botón Favorito
       const favBtn = target.closest('[data-action="toggle-fav"]');
       if (favBtn) {
         const id = favBtn.dataset.id;
@@ -1224,7 +1224,7 @@ function setupEventListeners() {
         return;
       }
 
-      // BotÃ³n Vista RÃ¡pida o clic en la tarjeta
+      // Botón Vista Rápida o clic en la tarjeta
       const quickViewBtn = target.closest('[data-action="quick-view"]');
       if (quickViewBtn) {
         const id = quickViewBtn.dataset.id;
@@ -1256,7 +1256,7 @@ function setupEventListeners() {
     });
   });
 
-  // 3. Enlaces del pie de pÃ¡gina que filtran el catÃ¡logo
+  // 3. Enlaces del pie de página que filtran el catálogo
   document.querySelectorAll('a[data-filter]').forEach(link => {
     link.addEventListener('click', (e) => {
       const fam = link.dataset.filter;
@@ -1267,7 +1267,7 @@ function setupEventListeners() {
     });
   });
 
-  // 4. BÃºsqueda con debounce
+  // 4. Búsqueda con debounce
   const searchInput = document.getElementById('searchInput');
   const clearSearchBtn = document.getElementById('clearSearchBtn');
   if (searchInput) {
@@ -1297,7 +1297,7 @@ function setupEventListeners() {
     }
   }
 
-  // 5. BotÃ³n restablecer filtros en estado vacÃ­o
+  // 5. Botón restablecer filtros en estado vacío
   document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
     if (searchInput) searchInput.value = '';
     STATE.filters.search = '';
@@ -1352,12 +1352,12 @@ function setupEventListeners() {
     });
   }
 
-  // 9. Checkout WhatsApp y SimulaciÃ³n
+  // 9. Checkout WhatsApp y Simulación
   document.getElementById('checkoutWhatsappBtn')?.addEventListener('click', checkoutViaWhatsApp);
   document.getElementById('checkoutSimulateBtn')?.addEventListener('click', () => {
     if (STATE.cart.length === 0) return;
     const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    showToast(`DemostraciÃ³n: Orden por ${formatCOP(subtotal)} registrada con Ã©xito`, 'âœ¨');
+    showToast(`Demostración: Orden por ${formatCOP(subtotal)} registrada con éxito`, 'âœ¨');
     setTimeout(() => {
       STATE.cart = [];
       saveCartToStorage();
@@ -1426,7 +1426,7 @@ function setupEventListeners() {
     }
   });
 
-  // 12. MenÃº mÃ³vil
+  // 12. Menú móvil
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const mainNav = document.getElementById('mainNav');
   if (mobileMenuBtn && mainNav) {
@@ -1435,7 +1435,7 @@ function setupEventListeners() {
       mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 
-    // Cerrar menÃº al hacer click en cualquier link
+    // Cerrar menú al hacer click en cualquier link
     mainNav.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => {
         mainNav.classList.remove('active');
@@ -1444,7 +1444,7 @@ function setupEventListeners() {
     });
   }
 
-  // 13. BotÃ³n de bÃºsqueda rÃ¡pida en el header
+  // 13. Botón de búsqueda rápida en el header
   document.getElementById('searchToggleBtn')?.addEventListener('click', () => {
     const catalogSection = document.getElementById('catalogo');
     if (catalogSection) {
@@ -1455,7 +1455,7 @@ function setupEventListeners() {
     }
   });
 
-  // 14. AutenticaciÃ³n y Registro de Clientes
+  // 14. Autenticación y Registro de Clientes
   document.getElementById('authBtn')?.addEventListener('click', openAuthModal);
   document.getElementById('closeAuthModalBtn')?.addEventListener('click', closeAuthModal);
   document.getElementById('authModalBackdrop')?.addEventListener('click', (e) => {
@@ -1483,7 +1483,7 @@ function setupEventListeners() {
 
   document.getElementById('forgotPassLink')?.addEventListener('click', (e) => {
     e.preventDefault();
-    showToast('Para restablecer tu contraseÃ±a, contÃ¡ctanos vÃ­a WhatsApp o correo.', 'ðŸ”‘');
+    showToast('Para restablecer tu contraseña, contáctanos vía WhatsApp o correo.', 'ðŸ”‘');
   });
 
   // 15. Cerrar con tecla Escape
@@ -1497,7 +1497,7 @@ function setupEventListeners() {
     }
   });
 
-  // 16. Efecto de cabecera translÃºcida al hacer scroll
+  // 16. Efecto de cabecera translúcida al hacer scroll
   const siteHeader = document.getElementById('header');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 30) {
@@ -1509,7 +1509,7 @@ function setupEventListeners() {
 }
 
 /* ==========================================================================
-   12. InicializaciÃ³n de la AplicaciÃ³n
+   12. Inicialización de la Aplicación
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   loadStateFromStorage();
@@ -1521,6 +1521,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupNewsletter();
   setupEventListeners();
 
-  console.log('âœ¨ ALABASTRO Haute Parfumerie iniciada con Ã©xito.');
+  console.log('âœ¨ ALABASTRO Haute Parfumerie iniciada con éxito.');
 });
 
