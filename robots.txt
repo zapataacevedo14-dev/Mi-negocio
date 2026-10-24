@@ -1,0 +1,35 @@
+# robots.txt para ALABASTRO Alta Perfumería
+# https://alabastroparfum.co/
+
+User-agent: *
+Allow: /
+Disallow: /*?*cart=
+Disallow: /*?*checkout=
+
+# Permitir explícitamente rastreadores de motores de búsqueda convencionales e IA (AEO / GEO)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Ubicación del mapa del sitio XML
+Sitemap: https://alabastroparfum.co/sitemap.xml

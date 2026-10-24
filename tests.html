@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALABASTRO — Suite de Pruebas Automatizadas (QA & Testing Dashboard)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #12100E;
+      --bg-card: #1A1714;
+      --bg-card-hover: #221F1B;
+      --border-color: #2F2922;
+      --border-accent: #B28A56;
+      --gold-primary: #C5A059;
+      --gold-light: #E8D5B5;
+      --text-main: #F7F4EF;
+      --text-muted: #8E857B;
+      --success: #2ECC71;
+      --success-bg: rgba(46, 204, 113, 0.12);
+      --error: #E74C3C;
+      --error-bg: rgba(231, 76, 60, 0.15);
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 24px;
+    }
+
+    .dashboard-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Top Nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-symbol {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #B28A56, #3B2E1E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      letter-spacing: 0.15em;
+      color: var(--gold-light);
+    }
+
+    .brand-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #C5A059, #9C7736);
+      color: #12100E;
+      border-color: #E8D5B5;
+      box-shadow: 0 4px 16px rgba(197, 160, 89, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #D4AF7A, #B28A56);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+    }
+
+    /* Summary Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--border-color);
+    }
+
+    .metric-card.accent-total::before { background: var(--gold-primary); }
+    .metric-card.accent-pass::before { background: var(--success); }
+    .metric-card.accent-fail::before { background: var(--error); }
+    .metric-card.accent-time::before { background: #3498DB; }
+
+    .metric-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-family: var(--font-serif);
+      color: var(--text-main);
+    }
+
+    .metric-card.accent-pass .metric-value { color: var(--success); }
+    .metric-card.accent-fail .metric-value { color: var(--error); }
+
+    /* Progress bar */
+    .progress-bar-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background-color: #24201B;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #B28A56, #2ECC71);
+      transition: width 0.4s ease;
+    }
+
+    /* Filter Toolbar */
+    .filter-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill.active {
+      background: var(--gold-primary);
+      color: #12100E;
+      border-color: var(--gold-primary);
+      font-weight: 600;
+    }
+
+    /* Suites Container */
+    .suites-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .suite-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .suite-card:hover {
+      border-color: #42392E;
+    }
+
+    .suite-header {
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid transparent;
+    }
+
+    .suite-card.expanded .suite-header {
+      border-bottom-color: var(--border-color);
+    }
+
+    .suite-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .suite-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    .suite-badges {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .badge-pass {
+      background-color: var(--success-bg);
+      color: var(--success);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .badge-fail {
+      background-color: var(--error-bg);
+      color: var(--error);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .badge-count {
+      background-color: #26211A;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
+
+    .suite-tests-list {
+      display: none;
+      flex-direction: column;
+    }
+
+    .suite-card.expanded .suite-tests-list {
+      display: flex;
+    }
+
+    .test-item {
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #231E18;
+      font-size: 0.88rem;
+      transition: background-color 0.15s ease;
+      gap: 14px;
+    }
+
+    .test-item:last-child {
+      border-bottom: none;
+    }
+
+    .test-item:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    .test-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .test-icon {
+      font-size: 1rem;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .test-name {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .test-duration {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      white-space: nowrap;
+    }
+
+    .test-error-box {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background-color: rgba(231, 76, 60, 0.08);
+      border-left: 3px solid var(--error);
+      border-radius: 4px;
+      color: #FF8A80;
+      font-family: monospace;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* Floating Sandbox for DOM tests */
+    #testSandbox {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Footer */
+    .dashboard-footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden DOM Sandbox for DOM Integration Tests -->
+  <div id="testSandbox" aria-hidden="true">
+    <header class="site-header" id="header">
+      <button id="authBtn" aria-label="Cuenta"></button>
+      <span id="cartCount">0</span>
+      <span id="favoritesCount">0</span>
+    </header>
+    <div id="productsGrid"></div>
+    <div id="cartDrawer">
+      <span id="cartDrawerItemCount">0</span>
+      <span id="cartSubtotalAmount">$0 COP</span>
+      <div id="cartItemsList"></div>
+      <div id="emptyCartView"></div>
+      <div id="cartDrawerFooter"></div>
+      <div id="progressFill"></div>
+      <div id="shippingStatusText"></div>
+    </div>
+    <div id="favoritesDrawer">
+      <span id="favoritesDrawerCount">0</span>
+      <div id="favoritesList"></div>
+      <div id="emptyFavoritesView"></div>
+    </div>
+    <div id="toastContainer"></div>
+    <input type="text" id="newsHoneypot" tabindex="-1">
+    <input type="text" id="loginHoneypot" tabindex="-1">
+    <input type="text" id="registerHoneypot" tabindex="-1">
+    <a href="https://wa.me/573112549053" target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn"></a>
+  </div>
+
+  <div class="dashboard-container">
+    <!-- Top Bar Navigation -->
+    <header class="top-nav">
+      <div class="brand-group">
+        <div class="brand-symbol">A</div>
+        <div>
+          <h1 class="brand-title">ALABASTRO</h1>
+          <p class="brand-tag">SUITE DE PRUEBAS AUTOMATIZADAS & QA</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-outline">
+          ← Regresar a la Tienda
+        </a>
+        <button id="runTestsBtn" class="btn btn-primary">
+          ▶ Ejecutar Todas las Pruebas
+        </button>
+      </div>
+    </header>
+
+    <!-- Metrics Cards Summary -->
+    <section class="metrics-grid">
+      <div class="metric-card accent-total">
+        <div class="metric-label">Total Pruebas</div>
+        <div class="metric-value" id="metricTotal">--</div>
+      </div>
+      <div class="metric-card accent-pass">
+        <div class="metric-label">Pruebas Aprobadas</div>
+        <div class="metric-value" id="metricPassed">--</div>
+      </div>
+      <div class="metric-card accent-fail">
+        <div class="metric-label">Pruebas Fallidas</div>
+        <div class="metric-value" id="metricFailed">--</div>
+      </div>
+      <div class="metric-card accent-time">
+        <div class="metric-label">Tiempo de Ejecución</div>
+        <div class="metric-value" id="metricDuration">-- ms</div>
+      </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <section class="progress-bar-wrap">
+      <div class="progress-labels">
+        <span id="progressStatusText">Listo para iniciar la ejecución...</span>
+        <span id="progressPercentage">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </section>
+
+    <!-- Filter Pills -->
+    <div class="filter-toolbar">
+      <div class="filter-pills">
+        <button class="filter-pill active" data-filter="all">Todas las Pruebas</button>
+        <button class="filter-pill" data-filter="failed">Solo Fallidas</button>
+        <button class="filter-pill" data-filter="passed">Solo Aprobadas</button>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--text-muted);">
+        Haz clic en cada suite para ver el detalle de aserciones
+      </div>
+    </div>
+
+    <!-- Test Suites Output List -->
+    <main class="suites-container" id="suitesContainer">
+      <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+        Cargando definiciones y preparando banco de pruebas...
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <p>ALABASTRO Alta Perfumería — Aseguramiento de Calidad Frontend (QA & Security Verification)</p>
+      <p style="margin-top: 6px; font-size: 0.75rem;">Para ejecutar desde la consola de cualquier página: <code>window.AlabastroTesting.runAll()</code></p>
+    </footer>
+  </div>
+
+  <!-- Cargar app.js para inicializar la API de Alabastro -->
+  <script src="app.js"></script>
+  <!-- Cargar suite de pruebas -->
+  <script src="test-suite.js"></script>
+
+  <!-- Controlador de la interfaz interactiva de pruebas -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const runBtn = document.getElementById('runTestsBtn');
+      const metricTotal = document.getElementById('metricTotal');
+      const metricPassed = document.getElementById('metricPassed');
+      const metricFailed = document.getElementById('metricFailed');
+      const metricDuration = document.getElementById('metricDuration');
+      const progressBar = document.getElementById('progressBar');
+      const progressPercentage = document.getElementById('progressPercentage');
+      const progressStatusText = document.getElementById('progressStatusText');
+      const suitesContainer = document.getElementById('suitesContainer');
+      const filterPills = document.querySelectorAll('.filter-pill');
+
+      let currentFilter = 'all';
+
+      // Filtros
+      filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          filterPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          currentFilter = pill.dataset.filter;
+          applyFilter();
+        });
+      });
+
+      function applyFilter() {
+        const testItems = document.querySelectorAll('.test-item');
+        testItems.forEach(item => {
+          const status = item.dataset.status;
+          if (currentFilter === 'all') {
+            item.style.display = 'flex';
+          } else if (currentFilter === 'failed') {
+            item.style.display = status === 'failed' ? 'flex' : 'none';
+          } else if (currentFilter === 'passed') {
+            item.style.display = status === 'passed' ? 'flex' : 'none';
+          }
+        });
+      }
+
+      async function startTesting() {
+        runBtn.disabled = true;
+        runBtn.textContent = '⏳ Ejecutando pruebas...';
+        progressStatusText.textContent = 'Ejecutando suites de prueba de ALABASTRO...';
+        progressBar.style.width = '0%';
+        progressPercentage.textContent = '0%';
+
+        suitesContainer.innerHTML = '';
+
+        const results = await window.AlabastroTesting.runAll();
+        const { suites, stats } = results;
+
+        // Renderizar métricas
+        metricTotal.textContent = stats.totalTests;
+        metricPassed.textContent = stats.passed;
+        metricFailed.textContent = stats.failed;
+        metricDuration.textContent = `${stats.durationMs} ms`;
+
+        const percent = Math.round((stats.passed / stats.totalTests) * 100) || 0;
+        progressBar.style.width = `${percent}%`;
+        progressPercentage.textContent = `${percent}%`;
+
+        if (stats.failed === 0) {
+          progressStatusText.textContent = `✨ ¡Excelente! Las ${stats.totalTests} pruebas pasaron satisfactoriamente (100% de éxito).`;
+          progressBar.style.background = '#2ECC71';
+        } else {
+          progressStatusText.textContent = `⚠️ Se detectaron ${stats.failed} pruebas fallidas de ${stats.totalTests}. Revisa el desglose a continuación.`;
+          progressBar.style.background = '#E74C3C';
+        }
+
+        // Renderizar Suites y Casos
+        suites.forEach((suite, index) => {
+          const hasFailed = suite.tests.some(t => t.status === 'failed');
+          const suitePassCount = suite.tests.filter(t => t.status === 'passed').length;
+
+          const suiteCard = document.createElement('article');
+          suiteCard.className = `suite-card ${index === 0 || hasFailed ? 'expanded' : ''}`;
+
+          suiteCard.innerHTML = `
+            <div class="suite-header">
+              <div class="suite-title-group">
+                <span style="font-size: 1.1rem;">${hasFailed ? '❌' : '✅'}</span>
+                <h3 class="suite-title">${suite.name}</h3>
+              </div>
+              <div class="suite-badges">
+                <span class="badge ${hasFailed ? 'badge-fail' : 'badge-pass'}">
+                  ${hasFailed ? 'Con Errores' : 'Completada'}
+                </span>
+                <span class="badge badge-count">
+                  ${suitePassCount}/${suite.tests.length} tests
+                </span>
+              </div>
+            </div>
+            <div class="suite-tests-list">
+              ${suite.tests.map(t => `
+                <div class="test-item" data-status="${t.status}">
+                  <div class="test-info">
+                    <span class="test-icon">${t.status === 'passed' ? '🟢' : '🔴'}</span>
+                    <div>
+                      <div class="test-name">${t.name}</div>
+                      ${t.error ? `<div class="test-error-box">${t.error}</div>` : ''}
+                    </div>
+                  </div>
+                  <span class="test-duration">${t.durationMs} ms</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+
+          // Toggle expand/collapse
+          suiteCard.querySelector('.suite-header').addEventListener('click', () => {
+            suiteCard.classList.toggle('expanded');
+          });
+
+          suitesContainer.appendChild(suiteCard);
+        });
+
+        applyFilter();
+        runBtn.disabled = false;
+        runBtn.textContent = '🔄 Re-ejecutar Todas las Pruebas';
+      }
+
+      runBtn.addEventListener('click', startTesting);
+
+      // Iniciar automáticamente al cargar
+      setTimeout(startTesting, 350);
+    });
+  </script>
+</body>
+</html>

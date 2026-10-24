@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F2D080"/>
+      <stop offset="50%" stop-color="#C5A059"/>
+      <stop offset="100%" stop-color="#9E7831"/>
+    </linearGradient>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2D2824"/>
+      <stop offset="100%" stop-color="#141210"/>
+    </radialGradient>
+  </defs>
+  <!-- Background circle with gold ring -->
+  <rect width="64" height="64" rx="14" fill="url(#bgGrad)"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.65"/>
+  <circle cx="32" cy="32" r="24" fill="none" stroke="url(#goldGrad)" stroke-width="0.75" stroke-dasharray="2 2" opacity="0.45"/>
+  <!-- Elegant Serif Letter A -->
+  <text x="32" y="44" font-family="'Playfair Display', 'Times New Roman', Georgia, serif" font-size="34" font-weight="700" text-anchor="middle" fill="url(#goldGrad)" letter-spacing="1">A</text>
+  <!-- Tiny Diamond Crown -->
+  <polygon points="32,13 34,16 32,19 30,16" fill="url(#goldGrad)"/>
+</svg>

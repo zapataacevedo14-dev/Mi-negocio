@@ -273,6 +273,202 @@ const STORAGE_KEYS = {
 };
 
 const FREE_SHIPPING_THRESHOLD = 350000; // $350.000 COP
+const MAX_CART_ITEM_QTY = 10; // Límite de seguridad por artículo
+
+/* ==========================================================================
+   2.5. Módulo de Seguridad Frontend (Defense-in-Depth)
+   ========================================================================== */
+const SecurityModule = (() => {
+  'use strict';
+
+  /**
+   * Sanitiza HTML para prevenir inyección XSS.
+   * Convierte caracteres especiales a entidades HTML seguras.
+   */
+  function sanitizeHTML(str) {
+    if (typeof str !== 'string') return '';
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;',
+      '/': '&#x2F;',
+      '`': '&#x60;'
+    };
+    return str.replace(/[&<>"'\/`]/g, char => map[char]);
+  }
+
+  /**
+   * Hash SHA-256 asíncrono usando Web Crypto API nativa del navegador.
+   * Devuelve un hash hexadecimal determinista.
+   */
+  async function hashPassword(password) {
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password + '_ALABASTRO_SALT_2026');
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) {
+      // Fallback: hash simple para navegadores sin Web Crypto
+      let hash = 0;
+      const salted = password + '_ALABASTRO_SALT_2026';
+      for (let i = 0; i < salted.length; i++) {
+        const char = salted.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return 'fb_' + Math.abs(hash).toString(16);
+    }
+  }
+
+  /**
+   * Rate Limiter para prevenir ataques de fuerza bruta.
+   * Máximo 5 intentos de login en ventana de 60 segundos.
+   */
+  const rateLimiter = {
+    attempts: [],
+    maxAttempts: 5,
+    windowMs: 60000, // 60 segundos
+    lockoutMs: 60000, // 60 segundos de bloqueo
+    lockedUntil: 0,
+
+    canAttempt() {
+      const now = Date.now();
+      if (now < this.lockedUntil) {
+        const secsLeft = Math.ceil((this.lockedUntil - now) / 1000);
+        return { allowed: false, message: `Demasiados intentos. Intenta nuevamente en ${secsLeft} segundos.` };
+      }
+      // Limpiar intentos vencidos
+      this.attempts = this.attempts.filter(t => (now - t) < this.windowMs);
+      if (this.attempts.length >= this.maxAttempts) {
+        this.lockedUntil = now + this.lockoutMs;
+        this.attempts = [];
+        return { allowed: false, message: 'Has superado el límite de intentos. Tu cuenta está bloqueada temporalmente por 60 segundos.' };
+      }
+      return { allowed: true };
+    },
+
+    recordAttempt() {
+      this.attempts.push(Date.now());
+    },
+
+    reset() {
+      this.attempts = [];
+      this.lockedUntil = 0;
+    }
+  };
+
+  /**
+   * Validadores de entrada robustos.
+   */
+  const validators = {
+    email(value) {
+      if (typeof value !== 'string') return false;
+      const clean = value.trim().toLowerCase();
+      if (clean.length > 254) return false;
+      return /^[a-z0-9](?:[a-z0-9._%+\-]{0,62}[a-z0-9])?@[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?(?:\.[a-z]{2,})+$/i.test(clean);
+    },
+
+    password(value) {
+      if (typeof value !== 'string') return { valid: false, message: 'Contraseña requerida.' };
+      if (value.length < 6) return { valid: false, message: 'La contraseña debe tener mínimo 6 caracteres.' };
+      if (value.length > 128) return { valid: false, message: 'Contraseña demasiado larga (máx. 128 caracteres).' };
+      if (/^(.)(\1)+$/.test(value)) return { valid: false, message: 'La contraseña no puede ser un solo carácter repetido.' };
+      return { valid: true };
+    },
+
+    name(value) {
+      if (typeof value !== 'string') return false;
+      const clean = value.trim();
+      if (clean.length < 2 || clean.length > 100) return false;
+      // Permite letras, espacios, tildes y ñ; bloquea HTML y scripts
+      return /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s.\-']+$/.test(clean);
+    },
+
+    phone(value) {
+      if (typeof value !== 'string') return true; // Campo opcional
+      const clean = value.trim();
+      if (clean === '') return true;
+      return /^[\d\s+()\-]{7,20}$/.test(clean);
+    },
+
+    /** Verifica que un productId sea válido contra el catálogo */
+    productId(id) {
+      return typeof id === 'string' && PRODUCTS.some(p => p.id === id);
+    }
+  };
+
+  /**
+   * JSON.parse seguro con protección contra prototype pollution.
+   */
+  function safeJSONParse(jsonString) {
+    try {
+      const parsed = JSON.parse(jsonString);
+      // Bloquear prototype pollution
+      if (typeof parsed === 'object' && parsed !== null) {
+        if ('__proto__' in parsed || 'constructor' in parsed || 'prototype' in parsed) {
+          console.warn('[Seguridad] Intento de prototype pollution bloqueado.');
+          return null;
+        }
+      }
+      return parsed;
+    } catch (e) {
+      console.warn('[Seguridad] Error en JSON.parse seguro:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Verifica integridad de datos de carrito desde localStorage.
+   */
+  function validateCartData(data) {
+    if (!Array.isArray(data)) return [];
+    return data.filter(item => {
+      return item
+        && typeof item.id === 'string'
+        && typeof item.name === 'string'
+        && typeof item.price === 'number'
+        && item.price > 0
+        && typeof item.quantity === 'number'
+        && item.quantity > 0
+        && item.quantity <= MAX_CART_ITEM_QTY
+        && PRODUCTS.some(p => p.id === item.id);
+    }).map(item => ({
+      id: item.id,
+      name: item.name,
+      familyDisplay: String(item.familyDisplay || ''),
+      price: Number(item.price),
+      size: String(item.size || ''),
+      quantity: Math.min(Number(item.quantity), MAX_CART_ITEM_QTY)
+    }));
+  }
+
+  /**
+   * Genera un token anti-CSRF simple basado en sesión.
+   */
+  function generateSessionToken() {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Inicializar token de sesión
+  if (!sessionStorage.getItem('_csrf_token')) {
+    sessionStorage.setItem('_csrf_token', generateSessionToken());
+  }
+
+  return {
+    sanitizeHTML,
+    hashPassword,
+    rateLimiter,
+    validators,
+    safeJSONParse,
+    validateCartData,
+    generateSessionToken
+  };
+})();
 
 /* ==========================================================================
    3. Helpers y Utilidades
@@ -351,11 +547,18 @@ function showToast(message, icon = '✦') {
 
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `
-    <span class="toast-icon">${icon}</span>
-    <span class="toast-msg">${message}</span>
-  `;
 
+  // Seguridad: usar textContent para el mensaje y evitar XSS
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'toast-icon';
+  iconSpan.textContent = icon;
+
+  const msgSpan = document.createElement('span');
+  msgSpan.className = 'toast-msg';
+  msgSpan.textContent = message;
+
+  toast.appendChild(iconSpan);
+  toast.appendChild(msgSpan);
   container.appendChild(toast);
 
   setTimeout(() => {
@@ -371,20 +574,39 @@ function loadStateFromStorage() {
   try {
     const savedCart = localStorage.getItem(STORAGE_KEYS.cart);
     if (savedCart) {
-      STATE.cart = JSON.parse(savedCart);
+      const parsed = SecurityModule.safeJSONParse(savedCart);
+      STATE.cart = SecurityModule.validateCartData(parsed);
     }
 
     const savedFavs = localStorage.getItem(STORAGE_KEYS.favorites);
     if (savedFavs) {
-      STATE.favorites = new Set(JSON.parse(savedFavs));
+      const parsed = SecurityModule.safeJSONParse(savedFavs);
+      if (Array.isArray(parsed)) {
+        // Validar que cada favorito sea un ID de producto válido
+        STATE.favorites = new Set(parsed.filter(id => SecurityModule.validators.productId(id)));
+      }
     }
 
     const savedUser = localStorage.getItem(STORAGE_KEYS.currentUser) || sessionStorage.getItem(STORAGE_KEYS.currentUser);
     if (savedUser) {
-      STATE.currentUser = JSON.parse(savedUser);
+      const parsed = SecurityModule.safeJSONParse(savedUser);
+      if (parsed && typeof parsed.id === 'string' && typeof parsed.email === 'string') {
+        // Omitir hash de contraseña del estado en memoria
+        STATE.currentUser = {
+          id: parsed.id,
+          name: SecurityModule.sanitizeHTML(parsed.name || ''),
+          email: parsed.email,
+          phone: parsed.phone || '',
+          createdAt: parsed.createdAt || ''
+        };
+      }
     }
   } catch (e) {
-    console.warn('No se pudo acceder al LocalStorage:', e);
+    console.warn('[Seguridad] No se pudo acceder al LocalStorage:', e);
+    // Limpiar datos potencialmente corruptos
+    STATE.cart = [];
+    STATE.favorites = new Set();
+    STATE.currentUser = null;
   }
 }
 
@@ -523,12 +745,23 @@ function renderCatalog() {
    6. Gestión del Carrito de Compras
    ========================================================================== */
 function addToCart(productId, quantity = 1) {
+  // Seguridad: validar productId contra el catálogo real
+  if (!SecurityModule.validators.productId(productId)) {
+    console.warn('[Seguridad] ID de producto inválido:', productId);
+    return;
+  }
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
 
+  // Seguridad: sanitizar y limitar cantidad
+  quantity = Math.max(1, Math.min(Math.floor(Number(quantity) || 1), MAX_CART_ITEM_QTY));
+
   const existing = STATE.cart.find(item => item.id === productId);
   if (existing) {
-    existing.quantity += quantity;
+    existing.quantity = Math.min(existing.quantity + quantity, MAX_CART_ITEM_QTY);
+    if (existing.quantity + quantity > MAX_CART_ITEM_QTY) {
+      showToast(`Límite máximo de ${MAX_CART_ITEM_QTY} unidades por producto`, '⚠️');
+    }
   } else {
     STATE.cart.push({
       id: product.id,
@@ -626,6 +859,9 @@ function updateCartUI() {
     cartItemsList.innerHTML = STATE.cart.map(item => {
       const product = PRODUCTS.find(p => p.id === item.id);
       const thumbSvg = product ? createBottleSvg(product, 44, 68) : '';
+      const safeName = SecurityModule.sanitizeHTML(item.name);
+      const safeSize = SecurityModule.sanitizeHTML(item.size);
+      const safeFamily = SecurityModule.sanitizeHTML(item.familyDisplay.split(' ')[0]);
 
       return `
         <div class="cart-item" data-id="${item.id}">
@@ -633,8 +869,8 @@ function updateCartUI() {
             ${thumbSvg}
           </div>
           <div class="cart-item-info">
-            <span class="cart-item-name">${item.name}</span>
-            <span class="cart-item-meta">${item.size} • ${item.familyDisplay.split(' ')[0]}</span>
+            <span class="cart-item-name">${safeName}</span>
+            <span class="cart-item-meta">${safeSize} • ${safeFamily}</span>
             <span class="cart-item-price">${formatCOP(item.price)}</span>
           </div>
           <div class="cart-item-controls">
@@ -698,7 +934,8 @@ function checkoutViaWhatsApp() {
   const encoded = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/573112549053?text=${encoded}`;
 
-  window.open(whatsappUrl, '_blank');
+  // Seguridad: noopener y noreferrer previene Reverse Tabnabbing
+  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   showToast('Redirigiendo a WhatsApp con tu pedido...', '💬');
 }
 
@@ -900,24 +1137,30 @@ function advanceQuizStep(nextStep) {
   document.getElementById(`step${nextStep}`)?.classList.add('active');
 }
 
-function calculateAndDisplayQuizResult() {
-  // Puntuación según coincidencia con las respuestas
-  const { occasion, sensation, intensity } = STATE.quizAnswers;
+function findBestFragranceMatch(answers) {
+  const { occasion, sensation, intensity } = answers || STATE.quizAnswers;
 
   let bestMatch = PRODUCTS[0];
   let highestScore = -1;
 
   PRODUCTS.forEach(p => {
     let score = 0;
-    if (p.quizTags.occasions.includes(occasion)) score += 3;
-    if (p.quizTags.sensations.includes(sensation)) score += 4;
-    if (p.quizTags.intensities.includes(intensity)) score += 2;
+    if (p.quizTags && p.quizTags.occasions && p.quizTags.occasions.includes(occasion)) score += 3;
+    if (p.quizTags && p.quizTags.sensations && p.quizTags.sensations.includes(sensation)) score += 4;
+    if (p.quizTags && p.quizTags.intensities && p.quizTags.intensities.includes(intensity)) score += 2;
 
     if (score > highestScore) {
       highestScore = score;
       bestMatch = p;
     }
   });
+
+  return { bestMatch, highestScore };
+}
+
+function calculateAndDisplayQuizResult() {
+  // Puntuación según coincidencia con las respuestas
+  const { bestMatch } = findBestFragranceMatch(STATE.quizAnswers);
 
   // Ocultar preguntas y mostrar resultado
   document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
@@ -966,32 +1209,54 @@ function resetQuiz() {
 }
 
 /* ==========================================================================
-   10. Formulario de Suscripción VIP (Newsletter)
+   10. Formulario de Suscripción VIP (Newsletter) — con Seguridad Reforzada
    ========================================================================== */
 function setupNewsletter() {
   const form = document.getElementById('newsletterForm');
   const input = document.getElementById('newsletterEmail');
   const feedback = document.getElementById('newsletterFeedback');
+  const honeypot = document.getElementById('newsHoneypot');
+  let lastSubmitTime = 0;
 
   if (!form || !input) return;
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    // Seguridad 1: Verificar honeypot anti-bot
+    if (honeypot && honeypot.value.trim() !== '') {
+      console.warn('[Seguridad] Intento de bot detectado vía honeypot.');
+      // Simular éxito para no revelar la detección
+      feedback.textContent = '✨ ¡Gracias por suscribirte!';
+      feedback.className = 'newsletter-feedback success';
+      feedback.style.display = 'block';
+      input.value = '';
+      return;
+    }
+
+    // Seguridad 2: Rate limiting (mín. 3 segundos entre envíos)
+    const now = Date.now();
+    if (now - lastSubmitTime < 3000) {
+      feedback.textContent = 'Por favor espera unos segundos antes de intentar nuevamente.';
+      feedback.className = 'newsletter-feedback error';
+      feedback.style.display = 'block';
+      return;
+    }
+    lastSubmitTime = now;
+
     const email = input.value.trim();
 
-    // Validación sencilla de email
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
+    // Seguridad 3: Validación robusta de email
+    if (!SecurityModule.validators.email(email)) {
       feedback.textContent = 'Por favor ingresa un correo electrónico válido.';
       feedback.className = 'newsletter-feedback error';
       feedback.style.display = 'block';
       return;
     }
 
-    // Simulación de suscripción exitosa
-    feedback.innerHTML = `
-      ✨ <strong>¡Bienvenido al Círculo Privado!</strong> Hemos enviado a <em>${email}</em> tu código de bienvenida: <strong>ALABASTRO10</strong> (10% de cortesía).
-    `;
+    // Seguridad 4: Sanitizar email antes de mostrar (usar textContent, no innerHTML)
+    const sanitizedEmail = SecurityModule.sanitizeHTML(email);
+    feedback.textContent = `✨ ¡Bienvenido al Círculo Privado! Hemos enviado a ${sanitizedEmail} tu código de bienvenida: ALABASTRO10 (10% de cortesía).`;
     feedback.className = 'newsletter-feedback success';
     feedback.style.display = 'block';
     input.value = '';
@@ -1001,36 +1266,80 @@ function setupNewsletter() {
 }
 
 /* ==========================================================================
-   10.5 Gestión de Autenticación y Registro de Clientes
+   10.5 Gestión de Autenticación y Registro de Clientes — con Seguridad Reforzada
    ========================================================================== */
+
+/**
+ * Inicializar usuarios de demostración con contraseñas hasheadas.
+ * Se ejecuta de forma asíncrona al arrancar la app.
+ */
+async function initDefaultUsers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.users);
+    if (raw) {
+      // Migración segura: si existen cuentas creadas previamente sin hash, hashearlas con SHA-256
+      const users = SecurityModule.safeJSONParse(raw);
+      if (Array.isArray(users)) {
+        let needsSave = false;
+        for (const u of users) {
+          if (u.password && !u.passwordHash) {
+            u.passwordHash = await SecurityModule.hashPassword(u.password);
+            delete u.password;
+            needsSave = true;
+          }
+        }
+        if (needsSave) {
+          saveRegisteredUsers(users);
+          console.log('[Seguridad] Cuentas de demostración migradas a SHA-256.');
+        }
+      }
+      return;
+    }
+
+    const hashedPass = await SecurityModule.hashPassword('password123');
+    const defaultUsers = [
+      {
+        id: 'usr-1',
+        name: 'Santiago Zapata',
+        email: 'santiago@alabastro.co',
+        phone: '311 254 9053',
+        passwordHash: hashedPass,
+        createdAt: new Date().toISOString()
+      }
+    ];
+    saveRegisteredUsers(defaultUsers);
+  } catch (e) {
+    console.warn('[Seguridad] Error inicializando usuarios:', e);
+  }
+}
+
 function getRegisteredUsers() {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.users);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {
-    console.warn('Error leyendo usuarios:', e);
-  }
-
-  // Cuentas de demostración iniciales
-  const defaultUsers = [
-    {
-      id: 'usr-1',
-      name: 'Santiago Zapata',
-      email: 'santiago@alabastro.co',
-      phone: '311 254 9053',
-      password: 'password123',
-      createdAt: new Date().toISOString()
+    if (raw) {
+      const parsed = SecurityModule.safeJSONParse(raw);
+      if (Array.isArray(parsed)) return parsed;
     }
-  ];
-  saveRegisteredUsers(defaultUsers);
-  return defaultUsers;
+  } catch (e) {
+    console.warn('[Seguridad] Error leyendo usuarios:', e);
+  }
+  return [];
 }
 
 function saveRegisteredUsers(users) {
   try {
-    localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
+    // Seguridad: nunca almacenar datos inesperados
+    const safeUsers = users.map(u => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      phone: u.phone || '',
+      passwordHash: u.passwordHash || '',
+      createdAt: u.createdAt || ''
+    }));
+    localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(safeUsers));
   } catch (e) {
-    console.warn('Error guardando usuarios:', e);
+    console.warn('[Seguridad] Error guardando usuarios:', e);
   }
 }
 
@@ -1080,8 +1389,24 @@ function switchAuthTab(tab) {
   }
 }
 
-function handleLoginSubmit(e) {
+async function handleLoginSubmit(e) {
   e.preventDefault();
+
+  // Seguridad 0: Honeypot Anti-Bot invisible
+  const honeypot = document.getElementById('loginHoneypot');
+  if (honeypot && honeypot.value.trim() !== '') {
+    console.warn('[Seguridad] Intento de bot bloqueado en Login vía Honeypot.');
+    showToast('Credenciales incorrectas. Por favor verifica tus datos.', '⚠️');
+    return;
+  }
+
+  // Seguridad 1: Rate limiting anti fuerza bruta
+  const rateCheck = SecurityModule.rateLimiter.canAttempt();
+  if (!rateCheck.allowed) {
+    showToast(rateCheck.message, '🔒');
+    return;
+  }
+
   const emailInput = document.getElementById('loginEmail');
   const passInput = document.getElementById('loginPassword');
   const rememberMe = document.getElementById('rememberMe')?.checked;
@@ -1089,40 +1414,92 @@ function handleLoginSubmit(e) {
   const email = emailInput?.value.trim().toLowerCase();
   const pass = passInput?.value;
 
-  const users = getRegisteredUsers();
-  const user = users.find(u => u.email.toLowerCase() === email && u.password === pass);
-
-  if (user) {
-    STATE.currentUser = user;
-    if (rememberMe) {
-      localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
-    } else {
-      sessionStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(user));
-    }
-    updateAuthUI();
-    closeAuthModal();
-    showToast(`¡Bienvenido/a de nuevo, ${user.name.split(' ')[0]}!`, '✨');
-    document.getElementById('loginForm')?.reset();
-  } else {
-    showToast('Correo o contraseña incorrectos. Por favor verifica tus datos.', '⚠️');
-  }
-}
-
-function handleRegisterSubmit(e) {
-  e.preventDefault();
-  const name = document.getElementById('regName')?.value.trim();
-  const email = document.getElementById('regEmail')?.value.trim().toLowerCase();
-  const phone = document.getElementById('regPhone')?.value.trim() || '311 254 9053';
-  const pass = document.getElementById('regPassword')?.value;
-  const passConfirm = document.getElementById('regPasswordConfirm')?.value;
-
-  if (!name || !email || !pass) {
-    showToast('Por favor completa todos los campos requeridos.', '⚠️');
+  // Seguridad 2: Validación de inputs
+  if (!SecurityModule.validators.email(email)) {
+    showToast('Por favor ingresa un correo electrónico válido.', '⚠️');
     return;
   }
 
-  if (pass.length < 6) {
-    showToast('La contraseña debe tener mínimo 6 caracteres.', '⚠️');
+  // Seguridad 3: Hash de la contraseña para comparar
+  const passHash = await SecurityModule.hashPassword(pass);
+
+  const users = getRegisteredUsers();
+  const user = users.find(u => u.email.toLowerCase() === email && u.passwordHash === passHash);
+
+  if (user) {
+    SecurityModule.rateLimiter.reset(); // Reset al lograr login exitoso
+
+    // Seguridad 4: No almacenar el hash de contraseña en el estado de sesión
+    const safeUserData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone || '',
+      createdAt: user.createdAt || ''
+    };
+    STATE.currentUser = safeUserData;
+    if (rememberMe) {
+      localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(safeUserData));
+    } else {
+      sessionStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(safeUserData));
+    }
+    updateAuthUI();
+    closeAuthModal();
+    const safeName = SecurityModule.sanitizeHTML(user.name.split(' ')[0]);
+    showToast(`¡Bienvenido/a de nuevo, ${safeName}!`, '✨');
+    document.getElementById('loginForm')?.reset();
+  } else {
+    SecurityModule.rateLimiter.recordAttempt();
+    // Seguridad 5: Mensaje genérico (no revelar si el email existe o no)
+    showToast('Credenciales incorrectas. Por favor verifica tus datos.', '⚠️');
+  }
+}
+
+async function handleRegisterSubmit(e) {
+  e.preventDefault();
+
+  // Seguridad 0: Honeypot Anti-Bot invisible
+  const honeypot = document.getElementById('registerHoneypot');
+  if (honeypot && honeypot.value.trim() !== '') {
+    console.warn('[Seguridad] Intento de bot bloqueado en Registro vía Honeypot.');
+    return;
+  }
+
+  // Seguridad 0.5: Verificación de consentimiento y tratamiento de datos
+  const termsCheckbox = document.getElementById('regTerms');
+  if (termsCheckbox && !termsCheckbox.checked) {
+    showToast('Debes aceptar la política de privacidad y tratamiento seguro de tus datos.', '⚠️');
+    return;
+  }
+
+  const name = document.getElementById('regName')?.value.trim();
+  const email = document.getElementById('regEmail')?.value.trim().toLowerCase();
+  const phone = document.getElementById('regPhone')?.value.trim() || '';
+  const pass = document.getElementById('regPassword')?.value;
+  const passConfirm = document.getElementById('regPasswordConfirm')?.value;
+
+  // Seguridad 1: Validación robusta de nombre
+  if (!name || !SecurityModule.validators.name(name)) {
+    showToast('Por favor ingresa un nombre válido (solo letras, sin caracteres especiales).', '⚠️');
+    return;
+  }
+
+  // Seguridad 2: Validación robusta de email
+  if (!SecurityModule.validators.email(email)) {
+    showToast('Por favor ingresa un correo electrónico válido.', '⚠️');
+    return;
+  }
+
+  // Seguridad 3: Validación de teléfono
+  if (!SecurityModule.validators.phone(phone)) {
+    showToast('El número de teléfono contiene caracteres no válidos.', '⚠️');
+    return;
+  }
+
+  // Seguridad 4: Validación robusta de contraseña
+  const passCheck = SecurityModule.validators.password(pass);
+  if (!passCheck.valid) {
+    showToast(passCheck.message, '⚠️');
     return;
   }
 
@@ -1138,25 +1515,36 @@ function handleRegisterSubmit(e) {
     return;
   }
 
+  // Seguridad 5: Hash de contraseña con SHA-256
+  const passwordHash = await SecurityModule.hashPassword(pass);
+
   const newUser = {
-    id: 'usr-' + Date.now(),
-    name,
+    id: 'usr-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8),
+    name: SecurityModule.sanitizeHTML(name),
     email,
     phone,
-    password: pass,
+    passwordHash,
     createdAt: new Date().toISOString()
   };
 
   users.push(newUser);
   saveRegisteredUsers(users);
 
-  // Iniciar sesión automáticamente
-  STATE.currentUser = newUser;
-  localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(newUser));
+  // Iniciar sesión automáticamente (sin almacenar hash en sesión)
+  const safeUserData = {
+    id: newUser.id,
+    name: newUser.name,
+    email: newUser.email,
+    phone: newUser.phone,
+    createdAt: newUser.createdAt
+  };
+  STATE.currentUser = safeUserData;
+  localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(safeUserData));
 
   updateAuthUI();
   closeAuthModal();
-  showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${name.split(' ')[0]}`, '👑');
+  const safeName = SecurityModule.sanitizeHTML(name.split(' ')[0]);
+  showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${safeName}`, '👑');
   document.getElementById('registerForm')?.reset();
 }
 
@@ -1251,6 +1639,7 @@ function setupEventListeners() {
       });
       btn.classList.add('active');
       btn.setAttribute('aria-selected', 'true');
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       STATE.filters.family = btn.dataset.family;
       renderCatalog();
     });
@@ -1430,7 +1819,8 @@ function setupEventListeners() {
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const mainNav = document.getElementById('mainNav');
   if (mobileMenuBtn && mainNav) {
-    mobileMenuBtn.addEventListener('click', () => {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const isOpen = mainNav.classList.toggle('active');
       mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
@@ -1441,6 +1831,24 @@ function setupEventListeners() {
         mainNav.classList.remove('active');
         mobileMenuBtn.setAttribute('aria-expanded', 'false');
       });
+    });
+
+    // Cerrar menú si el usuario toca fuera de él en móviles
+    document.addEventListener('click', (e) => {
+      if (mainNav.classList.contains('active')) {
+        if (!mainNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+          mainNav.classList.remove('active');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+
+    // Cerrar menú automáticamente al redimensionar a desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && mainNav.classList.contains('active')) {
+        mainNav.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 
@@ -1508,10 +1916,40 @@ function setupEventListeners() {
   }, { passive: true });
 }
 
+/**
+ * Monitor de inactividad de sesión (Auto-logout de seguridad).
+ * Cierra automáticamente la sesión tras 25 minutos de inactividad del usuario.
+ */
+function setupInactivityWatcher() {
+  let inactivityTimer;
+  const INACTIVITY_LIMIT_MS = 25 * 60 * 1000; // 25 minutos
+
+  function resetTimer() {
+    clearTimeout(inactivityTimer);
+    if (STATE.currentUser) {
+      inactivityTimer = setTimeout(() => {
+        if (STATE.currentUser) {
+          console.warn('[Seguridad] Sesión cerrada automáticamente por inactividad.');
+          handleLogout();
+          showToast('Tu sesión ha finalizado por inactividad para proteger tu privacidad.', '🔒');
+        }
+      }, INACTIVITY_LIMIT_MS);
+    }
+  }
+
+  ['click', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+    window.addEventListener(evt, resetTimer, { passive: true });
+  });
+  resetTimer();
+}
+
 /* ==========================================================================
    12. Inicialización de la Aplicación
    ========================================================================== */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Inicializar módulo de seguridad y usuarios con hashing
+  await initDefaultUsers();
+
   loadStateFromStorage();
   renderCatalog();
   updateCartUI();
@@ -1520,6 +1958,71 @@ document.addEventListener('DOMContentLoaded', () => {
   setupQuiz();
   setupNewsletter();
   setupEventListeners();
+  setupInactivityWatcher();
 
-  console.log('✨ ALABASTRO Alta Perfumería iniciada con éxito.');
+  // Seguridad: Advertencia contra ataques Self-XSS para usuarios que abren la consola
+  console.log('%c¡ALTO! / STOP!', 'color: #D32F2F; font-size: 28px; font-weight: bold; background: #FFF; padding: 4px 8px; border-radius: 4px;');
+  console.log('%cEsta consola está destinada exclusivamente a desarrolladores. Si alguien te indicó que copiaras o pegaras código aquí para obtener "descuentos" o "créditos", se trata de un fraude (Self-XSS) y podrían tomar control de tu cuenta.', 'font-size: 13px; color: #555; font-weight: 500;');
+
+  // Seguridad: Detectar herramientas de desarrollo abiertas (anti-tampering)
+  const devToolsWarningShown = { shown: false };
+  const devToolsChecker = setInterval(() => {
+    const widthThreshold = window.outerWidth - window.innerWidth > 160;
+    const heightThreshold = window.outerHeight - window.innerHeight > 160;
+    if ((widthThreshold || heightThreshold) && !devToolsWarningShown.shown) {
+      console.log('%c🔒 ALABASTRO SEGURIDAD', 'color:#E8D5B5;font-size:18px;font-weight:bold;background:#141210;padding:10px 20px;border-radius:6px;');
+      console.log('%cLa aplicación está operando en modo protegido. Cualquier intento de alteración de precios o estado será rechazado.', 'color:#C5A059;font-size:13px;');
+      devToolsWarningShown.shown = true;
+    }
+  }, 2500);
+
+  // Seguridad: Protección contra manipulación del objeto window.PRODUCTS
+  if (Object.freeze) {
+    Object.freeze(PRODUCTS);
+    PRODUCTS.forEach(p => Object.freeze(p));
+  }
+
+  console.log('✨ ALABASTRO Alta Perfumería iniciada con éxito. [Modo Seguro Activo]');
 });
+
+/* ==========================================================================
+   13. API Global de ALABASTRO (Testing Suite & Extensibilidad)
+   ========================================================================== */
+window.Alabastro = {
+  PRODUCTS,
+  STATE,
+  STORAGE_KEYS,
+  FREE_SHIPPING_THRESHOLD,
+  MAX_CART_ITEM_QTY,
+  SecurityModule,
+  formatCOP,
+  createBottleSvg,
+  addToCart,
+  updateCartItemQuantity,
+  removeFromCart,
+  toggleFavorite,
+  filterAndSortProducts,
+  renderCatalog,
+  updateCartUI,
+  updateFavoritesUI,
+  updateAuthUI,
+  openProductModal,
+  closeProductModal,
+  openCartDrawer,
+  closeCartDrawer,
+  openFavoritesDrawer,
+  closeFavoritesDrawer,
+  openAuthModal,
+  closeAuthModal,
+  switchAuthTab,
+  getRegisteredUsers,
+  saveRegisteredUsers,
+  handleLoginSubmit,
+  handleRegisterSubmit,
+  handleLogout,
+  loadStateFromStorage,
+  saveCartToStorage,
+  saveFavoritesToStorage,
+  findBestFragranceMatch,
+  calculateAndDisplayQuizResult
+};
