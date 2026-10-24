@@ -1,5 +1,5 @@
-﻿/**
- * ALABASTRO �” Haute Parfumerie
+/**
+ * ALABASTRO — Alta Perfumería
  * Lógica Frontend Principal (app.js)
  * Cumpliendo con la especificación técnica UI/UX:
  * - Catálogo de 8 fragancias premium
@@ -19,17 +19,17 @@
 const PRODUCTS = [
   {
     id: 'santal-nectar',
-    name: 'Santal Néctar',
-    subtitle: 'Extrait de Parfum �” 100ml',
+    name: 'Néctar de Sándalo',
+    subtitle: 'Extracto de Perfume — 100ml',
     family: 'amaderada',
     familyDisplay: 'Amaderada Especiada',
     price: 420000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (30% concentración)',
+    concentration: 'Extracto de Perfume (30% concentración)',
     description: 'Una composición majestuosa y cálida donde el sándalo de Mysore se entrelaza con cardamomo verde y maderas ahumadas, dejando una estela embriagadora y distinguida.',
     topNotes: ['Cardamomo de Ceilán', 'Bergamota dorada', 'Pimienta Rosa'],
     heartNotes: ['Sándalo de Mysore', 'Cedro Atlas', 'Iris de Florencia'],
-    baseNotes: ['Vainilla Bourbon', 'Ãmbar Cálido', 'Almizcle Blanco'],
+    baseNotes: ['Vainilla Bourbon', 'Ámbar Cálido', 'Almizcle Blanco'],
     longevity: '+12 Horas garantizadas',
     sillage: 'Intensa & Envolvente',
     bestFor: 'Noches templadas, cenas exclusivas, firmas personales',
@@ -47,17 +47,17 @@ const PRODUCTS = [
   },
   {
     id: 'rose-imperiale',
-    name: 'Rose Impériale',
-    subtitle: 'Eau de Parfum �” 100ml',
+    name: 'Rosa Imperial',
+    subtitle: 'Agua de Perfume — 100ml',
     family: 'floral',
     familyDisplay: 'Floral Sofisticada',
     price: 390000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (24% concentración)',
+    concentration: 'Agua de Perfume (24% concentración)',
     description: 'El tributo definitivo a la rosa centifolia de Grasse. Una apertura radiante de lichi silvestre da paso a pétalos aterciopelados sobre un fondo limpio y seductor.',
     topNotes: ['Rosa de Damasco', 'Lichi Silvestre', 'Mandarina'],
     heartNotes: ['Rosa Centifolia de Grasse', 'Peonía Rosa', 'Magnolia'],
-    baseNotes: ['Almizcle Blanco', 'Madera de Cachemira', 'Ãmbar Gris'],
+    baseNotes: ['Almizcle Blanco', 'Madera de Cachemira', 'Ámbar Gris'],
     longevity: '8 a 10 Horas',
     sillage: 'Moderada & Romántica',
     bestFor: 'Primavera, eventos de día, citas románticas',
@@ -75,17 +75,17 @@ const PRODUCTS = [
   },
   {
     id: 'oud-nocturne',
-    name: 'Oud Nocturne',
-    subtitle: 'Extrait de Parfum �” 100ml',
+    name: 'Oud Nocturno',
+    subtitle: 'Extracto de Perfume — 100ml',
     family: 'oriental',
     familyDisplay: 'Oriental Amaderada',
     price: 480000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (32% concentración)',
+    concentration: 'Extracto de Perfume (32% concentración)',
     description: 'La joya más opulenta de ALABASTRO. Resina de Oud puro de Camboya envejecido en roble francés, fundido con cuero negro y acordes de humo sagrado.',
     topNotes: ['Azafrán Español', 'Incienso de Omán', 'Nuez Moscada'],
     heartNotes: ['Oud de Camboya Macerado', 'Cuero Ruso', 'Pachulí Oscuro'],
-    baseNotes: ['Ãmbar Negro', 'Benjuí de Laos', 'Vetiver Ahumado'],
+    baseNotes: ['Ámbar Negro', 'Benjuí de Laos', 'Vetiver Ahumado'],
     longevity: '+16 Horas de fijación',
     sillage: 'Poderosa & Memorable',
     bestFor: 'Galas nocturnas, clima frío, presencia imponente',
@@ -103,13 +103,13 @@ const PRODUCTS = [
   },
   {
     id: 'bergamote-sauvage',
-    name: 'Bergamote Sauvage',
-    subtitle: 'Eau de Parfum �” 100ml',
+    name: 'Bergamota Salvaje',
+    subtitle: 'Agua de Perfume — 100ml',
     family: 'citrica',
     familyDisplay: 'Cítrica Aromática',
     price: 350000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (22% concentración)',
+    concentration: 'Agua de Perfume (22% concentración)',
     description: 'La frescura deslumbrante del amanecer en Calabria. Cítricos prensados en frío combinados con salvia aromática y un toque mineral ultramoderno.',
     topNotes: ['Bergamota de Calabria', 'Pomelo Rosado', 'Lima Kaffir'],
     heartNotes: ['Salvia Esclarea', 'Pimienta de Sichuan', 'Romero Silvestre'],
@@ -131,16 +131,16 @@ const PRODUCTS = [
   },
   {
     id: 'ambre-dore',
-    name: 'Ambre Doré',
-    subtitle: 'Extrait de Parfum �” 100ml',
+    name: 'Ámbar Dorado',
+    subtitle: 'Extracto de Perfume — 100ml',
     family: 'oriental',
     familyDisplay: 'Oriental Cálida',
     price: 440000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (30% concentración)',
+    concentration: 'Extracto de Perfume (30% concentración)',
     description: 'Un abrazo líquido de ámbar resinoso y especias dulces. Una caricia cálida que evoca salones de terciopelo y veladas inolvidables.',
     topNotes: ['Canela de Ceilán', 'Coriandro Dulce', 'Naranja Amarga'],
-    heartNotes: ['Ãmbar Gris Natural', 'Haba Tonka Tostada', 'Benjuí de Siam'],
+    heartNotes: ['Ámbar Gris Natural', 'Haba Tonka Tostada', 'Benjuí de Siam'],
     baseNotes: ['Resina de Ládano', 'Vainilla Ahumada', 'Sándalo'],
     longevity: '+12 Horas',
     sillage: 'Cálida & Aristocrática',
@@ -159,13 +159,13 @@ const PRODUCTS = [
   },
   {
     id: 'fleur-blanche',
-    name: 'Fleur Blanche',
-    subtitle: 'Eau de Parfum �” 100ml',
+    name: 'Flor Blanca',
+    subtitle: 'Agua de Perfume — 100ml',
     family: 'floral',
     familyDisplay: 'Floral Luminosa',
     price: 370000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (22% concentración)',
+    concentration: 'Agua de Perfume (22% concentración)',
     description: 'La danza hipnótica de las flores blancas más nobles: nardos de la India y jazmines recolectados a medianoche con un velo solar y sedoso.',
     topNotes: ['Azahar de Túnez', 'Neroli', 'Pera Nashi'],
     heartNotes: ['Tuberosa de la India', 'Jazmín Sambac', 'Gardenia'],
@@ -187,17 +187,17 @@ const PRODUCTS = [
   },
   {
     id: 'marina-profonda',
-    name: 'Marina Profonda',
-    subtitle: 'Eau de Parfum �” 100ml',
+    name: 'Marina Profunda',
+    subtitle: 'Agua de Perfume — 100ml',
     family: 'acuatica',
     familyDisplay: 'Acuática Marina Fresca',
     price: 360000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Eau de Parfum (22% concentración)',
+    concentration: 'Agua de Perfume (22% concentración)',
     description: 'Las profundidades indómitas del mar Mediterráneo. Rocío salino sobre acantilados rocosos, algas azules y madera de deriva acariciada por el sol.',
     topNotes: ['Brisa Marina Mineral', 'Limón Amalfi', 'Calone Cristal'],
     heartNotes: ['Salvia Marina', 'Algas Azules', 'Lavanda Costera'],
-    baseNotes: ['Madera de Deriva', 'Ãmbar Gris', 'Musgo de Roble Marino'],
+    baseNotes: ['Madera de Deriva', 'Ámbar Gris', 'Musgo de Roble Marino'],
     longevity: '8 a 10 Horas',
     sillage: 'Fresca & Conquistadora',
     bestFor: 'Verano, clima tropical, descanso de fin de semana',
@@ -215,17 +215,17 @@ const PRODUCTS = [
   },
   {
     id: 'vanille-celeste',
-    name: 'Vanille Céleste',
-    subtitle: 'Extrait de Parfum �” 100ml',
+    name: 'Vainilla Celeste',
+    subtitle: 'Extracto de Perfume — 100ml',
     family: 'gourmand',
-    familyDisplay: 'Gourmand Sofisticada',
+    familyDisplay: 'Dulce Gourmand Sofisticada',
     price: 410000,
     size: '100 ml / 3.4 FL. OZ.',
-    concentration: 'Extrait de Parfum (28% concentración)',
+    concentration: 'Extracto de Perfume (28% concentración)',
     description: 'Lejos de lo infantil, esta es una vainilla oscura y licorosa. Vainilla de Madagascar macerada en coñac, café tostado y flor de almendro.',
     topNotes: ['Almendra Amarga', 'Grano de Café Tostado', 'Ron Añejo'],
     heartNotes: ['Vaina de Vainilla Bourbon', 'Caramelo Salado', 'Heliotropo'],
-    baseNotes: ['Haba Tonka Negra', 'Sándalo Cremoso', 'Ãmbar Resinoso'],
+    baseNotes: ['Haba Tonka Negra', 'Sándalo Cremoso', 'Ámbar Resinoso'],
     longevity: '+12 Horas de duración',
     sillage: 'Adictiva & Magnética',
     bestFor: 'Noches frías, citas íntimas, amantes de notas dulces sofisticadas',
@@ -266,10 +266,10 @@ const STATE = {
 };
 
 const STORAGE_KEYS = {
-  cart: 'ALABASTRO_cart_v2',
-  favorites: 'ALABASTRO_favorites_v2',
-  users: 'ALABASTRO_users_v2',
-  currentUser: 'ALABASTRO_current_user_v2'
+  cart: 'essenza_cart_v2',
+  favorites: 'essenza_favorites_v2',
+  users: 'essenza_users_v2',
+  currentUser: 'essenza_current_user_v2'
 };
 
 const FREE_SHIPPING_THRESHOLD = 350000; // $350.000 COP
@@ -334,7 +334,7 @@ function createBottleSvg(product, width = 130, height = 210) {
       <text x="80" y="135" font-family="'Playfair Display', serif" font-size="9" fill="#E8D5B5" text-anchor="middle" font-weight="bold" letter-spacing="1.2">ALABASTRO</text>
       <line x1="56" y1="140" x2="104" y2="140" stroke="#B28A56" stroke-width="0.5" opacity="0.6"/>
       <text x="80" y="151" font-family="'DM Sans', sans-serif" font-size="6.5" fill="${product.gradient.accent}" text-anchor="middle" font-weight="600" letter-spacing="0.6">${product.name.toUpperCase()}</text>
-      <text x="80" y="162" font-family="'DM Sans', sans-serif" font-size="4.8" fill="#A89E92" text-anchor="middle" letter-spacing="0.4">EXTRAIT</text>
+      <text x="80" y="162" font-family="'DM Sans', sans-serif" font-size="4.8" fill="#A89E92" text-anchor="middle" letter-spacing="0.4">EXTRACTO</text>
 
       <!-- Fondo reforzado de cristal sólido -->
       <rect x="34" y="210" width="92" height="8" rx="3" fill="rgba(255,255,255,0.14)" />
@@ -345,7 +345,7 @@ function createBottleSvg(product, width = 130, height = 210) {
 /**
  * Notificaciones Flotantes Toast
  */
-function showToast(message, icon = 'âœ¦') {
+function showToast(message, icon = '✦') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
 
@@ -497,7 +497,7 @@ function renderCatalog() {
         <div class="card-body">
           <div class="card-meta-line">
             <span>${product.size}</span>
-            <span>Extrait de Parfum</span>
+            <span>Extracto de Perfume</span>
           </div>
 
           <h3 class="card-title">${product.name}</h3>
@@ -542,7 +542,7 @@ function addToCart(productId, quantity = 1) {
 
   saveCartToStorage();
   updateCartUI();
-  showToast(`«${product.name}» añadido a la bolsa`, 'ðŸ›ï¸');
+  showToast(`«${product.name}» añadido a la bolsa`, '🛍️');
 }
 
 function updateCartItemQuantity(productId, newQty) {
@@ -565,7 +565,7 @@ function removeFromCart(productId) {
   STATE.cart = STATE.cart.filter(i => i.id !== productId);
   saveCartToStorage();
   updateCartUI();
-  showToast(`«${name}» eliminado de la bolsa`, 'âœ•');
+  showToast(`«${name}» eliminado de la bolsa`, '✕');
 }
 
 function updateCartUI() {
@@ -601,7 +601,7 @@ function updateCartUI() {
   if (progressFill && shippingStatusText) {
     if (subtotal >= FREE_SHIPPING_THRESHOLD) {
       progressFill.style.width = '100%';
-      shippingStatusText.innerHTML = 'ðŸŽ‰ <strong>¡Felicidades!</strong> Tu pedido califica para <strong>Envío Nacional Gratuito</strong>';
+      shippingStatusText.innerHTML = '🎉 <strong>¡Felicidades!</strong> Tu pedido califica para <strong>Envío Nacional Gratuito</strong>';
     } else {
       const percentage = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
       const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
@@ -670,7 +670,7 @@ function closeCartDrawer() {
  */
 function checkoutViaWhatsApp() {
   if (STATE.cart.length === 0) {
-    showToast('Tu bolsa de compra está vacía', 'âš ï¸');
+    showToast('Tu bolsa de compra está vacía', '⚠️');
     return;
   }
 
@@ -678,9 +678,9 @@ function checkoutViaWhatsApp() {
   const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shippingText = subtotal >= FREE_SHIPPING_THRESHOLD ? 'GRATUITO (Promoción nacional)' : 'A coordinar';
 
-  let message = `*SOLICITUD DE PEDIDO �” ALABASTRO HAUTE PARFUMERIE*\n`;
-  message += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
-  message += `¡Hola Concierge de ALABASTRO! Deseo realizar el siguiente pedido:\n\n`;
+  let message = `*SOLICITUD DE PEDIDO — ALABASTRO ALTA PERFUMERÍA*\n`;
+  message += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  message += `¡Hola, equipo de ALABASTRO! Deseo realizar el siguiente pedido:\n\n`;
 
   STATE.cart.forEach((item, idx) => {
     message += `${idx + 1}. *${item.name}* (x${item.quantity})\n`;
@@ -688,18 +688,18 @@ function checkoutViaWhatsApp() {
     message += `   • Valor: ${formatCOP(item.price * item.quantity)}\n\n`;
   });
 
-  message += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n`;
+  message += `━━━━━━━━━━━━━━━━━━━━━\n`;
   message += `*Subtotal:* ${formatCOP(subtotal)}\n`;
   message += `*Envío:* ${shippingText}\n`;
   message += `*Empaque de regalo:* ${isGift ? 'Sí, por favor (incluir tarjeta)' : 'No necesario'}\n`;
-  message += `*Muestras de cortesía:* 3 decants incluidos\n\n`;
+  message += `*Muestras de cortesía:* 3 muestras exclusivas incluidas\n\n`;
   message += `Por favor indíquenme las opciones de pago (PSE / Transferencia) y datos de entrega. ¡Gracias!`;
 
   const encoded = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/573112549053?text=${encoded}`;
 
   window.open(whatsappUrl, '_blank');
-  showToast('Redirigiendo a WhatsApp con tu pedido...', 'ðŸ’¬');
+  showToast('Redirigiendo a WhatsApp con tu pedido...', '💬');
 }
 
 /* ==========================================================================
@@ -711,10 +711,10 @@ function toggleFavorite(productId) {
 
   if (STATE.favorites.has(productId)) {
     STATE.favorites.delete(productId);
-    showToast(`«${product.name}» retirado de tus favoritos`, 'â™¡');
+    showToast(`«${product.name}» retirado de tus favoritos`, '♡');
   } else {
     STATE.favorites.add(productId);
-    showToast(`«${product.name}» guardado en tus favoritos`, 'â¤ï¸');
+    showToast(`«${product.name}» guardado en tus favoritos`, '❤️');
   }
 
   saveFavoritesToStorage();
@@ -990,13 +990,13 @@ function setupNewsletter() {
 
     // Simulación de suscripción exitosa
     feedback.innerHTML = `
-      âœ¨ <strong>¡Bienvenido al Círculo Privado!</strong> Hemos enviado a <em>${email}</em> tu código de bienvenida: <strong>ALABASTRO10</strong> (10% de cortesía).
+      ✨ <strong>¡Bienvenido al Círculo Privado!</strong> Hemos enviado a <em>${email}</em> tu código de bienvenida: <strong>ALABASTRO10</strong> (10% de cortesía).
     `;
     feedback.className = 'newsletter-feedback success';
     feedback.style.display = 'block';
     input.value = '';
 
-    showToast('¡Suscripción exitosa! Cupón: ALABASTRO10', 'ðŸ’Ž');
+    showToast('¡Suscripción exitosa! Cupón: ALABASTRO10', '💎');
   });
 }
 
@@ -1016,7 +1016,7 @@ function getRegisteredUsers() {
     {
       id: 'usr-1',
       name: 'Santiago Zapata',
-      email: 'santiago@ALABASTRO.co',
+      email: 'santiago@alabastro.co',
       phone: '311 254 9053',
       password: 'password123',
       createdAt: new Date().toISOString()
@@ -1101,10 +1101,10 @@ function handleLoginSubmit(e) {
     }
     updateAuthUI();
     closeAuthModal();
-    showToast(`¡Bienvenido/a de nuevo, ${user.name.split(' ')[0]}!`, 'âœ¨');
+    showToast(`¡Bienvenido/a de nuevo, ${user.name.split(' ')[0]}!`, '✨');
     document.getElementById('loginForm')?.reset();
   } else {
-    showToast('Correo o contraseña incorrectos. Por favor verifica tus datos.', 'âš ï¸');
+    showToast('Correo o contraseña incorrectos. Por favor verifica tus datos.', '⚠️');
   }
 }
 
@@ -1117,24 +1117,24 @@ function handleRegisterSubmit(e) {
   const passConfirm = document.getElementById('regPasswordConfirm')?.value;
 
   if (!name || !email || !pass) {
-    showToast('Por favor completa todos los campos requeridos.', 'âš ï¸');
+    showToast('Por favor completa todos los campos requeridos.', '⚠️');
     return;
   }
 
   if (pass.length < 6) {
-    showToast('La contraseña debe tener mínimo 6 caracteres.', 'âš ï¸');
+    showToast('La contraseña debe tener mínimo 6 caracteres.', '⚠️');
     return;
   }
 
   if (pass !== passConfirm) {
-    showToast('Las contraseñas no coinciden.', 'âš ï¸');
+    showToast('Las contraseñas no coinciden.', '⚠️');
     return;
   }
 
   const users = getRegisteredUsers();
   const existing = users.find(u => u.email.toLowerCase() === email);
   if (existing) {
-    showToast('Ya existe una cuenta registrada con este correo electrónico.', 'âš ï¸');
+    showToast('Ya existe una cuenta registrada con este correo electrónico.', '⚠️');
     return;
   }
 
@@ -1156,7 +1156,7 @@ function handleRegisterSubmit(e) {
 
   updateAuthUI();
   closeAuthModal();
-  showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${name.split(' ')[0]}`, 'ðŸ‘‘');
+  showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${name.split(' ')[0]}`, '👑');
   document.getElementById('registerForm')?.reset();
 }
 
@@ -1166,7 +1166,7 @@ function handleLogout() {
   sessionStorage.removeItem(STORAGE_KEYS.currentUser);
   updateAuthUI();
   closeAuthModal();
-  showToast('Has cerrado sesión correctamente.', 'ðŸ‘‹');
+  showToast('Has cerrado sesión correctamente.', '👋');
 }
 
 function updateAuthUI() {
@@ -1357,7 +1357,7 @@ function setupEventListeners() {
   document.getElementById('checkoutSimulateBtn')?.addEventListener('click', () => {
     if (STATE.cart.length === 0) return;
     const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    showToast(`Demostración: Orden por ${formatCOP(subtotal)} registrada con éxito`, 'âœ¨');
+    showToast(`Demostración: Orden por ${formatCOP(subtotal)} registrada con éxito`, '✨');
     setTimeout(() => {
       STATE.cart = [];
       saveCartToStorage();
@@ -1483,7 +1483,7 @@ function setupEventListeners() {
 
   document.getElementById('forgotPassLink')?.addEventListener('click', (e) => {
     e.preventDefault();
-    showToast('Para restablecer tu contraseña, contáctanos vía WhatsApp o correo.', 'ðŸ”‘');
+    showToast('Para restablecer tu contraseña, contáctanos vía WhatsApp o correo.', '🔑');
   });
 
   // 15. Cerrar con tecla Escape
@@ -1521,6 +1521,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupNewsletter();
   setupEventListeners();
 
-  console.log('âœ¨ ALABASTRO Haute Parfumerie iniciada con éxito.');
+  console.log('✨ ALABASTRO Alta Perfumería iniciada con éxito.');
 });
-
