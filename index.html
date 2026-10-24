@@ -98,13 +98,459 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/og-square.jpg">
   <link rel="image_src" href="https://alabastroparfum.co/assets/og-cover.jpg">
 
-  <!-- Google Fonts: Playfair Display & DM Sans -->
+  <!-- Resource Hints: Preconnect & DNS-Prefetch to Font CDNs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <!-- Asynchronous Non-Blocking Google Fonts (Eliminates Render-Blocking Delay) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+  </noscript>
+
+  <!-- Preload & Asynchronous Stylesheet -->
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css"></noscript>
+
+  <!-- Critical Above-The-Fold CSS (Inlined for Instant FCP < 0.8s on Mobile 4G) -->
+  <style id="critical-css">
+    :root {
+      --color-negro: #211D19;
+      --color-negro-light: #2D2722;
+      --color-dorado: #B28A56;
+      --color-dorado-light: #D4AF7A;
+      --color-dorado-bright: #ECC88F;
+      --color-dorado-dark: #8F6936;
+      --color-marfil: #F7F4EF;
+      --color-marfil-light: #FAF8F5;
+      --color-arena: #E7E0D7;
+      --color-arena-dark: #D4CBC0;
+      --color-gris: #77716A;
+      --color-gris-light: #A39B92;
+      --color-blanco: #FFFFFF;
+      --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --space-2xs: 4px;
+      --space-xs: 8px;
+      --space-sm: 12px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+      --space-4xl: 96px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 2px 8px rgba(33, 29, 25, 0.06);
+      --container-max: 1280px;
+      --header-height: 80px;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-marfil);
+      color: var(--color-negro);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    img, svg {
+      display: block;
+      max-width: 100%;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .announcement-bar {
+      background-color: var(--color-negro);
+      color: var(--color-arena);
+      font-size: 0.78rem;
+      padding: 8px 16px;
+      text-align: center;
+      border-bottom: 1px solid rgba(178, 138, 86, 0.25);
+      position: relative;
+      z-index: 101;
+    }
+    .announcement-container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+    .announcement-text strong {
+      color: var(--color-dorado-light);
+    }
+    .announcement-divider {
+      color: var(--color-dorado);
+      opacity: 0.6;
+    }
+    .announcement-highlight {
+      color: var(--color-dorado-light);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+    .site-header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-height);
+      background-color: rgba(247, 244, 239, 0.94);
+      border-bottom: 1px solid var(--color-arena);
+      z-index: 100;
+    }
+    .header-container {
+      max-width: var(--container-max);
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .logo-title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--color-negro);
+      line-height: 1;
+    }
+    .logo-subtitle {
+      font-family: var(--font-sans);
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      color: var(--color-dorado);
+      margin-top: 3px;
+    }
+    .main-nav {
+      display: block;
+    }
+    .main-nav .nav-list {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      list-style: none;
+    }
+    .nav-link {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--color-negro);
+      letter-spacing: 0.04em;
+    }
+    .nav-link.active {
+      color: var(--color-dorado);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: var(--color-negro);
+      position: relative;
+    }
+    .badge-count {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background-color: var(--color-dorado);
+      color: var(--color-blanco);
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mobile-menu-btn {
+      display: none;
+    }
+    .hero-section {
+      position: relative;
+      background-color: var(--color-negro);
+      color: var(--color-marfil);
+      padding: var(--space-4xl) var(--space-lg);
+      overflow: hidden;
+      min-height: 82vh;
+      display: flex;
+      align-items: center;
+    }
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 75% 50%, rgba(178, 138, 86, 0.18) 0%, rgba(33, 29, 25, 0.98) 70%);
+      pointer-events: none;
+    }
+    .hero-container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: var(--space-3xl);
+      position: relative;
+      z-index: 2;
+    }
+    .hero-content {
+      max-width: 620px;
+    }
+    .hero-eyebrow {
+      display: block;
+      font-size: 0.76rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--color-dorado-light);
+      margin-bottom: var(--space-xs);
+      font-weight: 600;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+      color: var(--color-marfil-light);
+      line-height: 1.15;
+      margin-bottom: var(--space-lg);
+      font-weight: 600;
+      text-rendering: optimizeLegibility;
+    }
+    .hero-description {
+      font-size: 1.12rem;
+      color: var(--color-arena);
+      line-height: 1.7;
+      margin-bottom: var(--space-xl);
+    }
+    .hero-cta-group {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-2xl);
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: 14px 28px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .btn-primary {
+      background-color: var(--color-dorado);
+      border: 1px solid var(--color-dorado);
+      color: var(--color-negro);
+      font-weight: 600;
+    }
+    .btn-outline-light {
+      background-color: transparent;
+      border: 1px solid rgba(231, 224, 215, 0.4);
+      color: var(--color-marfil);
+    }
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid rgba(231, 224, 215, 0.15);
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--color-dorado-light);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--color-gris-light);
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 32px;
+      background-color: rgba(231, 224, 215, 0.15);
+    }
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .bottle-stage {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .halo-glow {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(178, 138, 86, 0.35) 0%, rgba(178, 138, 86, 0) 70%);
+      pointer-events: none;
+    }
+    .hero-bottle-card {
+      position: relative;
+      z-index: 2;
+    }
+    .bottle-svg {
+      width: 190px;
+      height: 300px;
+      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
+    }
+    @media (max-width: 992px) {
+      .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-xl);
+      }
+      .hero-content {
+        margin: 0 auto;
+      }
+      .hero-cta-group {
+        justify-content: center;
+      }
+      .hero-stats {
+        justify-content: center;
+      }
+      .main-nav {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+    }
+    @media (max-width: 600px) {
+      .hero-section {
+        padding: 36px 16px 28px;
+        min-height: auto;
+      }
+      .hero-title {
+        font-size: clamp(1.85rem, 7.5vw, 2.35rem);
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+      .hero-description {
+        font-size: 0.98rem;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        text-align: center;
+        padding-top: 16px;
+        width: 100%;
+      }
+      .stat-num {
+        font-size: 1.35rem;
+      }
+      .stat-label {
+        font-size: 0.68rem;
+      }
+      .stat-divider {
+        display: none;
+      }
+    }
+    @media (max-width: 480px) {
+      .header-container {
+        padding: 0 10px;
+      }
+      .logo-title {
+        font-size: 1.45rem;
+        letter-spacing: 0.12em;
+      }
+      .logo-subtitle {
+        font-size: 0.52rem;
+        letter-spacing: 0.22em;
+      }
+      .header-actions {
+        gap: 2px;
+      }
+      .header-actions .icon-btn {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+      }
+      .announcement-bar {
+        font-size: 0.72rem;
+        padding: 6px 10px;
+      }
+      .announcement-divider, .announcement-highlight {
+        display: none;
+      }
+      .hero-cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+      .hero-cta-group .btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 48px;
+      }
+      .bottle-stage {
+        max-width: 230px;
+        height: 260px;
+        margin: 0 auto;
+      }
+    }
+  </style>
 
   <!-- Structured Data JSON-LD for SEO, GEO & AEO (Generative Engine Optimization) -->
   <script type="application/ld+json">
@@ -1492,7 +1938,7 @@
   <!-- Toast Notification System -->
   <div class="toast-container" id="toastContainer" aria-live="assertive"></div>
 
-  <!-- Main Application Script -->
-  <script src="app.js"></script>
+  <!-- Main Application Script (Deferred for High Performance) -->
+  <script src="app.js" defer></script>
 </body>
 </html>
