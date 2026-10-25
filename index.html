@@ -98,23 +98,19 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/og-square.jpg">
   <link rel="image_src" href="https://alabastroparfum.co/assets/og-cover.jpg">
 
-  <!-- Resource Hints: Preconnect & DNS-Prefetch to Font CDNs -->
+  <!-- Resource Hints: Preconnect to Font CDNs -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-  <!-- Asynchronous Non-Blocking Google Fonts (Eliminates Render-Blocking Delay) -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
-  </noscript>
+  <!-- Preload Key Webfonts for Instant Hero Rendering (Eliminates LCP Delay & Font-Swap CLS) -->
+  <link rel="preload" href="https://fonts.gstatic.com/s/playfairdisplay/v40/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYgA.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="https://fonts.gstatic.com/s/dmsans/v17/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu0-K4.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- Preload & Asynchronous Stylesheet -->
-  <link rel="preload" href="styles.css" as="style">
-  <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles.css"></noscript>
+  <!-- Google Fonts: Tailored High-Performance Subset -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap">
+
+  <!-- Main Stylesheet (Directly linked for Zero CLS and Zero FOUC) -->
+  <link rel="stylesheet" href="styles.css">
 
   <!-- Critical Above-The-Fold CSS (Inlined for Instant FCP < 0.8s on Mobile 4G) -->
   <style id="critical-css">
@@ -472,6 +468,22 @@
       }
       .mobile-menu-btn {
         display: inline-flex;
+      }
+    }
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 66px;
+      }
+      .header-container {
+        padding: 0 16px;
+      }
+      .mobile-menu-btn {
+        display: inline-flex;
+        width: 42px;
+        height: 42px;
+      }
+      .main-nav {
+        display: none;
       }
     }
     @media (max-width: 600px) {
@@ -1014,7 +1026,7 @@
             <div class="hero-bottle-card">
               <div class="bottle-visual bottle-oud-nocturne">
                 <!-- Perfume Bottle SVG graphic with luxury facets and liquid reflection -->
-                <svg viewBox="0 0 200 320" class="bottle-svg" role="img" aria-label="Botella Oud Nocturne">
+                <svg viewBox="0 0 200 320" width="200" height="320" class="bottle-svg" role="img" aria-label="Botella Oud Nocturne">
                   <defs>
                     <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stop-color="#E9D5AA"/>
