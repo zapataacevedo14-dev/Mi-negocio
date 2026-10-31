@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALABASTRO — Consola de Administración</title>
+  <meta name="description" content="Consola administrativa y de control comercial de ALABASTRO Alta Perfumería">
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Tipografías Premium de la marca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="consola.css">
+  </head>
+<body class="consola-body">
+
+  <!-- =========================================================================
+       MODAL DE AUTENTICACIÓN ADMIN (Se muestra si no hay sesión privilegiada)
+       ========================================================================= -->
+  <div class="auth-gate-overlay" id="authGate" style="display: none;">
+    <div class="auth-gate-card">
+      <div class="gate-brand">
+        <div class="gate-logo">
+          <svg viewBox="0 0 48 48" width="48" height="48" fill="none">
+            <rect width="48" height="48" rx="8" fill="#211D19" />
+            <path d="M24 8L36 15V33L24 40L12 33V15L24 8Z" stroke="#B28A56" stroke-width="1.8" fill="none"/>
+            <circle cx="24" cy="24" r="6" stroke="#D4AF7A" stroke-width="1.5" />
+          </svg>
+        </div>
+        <h1 class="gate-title">ALABASTRO</h1>
+        <p class="gate-subtitle">Consola de Administración &amp; Control</p>
+      </div>
+
+      <div class="gate-security-notice">
+        🔒 Acceso restringido exclusivamente a personal autorizado y usuarios con privilegios.
+      </div>
+
+      <form id="adminLoginForm" class="gate-form">
+        <div class="form-group">
+          <label for="adminEmail">Correo Electrónico</label>
+          <input type="email" id="adminEmail" class="form-control" placeholder="admin@alabastro.com" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="adminPassword">Contraseña de Acceso</label>
+          <input type="password" id="adminPassword" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn-consola btn-primary-gold" id="btnAdminLogin">
+          <span>Ingresar a la Consola</span>
+        </button>
+
+        <button type="button" class="btn-consola btn-demo-quick" id="btnQuickDemoLogin">
+          <span>⚡ Rellenar credenciales maestras (admin@alabastro.com)</span>
+        </button>
+
+        <a href="../index.html" class="gate-back-link">← Volver a la Tienda Pública</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       LAYOUT PRINCIPAL DE LA CONSOLA (Sidebar en el lado izquierdo + Workspace)
+       ========================================================================= -->
+  <div class="consola-layout" id="consolaApp" style="display: none;">
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         SIDEBAR IZQUIERDO (Todos los ítems de navegación administrativa)
+         ─────────────────────────────────────────────────────────────────────── -->
+    <aside class="consola-sidebar" id="consolaSidebar">
+      <!-- Encabezado del Sidebar -->
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+            <path d="M16 4L26 9.5V22.5L16 28L6 22.5V9.5L16 4Z" stroke="#B28A56" stroke-width="2"/>
+            <circle cx="16" cy="16" r="4" stroke="#D4AF7A" stroke-width="1.5"/>
+          </svg>
+          <div class="brand-text">
+            <span class="brand-name">ALABASTRO</span>
+            <span class="brand-tag">Consola Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menú de Navegación del Sidebar (Lado Izquierdo) -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navegación Principal</div>
+
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Panel General</span>
+        </button>
+
+        <button class="nav-item" data-tab="products">
+          <span class="nav-icon">🧴</span>
+          <span class="nav-label">Catálogo de Productos</span>
+          <span class="nav-badge" id="sidebarProductCount">8</span>
+        </button>
+
+        <button class="nav-item" data-tab="orders">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">Gestión de Pedidos</span>
+          <span class="nav-badge badge-warning" id="sidebarOrderCount">0</span>
+        </button>
+
+        <button class="nav-item" data-tab="users">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Usuarios y Roles</span>
+        </button>
+
+        <div class="nav-section-title">Comercial &amp; Clientes</div>
+
+        <button class="nav-item" data-tab="subscribers">
+          <span class="nav-icon">📬</span>
+          <span class="nav-label">Newsletter Privado</span>
+          <span class="nav-badge" id="sidebarSubCount">0</span>
+        </button>
+
+        <button class="nav-item" data-tab="reviews">
+          <span class="nav-icon">⭐</span>
+          <span class="nav-label">Reseñas y Opiniones</span>
+        </button>
+
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Ajustes de Tienda</span>
+        </button>
+      </nav>
+
+      <!-- Pie del Sidebar Izquierdo: Info del Administrador -->
+      <div class="sidebar-footer">
+        <div class="admin-user-card">
+          <div class="admin-avatar" id="adminAvatar">A</div>
+          <div class="admin-info">
+            <span class="admin-name" id="adminName">Administrador</span>
+            <span class="admin-role-badge">ADMINISTRADOR</span>
+          </div>
+        </div>
+
+        <div class="sidebar-actions">
+          <a href="../index.html" target="_blank" class="sidebar-action-btn" title="Abrir Tienda Pública en pestaña nueva">
+            <span>Ver Tienda</span> ↗
+          </a>
+          <button class="sidebar-action-btn btn-logout" id="btnLogoutAdmin" title="Cerrar Sesión">
+            <span>Salir</span> ⎋
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         ÁREA DE TRABAJO PRINCIPAL (Workspace a la derecha del Sidebar)
+         ─────────────────────────────────────────────────────────────────────── -->
+    <main class="consola-main">
+      <!-- Barra Superior de Herramientas -->
+      <header class="consola-topbar">
+        <div class="topbar-left">
+          <h2 class="topbar-title" id="pageTitle">Panel General</h2>
+          <span class="db-status-pill" title="Base de Datos PostgreSQL en contenedor Docker">
+            <span class="pulse-dot"></span> PostgreSQL Docker: <strong>Conectado</strong>
+          </span>
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn-consola btn-gold-sm" id="btnQuickNewProduct">
+            <span>+ Nueva Fragancia</span>
+          </button>
+
+          <button class="btn-icon" id="btnRefreshData" title="Actualizar Datos">
+            🔄
+          </button>
+
+          <div class="topbar-clock" id="currentClock">--:--</div>
+        </div>
+      </header>
+
+      <!-- Contenedor Dinámico de Vistas -->
+      <div class="consola-views-container">
+
+        <!-- ===================================================================
+             1. VISTA: PANEL GENERAL (DASHBOARD)
+             =================================================================== -->
+        <section class="consola-view active" id="view-dashboard">
+          <!-- Tarjetas de Métricas Clave Reales -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon gold-bg">💰</div>
+              <div class="metric-data">
+                <span class="metric-label">Ventas Totales</span>
+                <span class="metric-value" id="metricTotalSales">$0 COP</span>
+                <span class="metric-sub" id="metricSalesSub">0 pedidos confirmados</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon blue-bg">📦</div>
+              <div class="metric-data">
+                <span class="metric-label">Pedidos Recibidos</span>
+                <span class="metric-value" id="metricActiveOrders">0</span>
+                <span class="metric-sub" id="metricPendingCount">0 pendientes de despacho</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon amber-bg">🧴</div>
+              <div class="metric-data">
+                <span class="metric-label">Perfumes Registrados</span>
+                <span class="metric-value" id="metricTotalProducts">12</span>
+                <span class="metric-sub" id="metricActiveCount">12 activos en catálogo</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon alert-bg">⚠️</div>
+              <div class="metric-data">
+                <span class="metric-label">Alertas de Stock</span>
+                <span class="metric-value" id="metricLowStockAlert">0</span>
+                <span class="metric-sub" id="metricLowStockSub">Agotados o bajo inventario</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon green-bg">👥</div>
+              <div class="metric-data">
+                <span class="metric-label">Clientes &amp; Audiencia</span>
+                <span class="metric-value" id="metricAudience">0</span>
+                <span class="metric-sub" id="metricAudienceSub">Usuarios y suscriptores</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filas de Contenido: Pedidos Recientes y Alertas de Inventario -->
+          <div class="dashboard-split">
+            <!-- Pedidos Recientes -->
+            <div class="dashboard-panel panel-large">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Pedidos Recientes</h3>
+                  <p class="panel-desc">Órdenes registradas en tiempo real desde la tienda pública</p>
+                </div>
+                <button class="btn-link" data-goto="orders">Ver todos los pedidos →</button>
+              </div>
+              <div class="table-responsive">
+                <table class="consola-table">
+                  <thead>
+                    <tr>
+                      <th>ID Pedido</th>
+                      <th>Cliente</th>
+                      <th>Total COP</th>
+                      <th>Estado</th>
+                      <th>Fecha</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardOrdersTable">
+                    <tr><td colspan="6" class="table-empty">Cargando pedidos...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Alertas de Inventario -->
+            <div class="dashboard-panel panel-small">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Monitoreo de Stock</h3>
+                  <p class="panel-desc">Fragancias con menor inventario disponible</p>
+                </div>
+                <span class="badge-pill">Unidades</span>
+              </div>
+              <div class="stock-alerts-list" id="dashboardStockList">
+                <!-- Se llena dinámicamente -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Registro de Auditoría y Actividad -->
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Registro de Auditoría de la Consola (PostgreSQL Logs)</h3>
+                <p class="panel-desc">Historial cronológico de cambios de productos, stock, precios y pedidos</p>
+              </div>
+              <span class="text-muted" style="font-size: 12px;">Transacciones seguras en BD</span>
+            </div>
+            <div class="activity-logs-container" id="dashboardActivityLogs">
+              <!-- Logs dinámicos -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             2. VISTA: CATÁLOGO DE PRODUCTOS (CRUD)
+             =================================================================== -->
+        <section class="consola-view" id="view-products">
+          <div class="view-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="productSearchInput" class="form-control" placeholder="Buscar por nombre, marca o nota olfativa...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="productFamilyFilter" class="form-control">
+                <option value="todos">Todas las Familias</option>
+                <option value="oriental">Oriental</option>
+                <option value="amaderada">Amaderada</option>
+                <option value="gourmand">Gourmand</option>
+                <option value="citrica">Cítrica</option>
+                <option value="floral">Floral</option>
+                <option value="acuatica">Acuática</option>
+              </select>
+
+              <select id="productStatusFilter" class="form-control">
+                <option value="todos">Todos los Estados</option>
+                <option value="activos">Solo Activos (En Tienda)</option>
+                <option value="pausados">Solo Pausados (Ocultos)</option>
+              </select>
+            </div>
+            <button class="btn-consola btn-primary-gold" id="btnCreateProduct">
+              <span>+ Agregar Perfume</span>
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="consola-table">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Fotografía</th>
+                  <th>Perfume &amp; Marca</th>
+                  <th>Familia Olfativa</th>
+                  <th>Precio COP</th>
+                  <th>Inventario</th>
+                  <th>Concentración</th>
+                  <th>Estado</th>
+                  <th style="text-align: right;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
+                <tr><td colspan="8" class="table-empty">Cargando catálogo desde PostgreSQL...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             3. VISTA: GESTIÓN DE PEDIDOS
+             =================================================================== -->
+        <section class="consola-view" id="view-orders">
+          <div class="view-toolbar">
+            <div class="toolbar-tabs" id="orderStatusTabs">
+              <button class="status-tab-btn active" data-status="todos">Todos</button>
+              <button class="status-tab-btn" data-status="pendiente">Pendientes</button>
+              <button class="status-tab-btn" data-status="en_preparacion">En Preparación</button>
+              <button class="status-tab-btn" data-status="enviado">Enviados</button>
+              <button class="status-tab-btn" data-status="entregado">Entregados</button>
+              <button class="status-tab-btn" data-status="cancelado">Cancelados</button>
+            </div>
+            <div class="toolbar-search">
+              <input type="text" id="orderSearchInput" class="form-control" placeholder="Buscar por ID, cliente, ciudad...">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="consola-table">
+              <thead>
+                <tr>
+                  <th>ID Pedido</th>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Ciudad &amp; Dirección</th>
+                  <th>Ítems</th>
+                  <th>Total COP</th>
+                  <th>Estado Actual</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <tr><td colspan="8" class="table-empty">Cargando pedidos...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             4. VISTA: USUARIOS Y PRIVILEGIOS
+             =================================================================== -->
+        <section class="consola-view" id="view-users">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Directorio de Usuarios y Privilegios</h3>
+              <p class="panel-desc">Administra el acceso y asigna permisos de Administrador a usuarios de confianza.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="consola-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Correo Electrónico</th>
+                  <th>Teléfono</th>
+                  <th>Rol Actual</th>
+                  <th>Fecha Registro</th>
+                  <th>Modificar Rol</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="6" class="table-empty">Cargando usuarios...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             5. VISTA: NEWSLETTER Y AUDIENCIA PRIVADA
+             =================================================================== -->
+        <section class="consola-view" id="view-subscribers">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Suscriptores del Círculo Privado</h3>
+              <p class="panel-desc">Clientes suscritos a lanzamientos exclusivos y comunicados de ALABASTRO.</p>
+            </div>
+            <button class="btn-consola btn-outline-gold" id="btnExportSubscribers">
+              📥 Exportar Lista (CSV)
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="consola-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Correo Electrónico</th>
+                  <th>Fecha de Suscripción</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="subscribersTableBody">
+                <tr><td colspan="5" class="table-empty">Cargando suscriptores...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             6. VISTA: RESEÑAS Y OPINIONES
+             =================================================================== -->
+        <section class="consola-view" id="view-reviews">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Moderación de Reseñas y Testimonios</h3>
+              <p class="panel-desc">Revisa y modera las opiniones de clientes antes o después de publicarlas.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="consola-table">
+              <thead>
+                <tr>
+                  <th>Fragancia</th>
+                  <th>Cliente</th>
+                  <th>Calificación</th>
+                  <th>Comentario</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="reviewsTableBody">
+                <tr><td colspan="6" class="table-empty">Cargando reseñas...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             7. VISTA: AJUSTES Y CONFIGURACIÓN DE TIENDA
+             =================================================================== -->
+        <section class="consola-view" id="view-settings">
+          <div class="settings-card">
+            <h3 class="settings-title">Reglas Comerciales y Parámetros</h3>
+            <form id="settingsForm">
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="settingFreeShipping">Umbral de Envío Gratuito (COP)</label>
+                  <input type="number" id="settingFreeShipping" class="form-control" value="350000" step="5000" required>
+                  <small class="form-hint">Monto mínimo en el carrito para activar envío nacional gratis.</small>
+                </div>
+
+                <div class="form-group col-6">
+                  <label for="settingWhatsapp">Número de WhatsApp de Ventas</label>
+                  <input type="text" id="settingWhatsapp" class="form-control" value="573112549053" required>
+                  <small class="form-hint">Código de país + número (ejemplo: 573112549053)</small>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="settingBannerNotice">Aviso de la Barra Superior de la Tienda</label>
+                <input type="text" id="settingBannerNotice" class="form-control" value="Envíos Nacionales Asegurados sin costo en compras superiores a $350.000 COP">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label for="settingContactPhone">Teléfono de Atención al Cliente</label>
+                  <input type="text" id="settingContactPhone" class="form-control" value="+57 311 254 9053">
+                </div>
+                <div class="form-group col-6">
+                  <label for="settingContactEmail">Correo Electrónico de Concierge</label>
+                  <input type="email" id="settingContactEmail" class="form-control" value="concierge@alabastro.com.co">
+                </div>
+              </div>
+
+              <div class="settings-actions">
+                <button type="submit" class="btn-consola btn-primary-gold" id="btnSaveSettings">
+                  Guardar Cambios de Configuración
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: CREAR / EDITAR FRAGANCIA (CRUD COMPLETO CONECTADO A POSTGRESQL)
+       ========================================================================= -->
+  <div class="consola-modal-backdrop" id="productModal" style="display: none;">
+    <div class="consola-modal-card modal-lg">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="productModalTitle">Agregar Nueva Fragancia</h3>
+          <p class="modal-subtitle">Los cambios se guardan directamente en la base de datos PostgreSQL</p>
+        </div>
+        <button class="modal-close-btn" id="btnCloseProductModal">&times;</button>
+      </div>
+
+      <form id="productForm" class="modal-form">
+        <input type="hidden" id="prodFormId">
+
+        <!-- 1. Identificación Principal: Marca, Nombre y Género -->
+        <div class="form-row">
+          <div class="form-group col-4">
+            <label for="prodFormBrand">Marca Original *</label>
+            <input type="text" id="prodFormBrand" class="form-control" list="brandListSuggestions" placeholder="Ej: Lattafa, Armaf, Afnan..." required>
+            <datalist id="brandListSuggestions">
+              <option value="Lattafa">
+              <option value="Armaf">
+              <option value="Afnan">
+              <option value="Rasasi">
+              <option value="Al Haramain">
+              <option value="Swiss Arabian">
+              <option value="Maison Alhambra">
+              <option value="Fragrance World">
+            </datalist>
+          </div>
+
+          <div class="form-group col-5">
+            <label for="prodFormName">Nombre del Perfume *</label>
+            <input type="text" id="prodFormName" class="form-control" placeholder="Ej: Asad, Khamrah, Yara..." required>
+          </div>
+
+          <div class="form-group col-3">
+            <label for="prodFormGender">Género / Destinado a *</label>
+            <select id="prodFormGender" class="form-control" required>
+              <option value="unisex">Unisex</option>
+              <option value="hombre">Hombre</option>
+              <option value="mujer">Mujer</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="prodFormSubtitle">Subtítulo Editorial</label>
+          <input type="text" id="prodFormSubtitle" class="form-control" placeholder="Ej: Eau de Parfum — 100ml / 3.4 FL. OZ.">
+        </div>
+
+        <!-- 2. Clasificación Comercial: Familia, Precio, Inventario y Estado -->
+        <div class="form-row">
+          <div class="form-group col-3">
+            <label for="prodFormFamily">Familia Olfativa *</label>
+            <select id="prodFormFamily" class="form-control" required>
+              <option value="oriental">Oriental</option>
+              <option value="amaderada">Amaderada</option>
+              <option value="gourmand">Gourmand</option>
+              <option value="citrica">Cítrica</option>
+              <option value="floral">Floral</option>
+              <option value="acuatica">Acuática</option>
+            </select>
+          </div>
+
+          <div class="form-group col-3">
+            <label for="prodFormPrice">Precio (Pesos COP) *</label>
+            <input type="number" id="prodFormPrice" class="form-control" placeholder="195000" min="1000" step="1000" required>
+            <small class="form-hint" id="prodPriceHint">$ 0 COP</small>
+          </div>
+
+          <div class="form-group col-3">
+            <label for="prodFormStock">Inventario Disponible *</label>
+            <input type="number" id="prodFormStock" class="form-control" placeholder="25" min="0" step="1" required>
+            <small class="form-hint">Unidades en bodega</small>
+          </div>
+
+          <div class="form-group col-3">
+            <label for="prodFormStatus">Estado en Tienda *</label>
+            <select id="prodFormStatus" class="form-control" required>
+              <option value="true">Activo (Visible)</option>
+              <option value="false">Pausado (Oculto)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3. Especificaciones: Tamaño, Concentración y Origen -->
+        <div class="form-row">
+          <div class="form-group col-4">
+            <label for="prodFormSize">Tamaño / Volumen</label>
+            <input type="text" id="prodFormSize" class="form-control" value="100 ml / 3.4 FL. OZ.">
+          </div>
+          <div class="form-group col-4">
+            <label for="prodFormConcentration">Concentración</label>
+            <input type="text" id="prodFormConcentration" class="form-control" value="Eau de Parfum">
+          </div>
+          <div class="form-group col-4">
+            <label for="prodFormOrigin">País de Origen</label>
+            <input type="text" id="prodFormOrigin" class="form-control" value="Dubái, Emiratos Árabes Unidos">
+          </div>
+        </div>
+
+        <!-- 4. Fotografía Real del Perfume con Selector, Subida y Vista Previa -->
+        <div class="form-group">
+          <label>Fotografía del Perfume (Ruta o URL) *</label>
+          <div class="photo-picker-container">
+            <!-- Mini preview instantáneo -->
+            <div class="photo-preview-box">
+              <img id="prodImagePreview" src="../assets/perfumes/lattafa-asad.png" alt="Vista previa del perfume" onerror="this.onerror=null; this.src='../assets/perfumes/lattafa-asad.png';">
+            </div>
+
+            <div class="photo-inputs-wrapper" style="flex: 1;">
+              <input type="text" id="prodFormImage" class="form-control" placeholder="assets/perfumes/lattafa-asad.png" required style="margin-bottom: 8px;">
+
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <select id="prodFormImageSelect" class="form-control" style="flex: 1; min-width: 220px; font-size: 12px;">
+                  <option value="">-- O selecciona una fotografía existente --</option>
+                  <option value="assets/perfumes/lattafa-asad.png">Lattafa Asad (Negro &amp; Oro)</option>
+                  <option value="assets/perfumes/lattafa-yara.png">Lattafa Yara (Rosa Gourmet)</option>
+                  <option value="assets/perfumes/lattafa-khamrah.png">Lattafa Khamrah (Licorera Cristal)</option>
+                  <option value="assets/perfumes/lattafa-badee-al-oud.png">Lattafa Bade'e Al Oud (Oud for Glory)</option>
+                  <option value="assets/perfumes/afnan-9pm.png">Afnan 9 PM (Nocturno)</option>
+                  <option value="assets/perfumes/armaf-club-de-nuit-intense-man.jpg">Armaf Club de Nuit Intense Man</option>
+                  <option value="assets/perfumes/armaf-club-de-nuit-woman.png">Armaf Club de Nuit Woman</option>
+                  <option value="assets/perfumes/rasasi-hawas-for-him.png">Rasasi Hawas for Him</option>
+                  <option value="assets/perfumes/al-haramain-amber-oud-gold.png">Al Haramain Amber Oud Gold</option>
+                  <option value="assets/perfumes/swiss-arabian-shaghaf-oud.png">Swiss Arabian Shaghaf Oud</option>
+                  <option value="assets/perfumes/maison-alhambra-kismet-magic.png">Maison Alhambra Kismet Magic</option>
+                  <option value="assets/perfumes/fragrance-world-signature.png">Fragrance World Signature</option>
+                </select>
+
+                <input type="file" id="prodFormFileInput" accept="image/*" style="display: none;">
+                <button type="button" class="btn-consola btn-outline-gold" id="btnUploadImageTrigger" style="font-size: 12px; padding: 6px 12px;">
+                  📁 Subir Archivo...
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Descripción Olfativa y Narrativa -->
+        <div class="form-group">
+          <label for="prodFormDesc">Descripción Olfativa y Narrativa</label>
+          <textarea id="prodFormDesc" class="form-control" rows="3" placeholder="Describe los acordes, la personalidad y el encanto de la fragancia árabe..."></textarea>
+        </div>
+
+        <!-- 6. Pirámide Olfativa -->
+        <div class="form-row">
+          <div class="form-group col-4">
+            <label for="prodFormTopNotes">Notas de Salida (Separadas por coma)</label>
+            <input type="text" id="prodFormTopNotes" class="form-control" placeholder="Pimienta Negra, Piña, Bergamota">
+          </div>
+          <div class="form-group col-4">
+            <label for="prodFormHeartNotes">Notas de Corazón (Por coma)</label>
+            <input type="text" id="prodFormHeartNotes" class="form-control" placeholder="Café Arábico, Iris, Canela">
+          </div>
+          <div class="form-group col-4">
+            <label for="prodFormBaseNotes">Notas de Fondo (Por coma)</label>
+            <input type="text" id="prodFormBaseNotes" class="form-control" placeholder="Vainilla Bourbon, Ámbar, Cedro">
+          </div>
+        </div>
+
+        <!-- 7. Rendimiento y Ocasiones -->
+        <div class="form-row">
+          <div class="form-group col-4">
+            <label for="prodFormLongevity">Fijación en Piel</label>
+            <input type="text" id="prodFormLongevity" class="form-control" value="+12 a 14 Horas">
+          </div>
+          <div class="form-group col-4">
+            <label for="prodFormSillage">Estela / Proyección</label>
+            <input type="text" id="prodFormSillage" class="form-control" value="Intensa, envolvente y distinguida">
+          </div>
+          <div class="form-group col-4">
+            <label for="prodFormBestFor">Ocasión Recomendada</label>
+            <input type="text" id="prodFormBestFor" class="form-control" value="Noches especiales, eventos y presencia ejecutiva">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-consola btn-outline-gold" id="btnCancelProductModal">Cancelar</button>
+          <button type="submit" class="btn-consola btn-primary-gold" id="btnSaveProduct">Guardar en PostgreSQL</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: AJUSTE RÁPIDO DE INVENTARIO
+       ========================================================================= -->
+  <div class="consola-modal-backdrop" id="stockModal" style="display: none;">
+    <div class="consola-modal-card" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Ajustar Inventario</h3>
+        <button class="modal-close-btn" id="btnCloseStockModal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 0;">
+        <p style="font-size: 13px; color: var(--color-gris-claro); margin-bottom: 12px;">
+          Fragancia: <strong id="stockModalProdName" style="color: var(--color-dorado-brillo);">--</strong>
+        </p>
+        <div class="form-group">
+          <label for="stockModalInput">Unidades Disponibles en Inventario *</label>
+          <input type="number" id="stockModalInput" class="form-control" min="0" step="1" required style="font-size: 16px; font-weight: 600;">
+          <small class="form-hint">Ingresa un número entero no negativo (0 para agotado).</small>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-consola btn-outline-gold" id="btnCancelStockModal">Cancelar</button>
+        <button type="button" class="btn-consola btn-primary-gold" id="btnConfirmStockModal">Guardar Stock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: CONFIRMACIÓN DE ELIMINACIÓN / PAUSA DE FRAGANCIA
+       ========================================================================= -->
+  <div class="consola-modal-backdrop" id="deleteModal" style="display: none;">
+    <div class="consola-modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Administrar Retiro de Fragancia</h3>
+        <button class="modal-close-btn" id="btnCloseDeleteModal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 16px 0;">
+        <p style="font-size: 14px; margin-bottom: 14px;">
+          ¿Qué acción deseas realizar con <strong id="deleteModalProdName" style="color: var(--color-dorado-brillo);">--</strong>?
+        </p>
+
+        <div style="background: rgba(178, 138, 86, 0.08); border: 1px solid rgba(178, 138, 86, 0.25); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--color-arena); margin-bottom: 16px; line-height: 1.5;">
+          🛡️ <strong>Protección de Historial:</strong> Si el producto tiene pedidos asociados, el sistema bloqueará la eliminación definitiva y te permitirá pausarlo para ocultarlo de la tienda pública sin romper los registros contables.
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button type="button" class="btn-consola btn-outline-gold" id="btnCancelDeleteModal">Cancelar</button>
+        <button type="button" class="btn-consola btn-outline-gold" id="btnPauseInstead" style="background: rgba(217, 130, 43, 0.15); border-color: #D9822B; color: #E59840;">
+          ⏸️ Pausar Fragancia
+        </button>
+        <button type="button" class="btn-consola btn-action-danger" id="btnConfirmPermanentDelete" style="padding: 8px 16px;">
+          🗑️ Eliminar Definitivamente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: DETALLES DE PEDIDO
+       ========================================================================= -->
+  <div class="consola-modal-backdrop" id="orderModal" style="display: none;">
+    <div class="consola-modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="orderModalTitle">Detalle del Pedido</h3>
+        <button class="modal-close-btn" id="btnCloseOrderModal">&times;</button>
+      </div>
+
+      <div class="modal-body" id="orderModalBody">
+        <!-- Contenido dinámico del pedido -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-consola btn-outline-gold" id="btnCloseOrderModal2">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificaciones -->
+  <div class="consola-toast-container" id="consolaToastContainer"></div>
+
+  <!-- Script de la Consola -->
+  <script src="consola.js"></script>
+  
+</body>
+</html>

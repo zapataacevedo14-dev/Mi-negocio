@@ -1,0 +1,24 @@
+{
+  "name": "alabastro-backend",
+  "version": "1.0.0",
+  "description": "Backend API REST y Consola de Administración para ALABASTRO Alta Perfumería",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node scripts/seed.js",
+    "test:db": "node scripts/test-db.js"
+  },
+  "keywords": ["perfume", "ecommerce", "express", "postgresql", "admin-console"],
+  "author": "ALABASTRO",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.5"
+  }
+}

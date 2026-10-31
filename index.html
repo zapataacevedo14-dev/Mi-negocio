@@ -287,6 +287,34 @@
       color: var(--color-negro);
       position: relative;
     }
+    .admin-console-nav-btn {
+      color: var(--color-dorado-dark) !important;
+      background: rgba(178, 138, 86, 0.12);
+      border: 1px solid rgba(178, 138, 86, 0.4);
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+    .admin-console-nav-btn:hover {
+      background: var(--color-dorado) !important;
+      color: #120F0C !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(178, 138, 86, 0.35);
+    }
+    .admin-badge-indicator {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      font-size: 10px;
+      background: #211D19;
+      border: 1px solid var(--color-dorado);
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
     .badge-count {
       position: absolute;
       top: 4px;
@@ -448,6 +476,16 @@
       height: 300px;
       filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
     }
+    .hero-khamrah-img {
+      max-width: 220px;
+      max-height: 280px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.75));
+      display: block;
+      margin: 0 auto;
+    }
     @media (max-width: 992px) {
       .hero-container {
         grid-template-columns: 1fr;
@@ -562,6 +600,14 @@
         margin: 0 auto;
       }
     }
+
+    /* Fusión transparente universal para todas las etiquetas <img> de tarjetas del catálogo */
+    .product-card img,
+    .card-photo-stage img,
+    .products-grid img,
+    .card-clean-photo {
+      mix-blend-mode: multiply !important;
+    }
   </style>
 
   <!-- Structured Data JSON-LD for SEO, GEO & AEO (Generative Engine Optimization) -->
@@ -652,23 +698,23 @@
       "@context": "https://schema.org",
       "@type": "ItemList",
       "@id": "https://alabastroparfum.co/#catalog-items",
-      "name": "Colección de Fragancias Exclusivas ALABASTRO",
-      "numberOfItems": 8,
+      "name": "Colección de Perfumes Árabes Originales de Lujo",
+      "numberOfItems": 12,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "Product",
-            "name": "Néctar de Sándalo",
-            "description": "Una composición majestuosa y cálida donde el sándalo de Mysore se entrelaza con cardamomo verde y maderas ahumadas, dejando una estela embriagadora y distinguida.",
+            "name": "Lattafa Khamrah",
+            "description": "La creación insignia más prestigiosa de Lattafa Perfumes. Notas de canela de Ceilán, dátiles del desierto, praliné tostado y vainilla bourbon.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Lattafa"
             },
             "offers": {
               "@type": "Offer",
-              "price": "420000",
+              "price": "235000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "itemCondition": "https://schema.org/NewCondition",
@@ -677,7 +723,7 @@
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.9",
-              "reviewCount": "128"
+              "reviewCount": "184"
             }
           }
         },
@@ -686,15 +732,15 @@
           "position": 2,
           "item": {
             "@type": "Product",
-            "name": "Rosa Imperial",
-            "description": "El tributo definitivo a la rosa centifolia de Grasse. Apertura radiante de lichi silvestre y pétalos aterciopelados.",
+            "name": "Lattafa Asad",
+            "description": "Fragancia masculina árabe de alta fijación. Notas magnéticas de pimienta negra, café arábico tostado, vainilla y ámbar cálido.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Lattafa"
             },
             "offers": {
               "@type": "Offer",
-              "price": "390000",
+              "price": "195000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
@@ -702,7 +748,7 @@
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.8",
-              "reviewCount": "94"
+              "reviewCount": "162"
             }
           }
         },
@@ -711,23 +757,23 @@
           "position": 3,
           "item": {
             "@type": "Product",
-            "name": "Oud Nocturno",
-            "description": "Resina de Oud puro de Camboya envejecido en roble francés, fundido con cuero negro y humo sagrado. Concentración 32% Extrait.",
+            "name": "Lattafa Yara",
+            "description": "Perfume femenino cremoso y etéreo con acordes de heliotropo, frutas tropicales, vainilla y sándalo.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Lattafa"
             },
             "offers": {
               "@type": "Offer",
-              "price": "480000",
+              "price": "189000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
             },
             "aggregateRating": {
               "@type": "AggregateRating",
-              "ratingValue": "5.0",
-              "reviewCount": "162"
+              "ratingValue": "4.9",
+              "reviewCount": "198"
             }
           }
         },
@@ -736,23 +782,23 @@
           "position": 4,
           "item": {
             "@type": "Product",
-            "name": "Bergamota Salvaje",
-            "description": "Cítricos prensados en frío de Calabria combinados con salvia aromática y vetiver de Haití.",
+            "name": "Lattafa Bade'e Al Oud (Oud for Glory)",
+            "description": "Madera noble de Oud natural de Dubái con azafrán, nuez moscada y pachulí oscuro.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Lattafa"
             },
             "offers": {
               "@type": "Offer",
-              "price": "350000",
+              "price": "215000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
             },
             "aggregateRating": {
               "@type": "AggregateRating",
-              "ratingValue": "4.7",
-              "reviewCount": "81"
+              "ratingValue": "4.9",
+              "reviewCount": "145"
             }
           }
         },
@@ -761,15 +807,15 @@
           "position": 5,
           "item": {
             "@type": "Product",
-            "name": "Ámbar Dorado",
-            "description": "Abrazo líquido de ámbar resinoso, canela de Ceilán, haba tonka y vainilla ahumada.",
+            "name": "Afnan 9 PM",
+            "description": "Fragancia nocturna y seductora con notas de manzana silvestre dulce, canela, vainilla negra y haba tonka.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Afnan"
             },
             "offers": {
               "@type": "Offer",
-              "price": "440000",
+              "price": "229000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
@@ -777,7 +823,7 @@
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.9",
-              "reviewCount": "115"
+              "reviewCount": "210"
             }
           }
         },
@@ -786,15 +832,15 @@
           "position": 6,
           "item": {
             "@type": "Product",
-            "name": "Flor Blanca",
-            "description": "Danza hipnótica de nardos de la India, jazmín Sambac y azahar de Túnez con fondo de sándalo rubio.",
+            "name": "Armaf Club de Nuit Intense Man",
+            "description": "Cítricos chispeantes, madera de abedul ahumada y un icónico fondo de almizcle y ámbar gris.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Armaf"
             },
             "offers": {
               "@type": "Offer",
-              "price": "370000",
+              "price": "219000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
@@ -802,7 +848,7 @@
             "aggregateRating": {
               "@type": "AggregateRating",
               "ratingValue": "4.8",
-              "reviewCount": "76"
+              "reviewCount": "320"
             }
           }
         },
@@ -811,23 +857,23 @@
           "position": 7,
           "item": {
             "@type": "Product",
-            "name": "Marina Profunda",
-            "description": "Profundidades del Mediterráneo. Rocío salino, limón Amalfi, algas azules y madera de deriva.",
+            "name": "Rasasi Hawas for Him",
+            "description": "Frescura marina vibrante con manzana crujiente, ciruela violeta, notas acuáticas y ámbar gris mineral.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Rasasi"
             },
             "offers": {
               "@type": "Offer",
-              "price": "360000",
+              "price": "295000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
             },
             "aggregateRating": {
               "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": "89"
+              "ratingValue": "4.9",
+              "reviewCount": "178"
             }
           }
         },
@@ -836,23 +882,23 @@
           "position": 8,
           "item": {
             "@type": "Product",
-            "name": "Vainilla Celeste",
-            "description": "Vainilla Bourbon de Madagascar macerada en coñac con granos de café tostado y ámbar resinoso.",
+            "name": "Al Haramain Amber Oud Gold Edition",
+            "description": "Opulencia frutal con melón dulce, piña madura y fondo infinito de ámbar suntuoso y vainilla.",
             "brand": {
               "@type": "Brand",
-              "name": "ALABASTRO"
+              "name": "Al Haramain"
             },
             "offers": {
               "@type": "Offer",
-              "price": "410000",
+              "price": "345000",
               "priceCurrency": "COP",
               "availability": "https://schema.org/InStock",
               "priceValidUntil": "2027-12-31"
             },
             "aggregateRating": {
               "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "142"
+              "ratingValue": "5.0",
+              "reviewCount": "154"
             }
           }
         }
@@ -951,11 +997,24 @@
           <li><a href="#historia" class="nav-link">Nuestra Casa</a></li>
           <li><a href="#preguntas" class="nav-link">Preguntas Frecuentes</a></li>
           <li><a href="#contacto" class="nav-link">Contacto</a></li>
+          <li><a href="consola/index.html" class="nav-link admin-nav-link" id="navAdminConsoleLink" style="color: var(--color-dorado); font-weight: 600;" title="Abrir Consola de Administración">👑 Consola Admin</a></li>
         </ul>
       </nav>
 
       <!-- Action Buttons -->
       <div class="header-actions">
+        <!-- Direct Access to Admin Console -->
+        <a href="consola/index.html" class="icon-btn admin-console-nav-btn" id="headerAdminConsoleBtn" aria-label="Ingresar a la Consola de Administración" title="Consola de Administración (Admin)">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+            <path d="M7 8l3 3-3 3"></path>
+            <line x1="13" y1="14" x2="17" y2="14"></line>
+          </svg>
+          <span class="admin-badge-indicator" title="Admin">⚡</span>
+        </a>
+
         <!-- User Account / Login Button -->
         <button class="icon-btn auth-btn" id="authBtn" aria-label="Iniciar sesión o registrarse" title="Mi Cuenta / Iniciar Sesión">
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -1024,51 +1083,18 @@
           <div class="bottle-stage">
             <div class="halo-glow"></div>
             <div class="hero-bottle-card">
-              <div class="bottle-visual bottle-oud-nocturne">
-                <!-- Perfume Bottle SVG graphic with luxury facets and liquid reflection -->
-                <svg viewBox="0 0 200 320" width="200" height="320" class="bottle-svg" role="img" aria-label="Botella Oud Nocturne">
-                  <defs>
-                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#E9D5AA"/>
-                      <stop offset="50%" stop-color="#B28A56"/>
-                      <stop offset="100%" stop-color="#6E4F23"/>
-                    </linearGradient>
-                    <linearGradient id="amberLiquid" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stop-color="#3A2A1A"/>
-                      <stop offset="40%" stop-color="#5C3B18"/>
-                      <stop offset="100%" stop-color="#1B120B"/>
-                    </linearGradient>
-                    <linearGradient id="glassShine" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="white" stop-opacity="0.35"/>
-                      <stop offset="35%" stop-color="white" stop-opacity="0.05"/>
-                      <stop offset="85%" stop-color="white" stop-opacity="0.15"/>
-                      <stop offset="100%" stop-color="white" stop-opacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <!-- Cap: Solid heavy gold rectangular faceted stopper -->
-                  <rect x="75" y="20" width="50" height="42" rx="4" fill="url(#goldGradient)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))"/>
-                  <rect x="80" y="24" width="40" height="6" fill="#FBF5E8" opacity="0.6"/>
-                  <!-- Collar / Atomizer Neck -->
-                  <rect x="88" y="62" width="24" height="12" fill="url(#goldGradient)"/>
-                  <ellipse cx="100" cy="74" rx="14" ry="3" fill="#D4AF7A"/>
-                  <!-- Main Glass Flask -->
-                  <rect x="36" y="74" width="128" height="200" rx="16" fill="url(#amberLiquid)" stroke="#B28A56" stroke-width="1.5"/>
-                  <!-- Liquid highlight gradient inside glass -->
-                  <rect x="42" y="80" width="116" height="188" rx="12" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-                  <path d="M48 84 L72 84 L56 264 L44 264 Z" fill="url(#glassShine)"/>
-                  <!-- Luxury Plaque Label -->
-                  <rect x="58" y="145" width="84" height="65" rx="3" fill="#14100E" stroke="url(#goldGradient)" stroke-width="1"/>
-                  <text x="100" y="167" font-family="'Playfair Display', serif" font-size="12" fill="#E8D5B5" text-anchor="middle" font-weight="bold" letter-spacing="2">ALABASTRO</text>
-                  <text x="100" y="183" font-family="'DM Sans', sans-serif" font-size="8.5" fill="#B28A56" text-anchor="middle" letter-spacing="1">OUD NOCTURNE</text>
-                  <text x="100" y="198" font-family="'DM Sans', sans-serif" font-size="6.5" fill="#A89E92" text-anchor="middle" letter-spacing="0.5">EXTRACTO DE PERFUME</text>
-                  <!-- Bottle Base thickness -->
-                  <rect x="42" y="260" width="116" height="10" rx="4" fill="rgba(255,255,255,0.12)"/>
-                </svg>
+              <div class="bottle-visual bottle-hero-khamrah">
+                <img src="assets/perfumes/lattafa-khamrah.png" 
+                     alt="Lattafa Khamrah Eau de Parfum 100ml Original Dubái" 
+                     class="hero-khamrah-img" 
+                     width="220" 
+                     height="280">
               </div>
               <div class="bottle-caption">
-                <span class="bottle-tag">Creación Insignia</span>
-                <span class="bottle-name">Oud Nocturne</span>
-                <span class="bottle-meta">Oud de Camboya • Ámbar Negro • Cuero</span>
+                <span class="bottle-tag">Creación Protagonista • 100% Original</span>
+                <span class="bottle-name">Lattafa Khamrah</span>
+                <span class="bottle-meta">Canela • Dátiles del Desierto • Praliné • Vainilla Bourbon</span>
+                <span class="bottle-origin-badge">Dubái, Emiratos Árabes Unidos</span>
               </div>
             </div>
           </div>
@@ -1135,24 +1161,61 @@
           </p>
         </header>
 
+        <!-- Catalog Gender & Audience Tabs -->
+        <div class="catalog-gender-nav" role="tablist" aria-label="Filtrar por género">
+          <button type="button" class="gender-filter-btn active" data-gender="all" role="tab" aria-selected="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            Todos los perfumes
+          </button>
+          <button type="button" class="gender-filter-btn" data-gender="hombre" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9.5 11c1.93 0 3.5 1.57 3.5 3.5S11.43 18 9.5 18 6 16.43 6 14.5 7.57 11 9.5 11m0-2C6.46 9 4 11.46 4 14.5S6.46 20 9.5 20s5.5-2.46 5.5-5.5c0-1.28-.44-2.46-1.18-3.41l4.47-4.47V9h2V3h-6v2h2.41l-4.47 4.47C11.96 9.44 10.78 9 9.5 9z"/></svg>
+            Perfumes para hombre
+          </button>
+          <button type="button" class="gender-filter-btn" data-gender="mujer" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4a5 5 0 0 1 5 5c0 2.4-1.7 4.4-4 4.9V16h2v2h-2v3h-2v-3H9v-2h2v-2.1c-2.3-.5-4-2.5-4-4.9a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3c0 1.66 1.34 3 3 3s3-1.34 3-3a3 3 0 0 0-3-3z"/></svg>
+            Perfumes para mujer
+          </button>
+          <button type="button" class="gender-filter-btn" data-gender="unisex" role="tab" aria-selected="false">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="5"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+            Perfumes unisex
+          </button>
+        </div>
+
         <!-- Catalog Toolbar: Search, Filters & Sorting -->
         <div class="catalog-toolbar" role="search" aria-label="Filtros del catálogo">
           <!-- Search Box -->
           <div class="search-box">
             <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre, nota (vainilla, sándalo)..." aria-label="Buscar fragancias">
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por perfume o marca (Lattafa, Asad, 9PM)..." aria-label="Buscar fragancias">
             <button class="clear-search-btn" id="clearSearchBtn" aria-label="Limpiar búsqueda" style="display: none;">&times;</button>
+          </div>
+
+          <!-- Brand Filter Select -->
+          <div class="brand-filter-box">
+            <label for="brandSelect" class="filter-label">Marca:</label>
+            <select id="brandSelect" class="brand-select" aria-label="Filtrar por marca árabe">
+              <option value="all">Todas las marcas</option>
+              <option value="Lattafa">Lattafa</option>
+              <option value="Afnan">Afnan</option>
+              <option value="Armaf">Armaf</option>
+              <option value="Rasasi">Rasasi</option>
+              <option value="Al Haramain">Al Haramain</option>
+              <option value="Swiss Arabian">Swiss Arabian</option>
+              <option value="Maison Alhambra">Maison Alhambra</option>
+              <option value="Fragrance World">Fragrance World</option>
+              <option value="Paris Corner">Paris Corner</option>
+            </select>
           </div>
 
           <!-- Olfactory Family Filters -->
           <div class="family-filters" role="tablist" aria-label="Filtrar por familia olfativa">
-            <button class="filter-btn active" data-family="all" role="tab" aria-selected="true">Todas</button>
-            <button class="filter-btn" data-family="amaderada" role="tab" aria-selected="false">Amaderadas</button>
-            <button class="filter-btn" data-family="floral" role="tab" aria-selected="false">Florales</button>
+            <button class="filter-btn active" data-family="all" role="tab" aria-selected="true">Todas las familias</button>
             <button class="filter-btn" data-family="oriental" role="tab" aria-selected="false">Orientales</button>
-            <button class="filter-btn" data-family="citrica" role="tab" aria-selected="false">Cítricas</button>
-            <button class="filter-btn" data-family="acuatica" role="tab" aria-selected="false">Acuáticas</button>
+            <button class="filter-btn" data-family="amaderada" role="tab" aria-selected="false">Amaderadas / Oud</button>
             <button class="filter-btn" data-family="gourmand" role="tab" aria-selected="false">Dulces / Gourmand</button>
+            <button class="filter-btn" data-family="citrica" role="tab" aria-selected="false">Cítricas</button>
+            <button class="filter-btn" data-family="acuatica" role="tab" aria-selected="false">Acuáticas / Marina</button>
+            <button class="filter-btn" data-family="floral" role="tab" aria-selected="false">Florales</button>
           </div>
 
           <!-- Sort Select -->
@@ -1169,7 +1232,7 @@
 
         <!-- Catalog Status Bar -->
         <div class="catalog-status">
-          <span id="resultsCount" class="results-count">Mostrando 8 fragancias</span>
+          <span id="resultsCount" class="results-count">Mostrando 22 fragancias originales</span>
           <div class="active-filter-tags" id="activeFilterTags"></div>
         </div>
 
@@ -1582,6 +1645,7 @@
             <li><a href="#mainContent" id="footerCartLink">Mi Carrito de Compra</a></li>
             <li><a href="#mainContent" id="footerFavLink">Mis Fragancias Favoritas</a></li>
             <li><a href="tests.html" target="_blank" rel="noopener noreferrer">Panel de Pruebas &amp; QA</a></li>
+            <li id="footerAdminConsoleItem"><a href="consola/index.html" id="footerAdminConsoleLink" style="color: var(--color-dorado); font-weight: 500;">Consola de Administración 🔒</a></li>
           </ul>
         </div>
 
@@ -1918,6 +1982,9 @@
             </div>
           </div>
           <div class="profile-actions">
+            <a href="consola/index.html" class="btn btn-primary" id="btnGoToConsola" style="display: none; background: #B28A56; color: #15120F; text-decoration: none; text-align: center; font-weight: 600;">
+              🔒 Abrir Consola de Administración
+            </a>
             <button type="button" class="btn btn-outline" id="profileViewFavsBtn">
               Ver Mis Fragancias Favoritas
             </button>
@@ -1952,5 +2019,7 @@
 
   <!-- Main Application Script (Deferred for High Performance) -->
   <script src="app.js" defer></script>
+  <!-- Automated Testing Suite (Disponible en consola del navegador con window.AlabastroTesting.runAll()) -->
+  <script src="test-suite.js" defer></script>
 </body>
 </html>
