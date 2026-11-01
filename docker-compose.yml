@@ -3,14 +3,28 @@ services:
     image: postgres:16-alpine
     container_name: alabastro_postgres
     restart: unless-stopped
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_replication_slots=10"
+      - "-c"
+      - "max_wal_senders=10"
+      - "-c"
+      - "timezone=UTC"
     environment:
       POSTGRES_DB: ${DB_NAME:-alabastro_db}
       POSTGRES_USER: ${DB_USER:-alabastro_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-AlabastroSecure2026!}
+      TZ: UTC
+      PGTZ: UTC
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - alabastro_pgdata:/var/lib/postgresql/data
+      - ./supabase/migrations/20261031000000_alabastro_supabase_schema.sql:/docker-entrypoint-initdb.d/01-supabase-schema.sql:ro
+      - ./supabase/seed.sql:/docker-entrypoint-initdb.d/02-supabase-seed.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-alabastro_user} -d ${DB_NAME:-alabastro_db}"]
       interval: 5s

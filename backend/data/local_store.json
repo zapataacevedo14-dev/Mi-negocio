@@ -8,7 +8,9 @@
       "password_hash": "$2a$10$pfX7DsKQo1mXbCrm7AZD4OxrpNLg82cOpIABE4.hUCBPec0Janzpm",
       "role": "admin",
       "created_at": "2026-10-26T03:27:29.625Z",
-      "updated_at": "2026-10-26T03:27:29.625Z"
+      "updated_at": "2026-10-26T03:27:29.625Z",
+      "auth_user_id": "00000000-0000-0000-0000-000000000001",
+      "metadata": {}
     },
     {
       "id": "usr-customer-001",
@@ -18,7 +20,9 @@
       "password_hash": "$2a$10$pfX7DsKQo1mXbCrm7AZD4Od4K07kW/zkg4FctPTlKCfP4C5WbFpK2",
       "role": "customer",
       "created_at": "2026-10-26T03:27:29.703Z",
-      "updated_at": "2026-10-26T03:27:29.703Z"
+      "updated_at": "2026-10-26T03:27:29.703Z",
+      "auth_user_id": "eed8a457-a1a1-477e-9110-3615953dfb98",
+      "metadata": {}
     }
   ],
   "products": [
@@ -80,7 +84,8 @@
         ]
       },
       "is_active": true,
-      "updated_at": "2026-10-26T04:17:41.267Z"
+      "updated_at": "2026-10-26T04:17:41.267Z",
+      "uuid": "f8be520d-dba2-4c6b-99af-8b102d1f70c1"
     },
     {
       "id": "lattafa-yara",
@@ -136,7 +141,8 @@
           "notable"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "4a17b475-a322-4afe-ac14-ca42f658ee83"
     },
     {
       "id": "lattafa-khamrah",
@@ -196,7 +202,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "b5762087-f8c4-4ef6-a870-d0be85da9f9f"
     },
     {
       "id": "lattafa-badee-al-oud",
@@ -250,7 +257,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "5a670fdb-5e07-47a8-a1f0-6cd14ffe4ddc"
     },
     {
       "id": "afnan-9pm",
@@ -308,7 +316,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "dc599f76-60c6-4932-824e-e24caaa190dc"
     },
     {
       "id": "armaf-club-de-nuit-intense-man",
@@ -369,7 +378,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "14c33e7d-fd72-4bec-9702-8077f90e91d7"
     },
     {
       "id": "armaf-club-de-nuit-woman",
@@ -429,7 +439,8 @@
           "notable"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "8f8be10d-401e-4bb4-9341-796e248c67c7"
     },
     {
       "id": "rasasi-hawas-for-him",
@@ -489,7 +500,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "4107c15c-708d-4b69-ae6a-5ecad10c2558"
     },
     {
       "id": "al-haramain-amber-oud-gold",
@@ -545,7 +557,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "50dfd2dd-28cd-4014-aa24-f9b8e3e1ae72"
     },
     {
       "id": "swiss-arabian-shaghaf-oud",
@@ -599,7 +612,8 @@
         ]
       },
       "is_active": true,
-      "updated_at": "2026-10-26T04:17:12.040Z"
+      "updated_at": "2026-10-26T04:17:12.040Z",
+      "uuid": "de55d575-b41e-4335-81b8-f4352549abbc"
     },
     {
       "id": "maison-alhambra-kismet-magic",
@@ -656,7 +670,8 @@
         ]
       },
       "is_active": true,
-      "updated_at": "2026-10-26T04:17:12.048Z"
+      "updated_at": "2026-10-26T04:17:12.048Z",
+      "uuid": "837d0c40-9b9a-4be3-9552-620867b9685b"
     },
     {
       "id": "fragrance-world-signature",
@@ -711,7 +726,8 @@
           "notable"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "723bad30-691c-4787-a18d-3d575b14fe73"
     },
     {
       "id": "lattafa-fakhar-black",
@@ -770,7 +786,8 @@
         ]
       },
       "is_active": true,
-      "updated_at": "2026-10-27T18:07:19.446Z"
+      "updated_at": "2026-10-27T18:07:19.446Z",
+      "uuid": "38c4fe15-c7a2-41f5-a3bc-5488ce01828c"
     },
     {
       "id": "afnan-supremacy-not-only-intense",
@@ -827,7 +844,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "68d913e5-b92b-48b5-814e-2b005cb07cf2"
     },
     {
       "id": "lattafa-nebras",
@@ -883,7 +901,8 @@
           "notable"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "75d30744-dc13-49bd-9984-5a4c308738f1"
     },
     {
       "id": "maison-alhambra-porto-neroli",
@@ -937,7 +956,8 @@
           "moderada"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "3086df00-b0bf-4187-80cd-2f230d48cbce"
     },
     {
       "id": "al-haramain-laventure",
@@ -993,7 +1013,8 @@
           "notable"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "c09b7862-1300-4995-afa4-bd25452dfb91"
     },
     {
       "id": "swiss-arabian-casablanca",
@@ -1049,7 +1070,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "7e38624d-c8fe-47f4-9570-ee61e76944e2"
     },
     {
       "id": "armaf-tres-nuit",
@@ -1102,7 +1124,8 @@
           "moderada"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "3801c4b9-4929-4d2a-8743-9be24167f3ea"
     },
     {
       "id": "fragrance-world-barakkat-rouge-540",
@@ -1154,7 +1177,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "75d67c5c-ed0d-4ef6-88e6-30ef059f9fe5"
     },
     {
       "id": "paris-corner-emir-celestial",
@@ -1210,7 +1234,8 @@
           "notable"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "2fee8da1-ad92-42f3-a6d2-72f8f40dd83c"
     },
     {
       "id": "lattafa-ameer-al-oudh-intense-oud",
@@ -1264,7 +1289,8 @@
           "intensa"
         ]
       },
-      "is_active": true
+      "is_active": true,
+      "uuid": "bdc2485e-b30d-43bd-bbdb-66a1a710d672"
     }
   ],
   "orders": [
@@ -1277,12 +1303,26 @@
       "shipping_address": "Carrera 7 # 116-50",
       "city": "Bogotá D.C.",
       "payment_method": "Tarjeta de Crédito / PSE",
-      "status": 693000,
-      "subtotal": 0,
-      "shipping_cost": 693000,
-      "total": 0,
+      "status": "confirmado",
+      "subtotal": 693000,
+      "shipping_cost": 0,
+      "total": 693000,
       "gift_packaging": false,
-      "notes": "[{\"id\":\"swiss-arabian-shaghaf-oud\",\"name\":\"Swiss Arabian Shaghaf Oud\",\"price\":249000,\"quantity\":2},{\"id\":\"maison-alhambra-kismet-magic\",\"name\":\"Maison Alhambra Kismet Magic\",\"price\":195000,\"quantity\":1}]",
+      "notes": "Pedido web verificado.",
+      "items": [
+        {
+          "id": "swiss-arabian-shaghaf-oud",
+          "name": "Swiss Arabian Shaghaf Oud",
+          "price": 249000,
+          "quantity": 2
+        },
+        {
+          "id": "maison-alhambra-kismet-magic",
+          "name": "Maison Alhambra Kismet Magic",
+          "price": 195000,
+          "quantity": 1
+        }
+      ],
       "created_at": "2026-10-26T04:17:12.053Z",
       "updated_at": "2026-10-26T04:17:12.053Z"
     },
@@ -1310,7 +1350,8 @@
         }
       ],
       "created_at": "2026-10-24T03:27:29.525Z",
-      "updated_at": "2026-10-25T03:27:29.525Z"
+      "updated_at": "2026-10-25T03:27:29.525Z",
+      "uuid": "b9778959-84c6-4673-b3ff-2b331182d538"
     },
     {
       "id": "ORD-2026-9042",
@@ -1336,7 +1377,8 @@
         }
       ],
       "created_at": "2026-10-25T22:27:29.525Z",
-      "updated_at": "2026-10-26T01:27:29.525Z"
+      "updated_at": "2026-10-26T01:27:29.525Z",
+      "uuid": "93559896-f5f6-435f-8a84-8ecdabb9ea16"
     },
     {
       "id": "ORD-2026-9043",
@@ -1362,7 +1404,8 @@
         }
       ],
       "created_at": "2026-10-26T02:27:29.525Z",
-      "updated_at": "2026-10-26T02:27:29.525Z"
+      "updated_at": "2026-10-26T02:27:29.525Z",
+      "uuid": "4c2df573-e521-4b45-ae66-80e43de20ace"
     }
   ],
   "subscribers": [
@@ -1370,13 +1413,15 @@
       "id": 1,
       "email": "sofia.duque@luxury.com",
       "active": true,
-      "created_at": "2026-10-26T03:27:29.703Z"
+      "created_at": "2026-10-26T03:27:29.703Z",
+      "uuid": "b7137e01-5ad8-4117-a2aa-b9d781ce8a0d"
     },
     {
       "id": 2,
       "email": "felipe.arias@inversionistas.co",
       "active": true,
-      "created_at": "2026-10-26T03:27:29.703Z"
+      "created_at": "2026-10-26T03:27:29.703Z",
+      "uuid": "aafcd1f1-d665-418f-9f4b-f20b0f3e16a6"
     }
   ],
   "reviews": [
@@ -1388,7 +1433,8 @@
       "comment": "La mejor compra de perfumería nicho que he hecho en Colombia. Dura fácilmente 14 horas en mi piel y la estela es imponente.",
       "verified_purchase": true,
       "status": "aprobada",
-      "created_at": "2026-10-26T03:27:29.703Z"
+      "created_at": "2026-10-26T03:27:29.703Z",
+      "uuid": "e1ac7c1c-02da-40a0-ab51-642c2d28d01b"
     },
     {
       "id": 2,
@@ -1398,7 +1444,8 @@
       "comment": "Un licor de canela y dátiles sumamente refinado. El frasco de cristal tallado y la presentación deslumbran tanto como el aroma.",
       "verified_purchase": true,
       "status": "aprobada",
-      "created_at": "2026-10-26T03:27:29.703Z"
+      "created_at": "2026-10-26T03:27:29.703Z",
+      "uuid": "189269ce-ff8c-40e0-ab21-d83e38a98ffb"
     }
   ],
   "settings": [
@@ -1423,7 +1470,8 @@
       "user_name": "Director Alabastro",
       "action": "SISTEMA_INIT",
       "details": "Alabastro Engine activado con catálogo verificado de 12 fragancias.",
-      "created_at": "2026-10-26T03:27:29.703Z"
+      "created_at": "2026-10-26T03:27:29.703Z",
+      "uuid": "d08944b1-6009-4932-ab03-6c4f0dada50c"
     },
     {
       "id": 2,
@@ -1431,7 +1479,8 @@
       "user_name": "Director Alabastro",
       "action": "LOGIN_ADMIN",
       "details": "Ingreso a la Consola de Administración",
-      "created_at": "2026-10-31T13:33:50.020Z"
+      "created_at": "2026-10-31T13:33:50.020Z",
+      "uuid": "6fbca473-fe02-4c78-9c28-e93ce2c7ad14"
     },
     {
       "id": 3,
@@ -1439,7 +1488,8 @@
       "user_name": "Director Alabastro",
       "action": "CREAR_PRODUCTO",
       "details": "Nueva fragancia creada: Qaed Al Fursan (test-qaed-al-fursan-1793453630075)",
-      "created_at": "2026-10-31T13:33:50.086Z"
+      "created_at": "2026-10-31T13:33:50.086Z",
+      "uuid": "e749fd2e-2939-4e6c-93fc-59d3b1167589"
     },
     {
       "id": 4,
@@ -1447,7 +1497,8 @@
       "user_name": "Director Alabastro",
       "action": "PAUSAR_PRODUCTO",
       "details": "Fragancia «Qaed Al Fursan» (test-qaed-al-fursan-1793453630075) pausada del catálogo público.",
-      "created_at": "2026-10-31T13:33:50.095Z"
+      "created_at": "2026-10-31T13:33:50.095Z",
+      "uuid": "a6aef7c8-0a74-4c7e-aa50-cb903c613bb3"
     },
     {
       "id": 5,
@@ -1455,7 +1506,8 @@
       "user_name": "Director Alabastro",
       "action": "ACTIVAR_PRODUCTO",
       "details": "Fragancia «Qaed Al Fursan» (test-qaed-al-fursan-1793453630075) activada en la tienda pública.",
-      "created_at": "2026-10-31T13:33:50.104Z"
+      "created_at": "2026-10-31T13:33:50.104Z",
+      "uuid": "650e85c8-2376-42f3-a844-45c40e31d8a9"
     },
     {
       "id": 6,
@@ -1463,7 +1515,8 @@
       "user_name": "Director Alabastro",
       "action": "ACTUALIZAR_PRODUCTO",
       "details": "Fragancia actualizada: Qaed Al Fursan Edición Oro (test-qaed-al-fursan-1793453630075)",
-      "created_at": "2026-10-31T13:33:50.124Z"
+      "created_at": "2026-10-31T13:33:50.124Z",
+      "uuid": "d216a132-d3b0-480f-b363-eb8f96afabba"
     },
     {
       "id": 7,
@@ -1471,7 +1524,8 @@
       "user_name": "Director Alabastro",
       "action": "ELIMINAR_PRODUCTO_PERMANENTE",
       "details": "Producto eliminado definitivamente: Qaed Al Fursan Edición Oro (test-qaed-al-fursan-1793453630075)",
-      "created_at": "2026-10-31T13:33:50.138Z"
+      "created_at": "2026-10-31T13:33:50.138Z",
+      "uuid": "a99603f0-b019-44da-bf24-71b7b7297943"
     },
     {
       "id": 8,
@@ -1479,7 +1533,8 @@
       "user_name": "Director Alabastro",
       "action": "LOGIN_ADMIN",
       "details": "Ingreso a la Consola de Administración",
-      "created_at": "2026-10-31T13:35:17.176Z"
+      "created_at": "2026-10-31T13:35:17.176Z",
+      "uuid": "34530c54-f930-4b46-a7c5-4f77a50e2703"
     }
   ]
 }

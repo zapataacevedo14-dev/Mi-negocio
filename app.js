@@ -2027,6 +2027,574 @@ function saveRegisteredUsers(users) {
   }
 }
 
+function getAuthApiBase() {
+  if (typeof window !== 'undefined' && window.location) {
+    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && window.location.port === '3000') {
+      return '';
+    }
+  }
+  return 'http://localhost:3000';
+}
+
+async function loadProtectedCustomerOrders() {
+  const listEl = document.getElementById('profileOrdersList');
+  const countEl = document.getElementById('profileOrdersCount');
+  if (!listEl || !STATE.currentUser) return;
+
+  const token = localStorage.getItem('alabastro_auth_token') || localStorage.getItem('alabastro_admin_token');
+  if (token && window.location.protocol !== 'file:') {
+    try {
+      const res = await fetch(getAuthApiBase() + '/api/orders/my-orders', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const orders = data.orders || [];
+        if (countEl) countEl.textContent = orders.length + (orders.length === 1 ? ' pedido' : ' pedidos');
+        if (orders.length === 0) {
+          listEl.innerHTML = '<p style="margin:0; opacity:0.75;">Aún no registras pedidos con esta cuenta.</p>';
+        } else {
+          listEl.innerHTML = orders.slice(0, 5).map(o => {
+            const totalFmt = Number(o.total || 0).toLocaleString('es-CO');
+            const st = SecurityModule.sanitizeHTML(String(o.status || 'pendiente').toUpperCase());
+            const idSafe = SecurityModule.sanitizeHTML(String(o.id));
+            return '<div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(212,175,122,0.12);">' +
+              '<div><strong>' + idSafe + '</strong> <span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:rgba(212,175,122,0.18); color:var(--color-dorado);">' + st + '</span></div>' +
+              '<div style="font-weight:600;">
+
+/* ==========================================================================
+   11. Event Listeners y Delegación de Eventos
+   ========================================================================== */
+function setupEventListeners() {
+  // 1. Delegación de clics en el catálogo de productos
+  const productsGrid = document.getElementById('productsGrid');
+  if (productsGrid) {
+    productsGrid.addEventListener('click', (e) => {
+      const target = e.target;
+
+      // Botón Añadir al carrito
+      const addBtn = target.closest('[data-action="add-cart"]');
+      if (addBtn) {
+        const id = addBtn.dataset.id;
+        addToCart(id, 1);
+        return;
+      }
+
+      // Botón Favorito
+      const favBtn = target.closest('[data-action="toggle-fav"]');
+      if (favBtn) {
+        const id = favBtn.dataset.id;
+        toggleFavorite(id);
+        return;
+      }
+
+      // Botón Vista Rápida o clic en la tarjeta
+      const quickViewBtn = target.closest('[data-action="quick-view"]');
+      if (quickViewBtn) {
+        const id = quickViewBtn.dataset.id;
+        openProductModal(id);
+        return;
+      }
+
+      // Abrir modal si se hace clic en la imagen de la tarjeta
+      const cardVisual = target.closest('.card-photo-stage') || target.closest('.card-visual-wrap');
+      if (cardVisual && !target.closest('button')) {
+        const card = target.closest('.product-card');
+        if (card) openProductModal(card.dataset.id);
+      }
+    });
+  }
+
+  // 2. Filtros por Género (Todos, Hombre, Mujer, Unisex)
+  const genderButtons = document.querySelectorAll('.gender-filter-btn');
+  genderButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      genderButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      STATE.filters.gender = btn.dataset.gender || 'all';
+      renderCatalog();
+    });
+  });
+
+  // 2.1. Filtros por Familia Olfativa
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterButtons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      STATE.filters.family = btn.dataset.family;
+      renderCatalog();
+    });
+  });
+
+  // 2.2. Filtro por Marca (Lattafa, Afnan, Armaf, etc.)
+  const brandSelect = document.getElementById('brandSelect');
+  if (brandSelect) {
+    brandSelect.addEventListener('change', () => {
+      STATE.filters.brand = brandSelect.value;
+      renderCatalog();
+    });
+  }
+
+  // 3. Enlaces del pie de página que filtran el catálogo
+  document.querySelectorAll('a[data-filter]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const fam = link.dataset.filter;
+      const matchingBtn = document.querySelector(`.filter-btn[data-family="${fam}"]`);
+      if (matchingBtn) {
+        matchingBtn.click();
+      }
+    });
+  });
+
+  // 4. Búsqueda con debounce
+  const searchInput = document.getElementById('searchInput');
+  const clearSearchBtn = document.getElementById('clearSearchBtn');
+  if (searchInput) {
+    let timeoutId;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(timeoutId);
+      const val = searchInput.value;
+
+      if (clearSearchBtn) {
+        clearSearchBtn.style.display = val.length > 0 ? 'block' : 'none';
+      }
+
+      timeoutId = setTimeout(() => {
+        STATE.filters.search = val;
+        renderCatalog();
+      }, 200);
+    });
+
+    if (clearSearchBtn) {
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        STATE.filters.search = '';
+        clearSearchBtn.style.display = 'none';
+        renderCatalog();
+        searchInput.focus();
+      });
+    }
+  }
+
+  // 5. Botón restablecer filtros en estado vacío
+  document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    STATE.filters.search = '';
+    if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+
+    if (brandSelect) brandSelect.value = 'all';
+    STATE.filters.brand = 'all';
+
+    const allGenderBtn = document.querySelector('.gender-filter-btn[data-gender="all"]');
+    if (allGenderBtn) allGenderBtn.click();
+
+    const allBtn = document.querySelector('.filter-btn[data-family="all"]');
+    if (allBtn) allBtn.click();
+  });
+
+  // 6. Ordenamiento
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      STATE.filters.sort = sortSelect.value;
+      renderCatalog();
+    });
+  }
+
+  // 7. Botones de Apertura y Cierre del Carrito
+  document.getElementById('cartBtn')?.addEventListener('click', openCartDrawer);
+  document.getElementById('footerCartLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openCartDrawer();
+  });
+  document.getElementById('closeCartBtn')?.addEventListener('click', closeCartDrawer);
+  document.getElementById('cartOverlay')?.addEventListener('click', closeCartDrawer);
+  document.getElementById('continueShoppingBtn')?.addEventListener('click', () => {
+    closeCartDrawer();
+    document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // 8. Controles internos del Carrito (steppers y eliminar)
+  const cartItemsList = document.getElementById('cartItemsList');
+  if (cartItemsList) {
+    cartItemsList.addEventListener('click', (e) => {
+      const plusBtn = e.target.closest('[data-action="cart-plus"]');
+      const minusBtn = e.target.closest('[data-action="cart-minus"]');
+      const removeBtn = e.target.closest('[data-action="cart-remove"]');
+
+      if (plusBtn) {
+        const id = plusBtn.dataset.id;
+        const current = STATE.cart.find(i => i.id === id);
+        if (current) updateCartItemQuantity(id, current.quantity + 1);
+      } else if (minusBtn) {
+        const id = minusBtn.dataset.id;
+        const current = STATE.cart.find(i => i.id === id);
+        if (current) updateCartItemQuantity(id, current.quantity - 1);
+      } else if (removeBtn) {
+        const id = removeBtn.dataset.id;
+        removeFromCart(id);
+      }
+    });
+  }
+
+  // 9. Checkout WhatsApp y Simulación
+  document.getElementById('checkoutWhatsappBtn')?.addEventListener('click', checkoutViaWhatsApp);
+  document.getElementById('checkoutSimulateBtn')?.addEventListener('click', async () => {
+    if (STATE.cart.length === 0) return;
+    const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const giftCheckbox = document.getElementById('giftPackagingCheckbox')?.checked;
+
+    if (window.location.protocol.startsWith('http')) {
+      try {
+        fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerName: STATE.currentUser ? STATE.currentUser.name : 'Cliente Alabastro',
+            customerEmail: STATE.currentUser ? STATE.currentUser.email : 'cliente.web@alabastro.com',
+            customerPhone: STATE.currentUser ? (STATE.currentUser.phone || '+57 311 254 9053') : '+57 311 254 9053',
+            shippingAddress: 'Carrera 7 # 116-50',
+            city: 'Bogotá D.C.',
+            paymentMethod: 'Tarjeta de Crédito / PSE',
+            giftPackaging: giftCheckbox,
+            items: STATE.cart.map(i => ({ id: i.id, quantity: i.quantity }))
+          })
+        }).catch(() => {});
+      } catch {}
+    }
+
+    showToast(`Demostración: Orden por ${formatCOP(subtotal)} registrada con éxito`, '✨');
+    setTimeout(() => {
+      STATE.cart = [];
+      saveCartToStorage();
+      updateCartUI();
+      closeCartDrawer();
+    }, 1400);
+  });
+
+  // 10. Botones de Favoritos
+  document.getElementById('favoritesBtn')?.addEventListener('click', openFavoritesDrawer);
+  document.getElementById('footerFavLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openFavoritesDrawer();
+  });
+  document.getElementById('closeFavoritesBtn')?.addEventListener('click', closeFavoritesDrawer);
+  document.getElementById('favoritesOverlay')?.addEventListener('click', closeFavoritesDrawer);
+
+  const favList = document.getElementById('favoritesList');
+  if (favList) {
+    favList.addEventListener('click', (e) => {
+      const addCart = e.target.closest('[data-action="fav-add-cart"]');
+      const removeFav = e.target.closest('[data-action="fav-remove"]');
+
+      if (addCart) {
+        addToCart(addCart.dataset.id, 1);
+        openCartDrawer();
+      } else if (removeFav) {
+        toggleFavorite(removeFav.dataset.id);
+      }
+    });
+  }
+
+  // 11. Modal de Detalle
+  document.getElementById('closeProductModalBtn')?.addEventListener('click', closeProductModal);
+  document.getElementById('productModalBackdrop')?.addEventListener('click', (e) => {
+    if (e.target.id === 'productModalBackdrop') {
+      closeProductModal();
+    }
+  });
+
+  // Stepper dentro del Modal
+  const modalQtyCount = document.getElementById('modalQtyCount');
+  document.getElementById('modalQtyMinus')?.addEventListener('click', () => {
+    if (STATE.modalQuantity > 1) {
+      STATE.modalQuantity--;
+      if (modalQtyCount) modalQtyCount.textContent = STATE.modalQuantity;
+    }
+  });
+
+  document.getElementById('modalQtyPlus')?.addEventListener('click', () => {
+    STATE.modalQuantity++;
+    if (modalQtyCount) modalQtyCount.textContent = STATE.modalQuantity;
+  });
+
+  document.getElementById('modalAddToCartBtn')?.addEventListener('click', () => {
+    if (STATE.activeModalProduct) {
+      addToCart(STATE.activeModalProduct.id, STATE.modalQuantity);
+      closeProductModal();
+      openCartDrawer();
+    }
+  });
+
+  document.getElementById('modalToggleFavBtn')?.addEventListener('click', () => {
+    if (STATE.activeModalProduct) {
+      toggleFavorite(STATE.activeModalProduct.id);
+    }
+  });
+
+  // 12. Menú móvil
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mainNav = document.getElementById('mainNav');
+  if (mobileMenuBtn && mainNav) {
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mainNav.classList.toggle('active');
+      mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Cerrar menú al hacer click en cualquier link
+    mainNav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Cerrar menú si el usuario toca fuera de él en móviles
+    document.addEventListener('click', (e) => {
+      if (mainNav.classList.contains('active')) {
+        if (!mainNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+          mainNav.classList.remove('active');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+
+    // Cerrar menú automáticamente al redimensionar a desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && mainNav.classList.contains('active')) {
+        mainNav.classList.remove('active');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // 13. Botón de búsqueda rápida en el header
+  document.getElementById('searchToggleBtn')?.addEventListener('click', () => {
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+      catalogSection.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        searchInput?.focus();
+      }, 400);
+    }
+  });
+
+  // 13.b Enlaces Inteligentes a la Consola de Administración
+  async function navigateToAdminConsole(e) {
+    e.preventDefault();
+    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && window.location.port === '3000') {
+      window.location.href = '/consola/';
+      return;
+    }
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 500);
+      const res = await fetch('http://localhost:3000/api/health', { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (res.ok) {
+        window.location.href = 'http://localhost:3000/consola/';
+        return;
+      }
+    } catch {}
+    window.location.href = 'consola/index.html';
+  }
+  document.getElementById('headerAdminConsoleBtn')?.addEventListener('click', navigateToAdminConsole);
+  document.getElementById('navAdminConsoleLink')?.addEventListener('click', navigateToAdminConsole);
+  document.getElementById('btnGoToConsola')?.addEventListener('click', navigateToAdminConsole);
+  document.getElementById('footerAdminConsoleLink')?.addEventListener('click', navigateToAdminConsole);
+  document.getElementById('footerAdminConsoleItem')?.addEventListener('click', navigateToAdminConsole);
+  document.querySelector('#footerAdminConsoleItem a')?.addEventListener('click', navigateToAdminConsole);
+
+  // 14. Autenticación y Registro de Clientes
+  document.getElementById('authBtn')?.addEventListener('click', openAuthModal);
+  document.getElementById('closeAuthModalBtn')?.addEventListener('click', closeAuthModal);
+  document.getElementById('authModalBackdrop')?.addEventListener('click', (e) => {
+    if (e.target.id === 'authModalBackdrop') closeAuthModal();
+  });
+
+  document.getElementById('tabLoginBtn')?.addEventListener('click', () => switchAuthTab('login'));
+  document.getElementById('tabRegisterBtn')?.addEventListener('click', () => switchAuthTab('register'));
+  document.getElementById('switchToRegister')?.addEventListener('click', () => switchAuthTab('register'));
+  document.getElementById('switchToLogin')?.addEventListener('click', () => switchAuthTab('login'));
+
+  document.getElementById('loginForm')?.addEventListener('submit', handleLoginSubmit);
+  document.getElementById('registerForm')?.addEventListener('submit', handleRegisterSubmit);
+  document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+
+  document.getElementById('profileViewFavsBtn')?.addEventListener('click', () => {
+    closeAuthModal();
+    openFavoritesDrawer();
+  });
+
+  document.getElementById('profileGoShoppingBtn')?.addEventListener('click', () => {
+    closeAuthModal();
+    document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('forgotPassLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    showToast('Para restablecer tu contraseña, contáctanos vía WhatsApp o correo.', '🔑');
+  });
+
+  // 15. Cerrar con tecla Escape
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeProductModal();
+      closeAuthModal();
+      closeCartDrawer();
+      closeFavoritesDrawer();
+      mainNav?.classList.remove('active');
+    }
+  });
+
+  // 16. Efecto de cabecera translúcida al hacer scroll
+  const siteHeader = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 30) {
+      siteHeader?.classList.add('scrolled');
+    } else {
+      siteHeader?.classList.remove('scrolled');
+    }
+  }, { passive: true });
+}
+
+/**
+ * Monitor de inactividad de sesión (Auto-logout de seguridad).
+ * Cierra automáticamente la sesión tras 25 minutos de inactividad del usuario.
+ */
+function setupInactivityWatcher() {
+  let inactivityTimer;
+  const INACTIVITY_LIMIT_MS = 25 * 60 * 1000; // 25 minutos
+
+  function resetTimer() {
+    clearTimeout(inactivityTimer);
+    if (STATE.currentUser) {
+      inactivityTimer = setTimeout(() => {
+        if (STATE.currentUser) {
+          console.warn('[Seguridad] Sesión cerrada automáticamente por inactividad.');
+          handleLogout();
+          showToast('Tu sesión ha finalizado por inactividad para proteger tu privacidad.', '🔒');
+        }
+      }, INACTIVITY_LIMIT_MS);
+    }
+  }
+
+  ['click', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+    window.addEventListener(evt, resetTimer, { passive: true });
+  });
+  resetTimer();
+}
+
+/* ==========================================================================
+   12. Inicialización de la Aplicación
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', async () => {
+  // Inicializar módulo de seguridad y usuarios con hashing
+  await initDefaultUsers();
+
+  loadStateFromStorage();
+  await loadProductsFromBackend();
+  renderCatalog();
+  updateCartUI();
+  updateFavoritesUI();
+  updateAuthUI();
+  setupQuiz();
+  setupNewsletter();
+  setupEventListeners();
+  setupInactivityWatcher();
+
+  // Seguridad: Advertencia contra ataques Self-XSS para usuarios que abren la consola
+  console.log('%c¡ALTO! / STOP!', 'color: #D32F2F; font-size: 28px; font-weight: bold; background: #FFF; padding: 4px 8px; border-radius: 4px;');
+  console.log('%cEsta consola está destinada exclusivamente a desarrolladores. Si alguien te indicó que copiaras o pegaras código aquí para obtener "descuentos" o "créditos", se trata de un fraude (Self-XSS) y podrían tomar control de tu cuenta.', 'font-size: 13px; color: #555; font-weight: 500;');
+
+  // Seguridad: Detectar herramientas de desarrollo abiertas (anti-tampering)
+  const devToolsWarningShown = { shown: false };
+  const devToolsChecker = setInterval(() => {
+    const widthThreshold = window.outerWidth - window.innerWidth > 160;
+    const heightThreshold = window.outerHeight - window.innerHeight > 160;
+    if ((widthThreshold || heightThreshold) && !devToolsWarningShown.shown) {
+      console.log('%c🔒 ALABASTRO SEGURIDAD', 'color:#E8D5B5;font-size:18px;font-weight:bold;background:#141210;padding:10px 20px;border-radius:6px;');
+      console.log('%cLa aplicación está operando en modo protegido. Cualquier intento de alteración de precios o estado será rechazado.', 'color:#C5A059;font-size:13px;');
+      devToolsWarningShown.shown = true;
+    }
+  }, 2500);
+
+  // Seguridad: Protección contra manipulación del objeto window.PRODUCTS
+  if (Object.freeze) {
+    Object.freeze(PRODUCTS);
+    PRODUCTS.forEach(p => Object.freeze(p));
+  }
+
+  console.log('✨ ALABASTRO Alta Perfumería iniciada con éxito. [Modo Seguro Activo]');
+});
+
+/* ==========================================================================
+   13. API Global de ALABASTRO (Testing Suite & Extensibilidad)
+   ========================================================================== */
+window.Alabastro = {
+  PRODUCTS,
+  STATE,
+  STORAGE_KEYS,
+  FREE_SHIPPING_THRESHOLD,
+  MAX_CART_ITEM_QTY,
+  SecurityModule,
+  formatCOP,
+  createBottleSvg,
+  addToCart,
+  updateCartItemQuantity,
+  removeFromCart,
+  toggleFavorite,
+  filterAndSortProducts,
+  renderCatalog,
+  updateCartUI,
+  updateFavoritesUI,
+  updateAuthUI,
+  openProductModal,
+  closeProductModal,
+  openCartDrawer,
+  closeCartDrawer,
+  openFavoritesDrawer,
+  closeFavoritesDrawer,
+  openAuthModal,
+  closeAuthModal,
+  switchAuthTab,
+  getRegisteredUsers,
+  saveRegisteredUsers,
+  handleLoginSubmit,
+  handleRegisterSubmit,
+  handleLogout,
+  loadStateFromStorage,
+  saveCartToStorage,
+  saveFavoritesToStorage,
+  findBestFragranceMatch,
+  calculateAndDisplayQuizResult
+};
+ + totalFmt + ' COP</div>' +
+            '</div>';
+          }).join('');
+        }
+        return;
+      }
+    } catch (e) {
+      // Fallback local
+    }
+  }
+
+  if (countEl) countEl.textContent = 'Sesión verificada';
+  listEl.innerHTML = '<p style="margin:0; opacity:0.75;">Tus próximos pedidos aparecerán aquí automáticamente.</p>';
+}
+
 function openAuthModal() {
   const backdrop = document.getElementById('authModalBackdrop');
   const guestView = document.getElementById('authGuestView');
@@ -2035,6 +2603,7 @@ function openAuthModal() {
   if (STATE.currentUser) {
     if (guestView) guestView.style.display = 'none';
     if (profileView) profileView.style.display = 'block';
+    loadProtectedCustomerOrders();
   } else {
     if (guestView) guestView.style.display = 'block';
     if (profileView) profileView.style.display = 'none';
@@ -2104,16 +2673,57 @@ async function handleLoginSubmit(e) {
     return;
   }
 
-  // Seguridad 3: Hash de la contraseña para comparar
-  const passHash = await SecurityModule.hashPassword(pass);
+  // Intentar primero contra el Backend Supabase Auth (/api/auth/login)
+  if (window.location.protocol !== 'file:') {
+    try {
+      const apiRes = await fetch(getAuthApiBase() + '/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+      });
+      const apiData = await apiRes.json();
+      if (apiRes.ok && apiData.success && apiData.user) {
+        SecurityModule.rateLimiter.reset();
+        const safeUserData = {
+          id: apiData.user.id,
+          name: apiData.user.name,
+          email: apiData.user.email,
+          phone: apiData.user.phone || '',
+          role: apiData.user.role || 'customer',
+          createdAt: apiData.user.createdAt || new Date().toISOString()
+        };
+        if (apiData.token) {
+          localStorage.setItem('alabastro_auth_token', apiData.token);
+          if (safeUserData.role === 'admin') {
+            localStorage.setItem('alabastro_admin_token', apiData.token);
+          }
+        }
+        STATE.currentUser = safeUserData;
+        if (rememberMe) {
+          localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(safeUserData));
+        } else {
+          sessionStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(safeUserData));
+        }
+        updateAuthUI();
+        closeAuthModal();
+        const safeName = SecurityModule.sanitizeHTML(safeUserData.name.split(' ')[0]);
+        showToast(`¡Bienvenido/a de nuevo, ${safeName}!`, '✨');
+        document.getElementById('loginForm')?.reset();
+        return;
+      }
+    } catch (err) {
+      // Continuar al fallback local si el servidor no está disponible
+    }
+  }
 
+  // Fallback Local (SHA-256)
+  const passHash = await SecurityModule.hashPassword(pass);
   const users = getRegisteredUsers();
   const user = users.find(u => u.email.toLowerCase() === email && u.passwordHash === passHash);
 
   if (user) {
-    SecurityModule.rateLimiter.reset(); // Reset al lograr login exitoso
+    SecurityModule.rateLimiter.reset();
 
-    // Seguridad 4: No almacenar el hash de contraseña en el estado de sesión
     const role = user.role || (user.email.toLowerCase() === 'admin@alabastro.com' ? 'admin' : 'customer');
     const safeUserData = {
       id: user.id,
@@ -2139,7 +2749,6 @@ async function handleLoginSubmit(e) {
     document.getElementById('loginForm')?.reset();
   } else {
     SecurityModule.rateLimiter.recordAttempt();
-    // Seguridad 5: Mensaje genérico (no revelar si el email existe o no)
     showToast('Credenciales incorrectas. Por favor verifica tus datos.', '⚠️');
   }
 }
@@ -2167,25 +2776,21 @@ async function handleRegisterSubmit(e) {
   const pass = document.getElementById('regPassword')?.value;
   const passConfirm = document.getElementById('regPasswordConfirm')?.value;
 
-  // Seguridad 1: Validación robusta de nombre
   if (!name || !SecurityModule.validators.name(name)) {
     showToast('Por favor ingresa un nombre válido (solo letras, sin caracteres especiales).', '⚠️');
     return;
   }
 
-  // Seguridad 2: Validación robusta de email
   if (!SecurityModule.validators.email(email)) {
     showToast('Por favor ingresa un correo electrónico válido.', '⚠️');
     return;
   }
 
-  // Seguridad 3: Validación de teléfono
   if (!SecurityModule.validators.phone(phone)) {
     showToast('El número de teléfono contiene caracteres no válidos.', '⚠️');
     return;
   }
 
-  // Seguridad 4: Validación robusta de contraseña
   const passCheck = SecurityModule.validators.password(pass);
   if (!passCheck.valid) {
     showToast(passCheck.message, '⚠️');
@@ -2197,6 +2802,45 @@ async function handleRegisterSubmit(e) {
     return;
   }
 
+  // Intentar registro primero en Backend Supabase Auth (/api/auth/register)
+  if (window.location.protocol !== 'file:') {
+    try {
+      const apiRes = await fetch(getAuthApiBase() + '/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, password: pass })
+      });
+      const apiData = await apiRes.json();
+      if (!apiRes.ok && apiData && apiData.message) {
+        showToast(apiData.message, '⚠️');
+        return;
+      }
+      if (apiRes.ok && apiData.success && apiData.user) {
+        if (apiData.token) {
+          localStorage.setItem('alabastro_auth_token', apiData.token);
+        }
+        const safeUserData = {
+          id: apiData.user.id,
+          name: apiData.user.name,
+          email: apiData.user.email,
+          phone: apiData.user.phone || '',
+          role: 'customer',
+          createdAt: apiData.user.createdAt || new Date().toISOString()
+        };
+        STATE.currentUser = safeUserData;
+        localStorage.setItem(STORAGE_KEYS.currentUser, JSON.stringify(safeUserData));
+        updateAuthUI();
+        closeAuthModal();
+        const safeName = SecurityModule.sanitizeHTML(name.split(' ')[0]);
+        showToast(`¡Cuenta creada con éxito! Bienvenido al Círculo Privado, ${safeName}`, '👑');
+        document.getElementById('registerForm')?.reset();
+        return;
+      }
+    } catch (err) {
+      // Continuar al fallback local
+    }
+  }
+
   const users = getRegisteredUsers();
   const existing = users.find(u => u.email.toLowerCase() === email);
   if (existing) {
@@ -2204,7 +2848,6 @@ async function handleRegisterSubmit(e) {
     return;
   }
 
-  // Seguridad 5: Hash de contraseña con SHA-256
   const passwordHash = await SecurityModule.hashPassword(pass);
 
   const newUser = {
@@ -2212,6 +2855,7 @@ async function handleRegisterSubmit(e) {
     name: SecurityModule.sanitizeHTML(name),
     email,
     phone,
+    role: 'customer',
     passwordHash,
     createdAt: new Date().toISOString()
   };
@@ -2219,12 +2863,12 @@ async function handleRegisterSubmit(e) {
   users.push(newUser);
   saveRegisteredUsers(users);
 
-  // Iniciar sesión automáticamente (sin almacenar hash en sesión)
   const safeUserData = {
     id: newUser.id,
     name: newUser.name,
     email: newUser.email,
     phone: newUser.phone,
+    role: 'customer',
     createdAt: newUser.createdAt
   };
   STATE.currentUser = safeUserData;
@@ -2238,9 +2882,18 @@ async function handleRegisterSubmit(e) {
 }
 
 function handleLogout() {
+  const token = localStorage.getItem('alabastro_auth_token') || localStorage.getItem('alabastro_admin_token');
+  if (token && window.location.protocol !== 'file:') {
+    fetch(getAuthApiBase() + '/api/auth/logout', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).catch(() => {});
+  }
   STATE.currentUser = null;
   localStorage.removeItem(STORAGE_KEYS.currentUser);
   sessionStorage.removeItem(STORAGE_KEYS.currentUser);
+  localStorage.removeItem('alabastro_auth_token');
+  localStorage.removeItem('alabastro_admin_token');
   updateAuthUI();
   closeAuthModal();
   showToast('Has cerrado sesión correctamente.', '👋');
@@ -2261,11 +2914,17 @@ function updateAuthUI() {
     const pName = document.getElementById('profileName');
     const pEmail = document.getElementById('profileEmail');
     const pPhone = document.getElementById('profilePhoneDisplay');
+    const pBadge = document.getElementById('profileRoleBadge');
 
     if (pAvatar) pAvatar.textContent = STATE.currentUser.name.trim().charAt(0).toUpperCase();
     if (pName) pName.textContent = STATE.currentUser.name;
     if (pEmail) pEmail.textContent = STATE.currentUser.email;
     if (pPhone) pPhone.textContent = STATE.currentUser.phone || '+57 311 254 9053';
+    if (pBadge) {
+      pBadge.textContent = STATE.currentUser.role === 'admin'
+        ? '👑 DIRECTOR ADMINISTRADOR'
+        : '✦ MIEMBRO CÍRCULO PRIVADO';
+    }
 
     const btnConsola = document.getElementById('btnGoToConsola');
     if (btnConsola) {

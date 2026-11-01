@@ -6,7 +6,7 @@
 'use strict';
 
 const CONSOLA_STATE = {
-  token: localStorage.getItem('alabastro_admin_token') || null,
+  token: localStorage.getItem('alabastro_admin_token') || localStorage.getItem('alabastro_auth_token') || null,
   currentUser: null,
   currentTab: 'dashboard',
   products: [],
@@ -606,6 +606,12 @@ async function verifyCurrentSession() {
       CONSOLA_STATE.currentUser = res.user;
       showConsolaApp();
       loadAllData();
+    } else if (res.success && res.user && res.user.role !== 'admin') {
+      CONSOLA_STATE.token = null;
+      CONSOLA_STATE.currentUser = null;
+      localStorage.removeItem('alabastro_admin_token');
+      showAuthGate();
+      showToast('Acceso denegado (403): Esta ruta está protegida para Administradores.', '🔒');
     } else {
       handleAdminLogout();
       showAuthGate();
@@ -634,9 +640,16 @@ function showConsolaApp() {
 }
 
 function handleAdminLogout() {
+  if (CONSOLA_STATE.token && window.location.protocol !== 'file:') {
+    fetch(`${API_BASE}/api/auth/logout`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${CONSOLA_STATE.token}` }
+    }).catch(() => {});
+  }
   CONSOLA_STATE.token = null;
   CONSOLA_STATE.currentUser = null;
   localStorage.removeItem('alabastro_admin_token');
+  localStorage.removeItem('alabastro_auth_token');
   showAuthGate();
 }
 
@@ -657,14 +670,17 @@ function setupAuthEventListeners() {
           body: JSON.stringify({ email, password })
         });
 
-        if (res.success && res.token && res.user.role === 'admin') {
+        if (res.success && res.token && res.user && res.user.role === 'admin') {
           CONSOLA_STATE.token = res.token;
           CONSOLA_STATE.currentUser = res.user;
           localStorage.setItem('alabastro_admin_token', res.token);
+          localStorage.setItem('alabastro_auth_token', res.token);
           showConsolaApp();
           loadAllData();
           showToast(`¡Bienvenido a la Consola, ${res.user.name.split(' ')[0]}!`, '👑');
           loginForm.reset();
+        } else if (res.success && res.user && res.user.role !== 'admin') {
+          showToast('Acceso denegado (403): Tu cuenta de cliente no tiene privilegios de Administrador.', '🔒');
         } else {
           showToast(res.message || 'Credenciales o privilegios insuficientes.', '⚠️');
         }

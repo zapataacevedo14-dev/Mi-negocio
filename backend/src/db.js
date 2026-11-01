@@ -1,11 +1,13 @@
 /**
- * ALABASTRO — Configuración y Gestión de Base de Datos
- * Soporte Dual: PostgreSQL 16 Dockerizada (Producción/Contenedor)
- * con Fallback Embebido Resiliente (Alabastro Local Engine) si Docker no está activo.
+ * ALABASTRO — Configuración y Gestión de Base de Datos Estandarizada para Supabase
+ * Soporte Dual:
+ *   1. PostgreSQL 16 Dockerizada Local / Supabase Cloud (Esquema public + auth + RLS + Triggers)
+ *   2. Fallback Embebido Resiliente (Alabastro Local Engine) si el contenedor no está activo.
  */
 
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
@@ -13,18 +15,38 @@ require('dotenv').config();
 let usePostgres = false;
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const STORE_FILE = path.join(DATA_DIR, 'local_store.json');
+const SUPABASE_SCHEMA_FILE = path.resolve(__dirname, '..', '..', 'supabase', 'migrations', '20261031000000_alabastro_supabase_schema.sql');
 
-// Pool de conexión a PostgreSQL
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  database: process.env.DB_NAME || 'alabastro_db',
-  user: process.env.DB_USER || 'alabastro_user',
-  password: process.env.DB_PASSWORD || 'AlabastroSecure2026!',
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2500, // Timeout ágil para detectar si Docker está activo
-});
+// Configuración de conexión compatible con Supabase Cloud (DATABASE_URL / SUPABASE_DB_URL) y Docker Local
+const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL || null;
+const isSupabaseCloud = Boolean(
+  (connectionString && (connectionString.includes('supabase.co') || connectionString.includes('supabase.com'))) ||
+  (process.env.DB_HOST && (process.env.DB_HOST.includes('supabase.co') || process.env.DB_HOST.includes('supabase.com'))) ||
+  process.env.DB_SSL === 'true'
+);
+
+const poolConfig = connectionString
+  ? {
+      connectionString,
+      ssl: isSupabaseCloud ? { rejectUnauthorized: false } : false,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 3500
+    }
+  : {
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432', 10),
+      database: process.env.DB_NAME || 'alabastro_db',
+      user: process.env.DB_USER || 'alabastro_user',
+      password: process.env.DB_PASSWORD || 'AlabastroSecure2026!',
+      ssl: isSupabaseCloud ? { rejectUnauthorized: false } : false,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2500
+    };
+
+// Pool de conexión a PostgreSQL / Supabase
+const pool = new Pool(poolConfig);
 
 pool.on('error', (err) => {
   if (usePostgres) {
@@ -912,7 +934,7 @@ class LocalEngine {
         return { rows: u ? [u] : [] };
       }
       if (upper.includes('WHERE ID = $1')) {
-        const u = this.data.users.find(x => x.id === params[0]);
+        const u = this.data.users.find(x => x.id === params[0] || x.auth_user_id === params[0]);
         return { rows: u ? [u] : [] };
       }
       if (upper.includes("WHERE ROLE = 'CUSTOMER'")) {
@@ -922,13 +944,16 @@ class LocalEngine {
       return { rows: this.data.users };
     }
     if (upper.startsWith('INSERT INTO USERS')) {
+      const uid = crypto.randomUUID();
       const newUser = {
         id: params[0],
+        auth_user_id: uid,
         name: params[1],
         email: params[2].toLowerCase(),
         phone: params[3] || '',
         password_hash: params[4],
         role: params[5] || 'customer',
+        metadata: {},
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
@@ -1011,6 +1036,7 @@ class LocalEngine {
     if (upper.startsWith('INSERT INTO PRODUCTS')) {
       const p = {
         id: params[0],
+        uuid: crypto.randomUUID(),
         name: params[1],
         full_name: params[2] || `${params[3] || 'ALABASTRO'} ${params[1]}`,
         brand: params[3] || 'ALABASTRO',
@@ -1213,6 +1239,7 @@ class LocalEngine {
     if (upper.startsWith('INSERT INTO ORDERS')) {
       const newOrder = {
         id: params[0],
+        uuid: crypto.randomUUID(),
         user_id: params[1],
         customer_name: params[2],
         customer_email: params[3],
@@ -1362,159 +1389,82 @@ class LocalEngine {
 const localEngine = new LocalEngine();
 
 /**
- * Inicialización inteligente de base de datos
+ * Inicialización inteligente de base de datos con Esquema Estandarizado de Supabase
  */
 async function initDatabase() {
   try {
     const client = await pool.connect();
     usePostgres = true;
-    console.log('✅ [PostgreSQL] Conectado exitosamente al contenedor de base de datos Docker.');
+    console.log('✅ [Supabase / PostgreSQL] Conectado exitosamente al motor PostgreSQL (Estándar Supabase).');
 
-    await client.query('BEGIN');
+    try {
+      // Ejecutar migración oficial estandarizada al formato Supabase si el archivo existe
+      if (fs.existsSync(SUPABASE_SCHEMA_FILE)) {
+        const supabaseSchemaSql = fs.readFileSync(SUPABASE_SCHEMA_FILE, 'utf8');
+        await client.query(supabaseSchemaSql);
+        console.log('🛡️  [Supabase Schema] Extensiones (pgcrypto, uuid-ossp), esquema auth, roles (anon, authenticated, service_role), triggers updated_at y políticas RLS sincronizados.');
+      } else {
+        await client.query('BEGIN');
+        await client.query(`
+          CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+          CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        `);
+        await client.query('COMMIT');
+      }
+    } finally {
+      client.release();
+    }
 
-    // Tablas
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id VARCHAR(64) PRIMARY KEY,
-        name VARCHAR(120) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        phone VARCHAR(50),
-        password_hash VARCHAR(255) NOT NULL,
-        role VARCHAR(30) DEFAULT 'customer',
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS products (
-        id VARCHAR(64) PRIMARY KEY,
-        name VARCHAR(120) NOT NULL,
-        full_name VARCHAR(150),
-        brand VARCHAR(80),
-        gender VARCHAR(30),
-        gender_display VARCHAR(50),
-        origin VARCHAR(100),
-        image VARCHAR(255),
-        subtitle VARCHAR(150),
-        family VARCHAR(50) NOT NULL,
-        family_display VARCHAR(100),
-        price NUMERIC(12, 2) NOT NULL,
-        stock INTEGER DEFAULT 20,
-        size VARCHAR(50) DEFAULT '100 ml / 3.4 FL. OZ.',
-        concentration VARCHAR(100),
-        description TEXT,
-        top_notes JSONB DEFAULT '[]'::jsonb,
-        heart_notes JSONB DEFAULT '[]'::jsonb,
-        base_notes JSONB DEFAULT '[]'::jsonb,
-        longevity VARCHAR(100),
-        sillage VARCHAR(100),
-        best_for TEXT,
-        gradient JSONB DEFAULT '{}'::jsonb,
-        quiz_tags JSONB DEFAULT '{}'::jsonb,
-        is_active BOOLEAN DEFAULT TRUE,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS orders (
-        id VARCHAR(64) PRIMARY KEY,
-        user_id VARCHAR(64) REFERENCES users(id) ON DELETE SET NULL,
-        customer_name VARCHAR(120) NOT NULL,
-        customer_email VARCHAR(255) NOT NULL,
-        customer_phone VARCHAR(50),
-        shipping_address TEXT NOT NULL,
-        city VARCHAR(100) NOT NULL,
-        payment_method VARCHAR(50) DEFAULT 'transferencia',
-        status VARCHAR(40) DEFAULT 'pendiente',
-        subtotal NUMERIC(12, 2) NOT NULL,
-        shipping_cost NUMERIC(12, 2) DEFAULT 0,
-        total NUMERIC(12, 2) NOT NULL,
-        gift_packaging BOOLEAN DEFAULT FALSE,
-        notes TEXT,
-        items JSONB NOT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS subscribers (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        active BOOLEAN DEFAULT TRUE,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS reviews (
-        id SERIAL PRIMARY KEY,
-        product_id VARCHAR(64) REFERENCES products(id) ON DELETE CASCADE,
-        author_name VARCHAR(120) NOT NULL,
-        rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-        comment TEXT NOT NULL,
-        verified_purchase BOOLEAN DEFAULT TRUE,
-        status VARCHAR(30) DEFAULT 'aprobada',
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS settings (
-        key VARCHAR(80) PRIMARY KEY,
-        value JSONB NOT NULL,
-        description TEXT,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS activity_logs (
-        id SERIAL PRIMARY KEY,
-        user_id VARCHAR(64),
-        user_name VARCHAR(120),
-        action VARCHAR(100) NOT NULL,
-        details TEXT,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-
-    // Migraciones seguras para columnas añadidas
-    await client.query(`
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS brand VARCHAR(80);
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS gender VARCHAR(30);
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS gender_display VARCHAR(50);
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS origin VARCHAR(100);
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS image VARCHAR(255);
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS full_name VARCHAR(150);
-    `);
-
-    await client.query('COMMIT');
-    client.release();
-
-    // Sembrar datos en PostgreSQL
+    // Sembrar datos en PostgreSQL / Supabase
     await seedPostgresData();
 
   } catch (err) {
     usePostgres = false;
-    console.warn('⚡ [Alabastro DB] Contenedor PostgreSQL no disponible en puerto 5432.');
-    console.log('🛡️  [Alabastro DB] Activando Motor Embebido de Alta Resiliencia (JSON Store).');
+    console.warn('⚡ [Alabastro DB] Contenedor PostgreSQL / Supabase no disponible en puerto 5432.');
+    console.log('🛡️  [Alabastro DB] Activando Motor Embebido de Alta Resiliencia (JSON Store compatible con formato Supabase).');
     localEngine.load();
     console.log(`✨ [Alabastro DB] ${localEngine.data.products.length} fragancias árabes cargadas en memoria.`);
   }
 }
 
 /**
- * Siembra datos en PostgreSQL
+ * Siembra datos en PostgreSQL bajo el estándar de Supabase (`auth.users` + `public.users` + `public.products`)
  */
 async function seedPostgresData() {
   const adminEmail = (process.env.ADMIN_EMAIL || 'admin@alabastro.com').toLowerCase();
-  const userCheck = await pool.query('SELECT id FROM users WHERE email = $1', [adminEmail]);
+  const userCheck = await pool.query('SELECT id FROM public.users WHERE email = $1', [adminEmail]);
 
   if (userCheck.rows.length === 0) {
     const salt = await bcrypt.genSalt(10);
     const passHash = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'AdminAlabastro2026!', salt);
+    const adminUuid = '00000000-0000-0000-0000-000000000001';
+    const adminName = process.env.ADMIN_NAME || 'Director Alabastro';
+    const adminPhone = process.env.ADMIN_PHONE || '+57 311 254 9053';
+
+    try {
+      await pool.query(
+        `INSERT INTO auth.users (id, email, encrypted_password, role, aud, raw_app_meta_data, raw_user_meta_data)
+         VALUES ($1::uuid, $2, $3, 'authenticated', 'authenticated',
+                 '{"provider":"email","providers":["email"],"role":"admin"}'::jsonb,
+                 jsonb_build_object('legacy_id', 'usr-admin-master-001', 'name', $4::text, 'phone', $5::text, 'role', 'admin'))
+         ON CONFLICT (email) DO NOTHING`,
+        [adminUuid, adminEmail, passHash, adminName, adminPhone]
+      );
+    } catch {
+      // Si auth.users es administrado externamente por Supabase Cloud GoTrue, continuar con public.users
+    }
+
     await pool.query(
-      `INSERT INTO users (id, name, email, phone, password_hash, role)
-       VALUES ($1, $2, $3, $4, $5, 'admin')`,
-      ['usr-admin-master-001', process.env.ADMIN_NAME || 'Director Alabastro', adminEmail, process.env.ADMIN_PHONE || '+57 311 254 9053', passHash]
+      `INSERT INTO public.users (id, name, email, phone, password_hash, role)
+       VALUES ($1, $2, $3, $4, $5, 'admin')
+       ON CONFLICT (email) DO UPDATE SET role = 'admin'`,
+      ['usr-admin-master-001', adminName, adminEmail, adminPhone, passHash]
     );
   }
 
   for (const prod of DEFAULT_PRODUCTS) {
     await pool.query(
-      `INSERT INTO products (
+      `INSERT INTO public.products (
         id, name, full_name, brand, gender, gender_display, origin, image, subtitle,
         family, family_display, price, stock, size, concentration, description,
         top_notes, heart_notes, base_notes, longevity, sillage, best_for, gradient, quiz_tags, is_active
@@ -1523,10 +1473,10 @@ async function seedPostgresData() {
         $17, $18, $19, $20, $21, $22, $23, $24, $25
       )
       ON CONFLICT (id) DO UPDATE SET
-        brand = COALESCE(products.brand, EXCLUDED.brand),
-        image = COALESCE(products.image, EXCLUDED.image),
-        full_name = COALESCE(products.full_name, EXCLUDED.full_name),
-        gender_display = COALESCE(products.gender_display, EXCLUDED.gender_display)`,
+        brand = COALESCE(public.products.brand, EXCLUDED.brand),
+        image = COALESCE(public.products.image, EXCLUDED.image),
+        full_name = COALESCE(public.products.full_name, EXCLUDED.full_name),
+        gender_display = COALESCE(public.products.gender_display, EXCLUDED.gender_display)`,
       [
         prod.id, prod.name, prod.full_name, prod.brand, prod.gender, prod.gender_display,
         prod.origin, prod.image, prod.subtitle, prod.family, prod.family_display,

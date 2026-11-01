@@ -1,0 +1,15 @@
+# Dependency directories
+node_modules/
+backend/node_modules/
+
+# Environment and sensitive credentials (use Render Dashboard environment variables instead)
+.env
+.env.*
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# OS and temporary files
+.DS_Store
+Thumbs.db
+*.log
