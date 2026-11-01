@@ -1137,7 +1137,7 @@ function updateActiveFilterTags() {
  */
 async function loadProductsFromBackend() {
   try {
-    const apiBase = (typeof window !== 'undefined' && window.location && window.location.port === '3000') ? '' : 'http://localhost:3000';
+    const apiBase = (typeof window !== 'undefined' && window.location && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) ? '' : 'http://localhost:3000';
     const res = await fetch(`${apiBase}/api/products`);
     if (!res.ok) return;
     const data = await res.json();
@@ -1361,7 +1361,7 @@ function addToCart(productId, quantity = 1) {
   product.stock = Math.max(0, product.stock - quantity);
 
   // Sincronizar descuento de stock inmediatamente con la base de datos (Backend)
-  const apiBase = (typeof window !== 'undefined' && window.location && window.location.port === '3000') ? '' : 'http://localhost:3000';
+  const apiBase = (typeof window !== 'undefined' && window.location && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) ? '' : 'http://localhost:3000';
   fetch(`${apiBase}/api/products/${encodeURIComponent(product.id)}/decrement`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -1397,7 +1397,7 @@ function updateCartItemQuantity(productId, newQty) {
         return;
       }
       product.stock -= diff;
-      const apiBase = (typeof window !== 'undefined' && window.location && window.location.port === '3000') ? '' : 'http://localhost:3000';
+      const apiBase = (typeof window !== 'undefined' && window.location && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) ? '' : 'http://localhost:3000';
       fetch(`${apiBase}/api/products/${encodeURIComponent(product.id)}/decrement`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1406,7 +1406,7 @@ function updateCartItemQuantity(productId, newQty) {
     } else if (diff < 0) {
       const restoreQty = Math.abs(diff);
       product.stock += restoreQty;
-      const apiBase = (typeof window !== 'undefined' && window.location && window.location.port === '3000') ? '' : 'http://localhost:3000';
+      const apiBase = (typeof window !== 'undefined' && window.location && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) ? '' : 'http://localhost:3000';
       fetch(`${apiBase}/api/products/${encodeURIComponent(product.id)}/increment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1431,7 +1431,7 @@ function removeFromCart(productId) {
   const product = getProductById(productId);
   if (product && qtyToRestore > 0) {
     product.stock += qtyToRestore;
-    const apiBase = (typeof window !== 'undefined' && window.location && window.location.port === '3000') ? '' : 'http://localhost:3000';
+    const apiBase = (typeof window !== 'undefined' && window.location && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) ? '' : 'http://localhost:3000';
     fetch(`${apiBase}/api/products/${encodeURIComponent(product.id)}/increment`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2029,7 +2029,7 @@ function saveRegisteredUsers(users) {
 
 function getAuthApiBase() {
   if (typeof window !== 'undefined' && window.location) {
-    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && window.location.port === '3000') {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
       return '';
     }
   }
@@ -2060,528 +2060,7 @@ async function loadProtectedCustomerOrders() {
             const idSafe = SecurityModule.sanitizeHTML(String(o.id));
             return '<div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(212,175,122,0.12);">' +
               '<div><strong>' + idSafe + '</strong> <span style="font-size:0.72rem; padding:2px 6px; border-radius:4px; background:rgba(212,175,122,0.18); color:var(--color-dorado);">' + st + '</span></div>' +
-              '<div style="font-weight:600;">
-
-/* ==========================================================================
-   11. Event Listeners y Delegación de Eventos
-   ========================================================================== */
-function setupEventListeners() {
-  // 1. Delegación de clics en el catálogo de productos
-  const productsGrid = document.getElementById('productsGrid');
-  if (productsGrid) {
-    productsGrid.addEventListener('click', (e) => {
-      const target = e.target;
-
-      // Botón Añadir al carrito
-      const addBtn = target.closest('[data-action="add-cart"]');
-      if (addBtn) {
-        const id = addBtn.dataset.id;
-        addToCart(id, 1);
-        return;
-      }
-
-      // Botón Favorito
-      const favBtn = target.closest('[data-action="toggle-fav"]');
-      if (favBtn) {
-        const id = favBtn.dataset.id;
-        toggleFavorite(id);
-        return;
-      }
-
-      // Botón Vista Rápida o clic en la tarjeta
-      const quickViewBtn = target.closest('[data-action="quick-view"]');
-      if (quickViewBtn) {
-        const id = quickViewBtn.dataset.id;
-        openProductModal(id);
-        return;
-      }
-
-      // Abrir modal si se hace clic en la imagen de la tarjeta
-      const cardVisual = target.closest('.card-photo-stage') || target.closest('.card-visual-wrap');
-      if (cardVisual && !target.closest('button')) {
-        const card = target.closest('.product-card');
-        if (card) openProductModal(card.dataset.id);
-      }
-    });
-  }
-
-  // 2. Filtros por Género (Todos, Hombre, Mujer, Unisex)
-  const genderButtons = document.querySelectorAll('.gender-filter-btn');
-  genderButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      genderButtons.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
-      STATE.filters.gender = btn.dataset.gender || 'all';
-      renderCatalog();
-    });
-  });
-
-  // 2.1. Filtros por Familia Olfativa
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterButtons.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      btn.classList.add('active');
-      btn.setAttribute('aria-selected', 'true');
-      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      STATE.filters.family = btn.dataset.family;
-      renderCatalog();
-    });
-  });
-
-  // 2.2. Filtro por Marca (Lattafa, Afnan, Armaf, etc.)
-  const brandSelect = document.getElementById('brandSelect');
-  if (brandSelect) {
-    brandSelect.addEventListener('change', () => {
-      STATE.filters.brand = brandSelect.value;
-      renderCatalog();
-    });
-  }
-
-  // 3. Enlaces del pie de página que filtran el catálogo
-  document.querySelectorAll('a[data-filter]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const fam = link.dataset.filter;
-      const matchingBtn = document.querySelector(`.filter-btn[data-family="${fam}"]`);
-      if (matchingBtn) {
-        matchingBtn.click();
-      }
-    });
-  });
-
-  // 4. Búsqueda con debounce
-  const searchInput = document.getElementById('searchInput');
-  const clearSearchBtn = document.getElementById('clearSearchBtn');
-  if (searchInput) {
-    let timeoutId;
-    searchInput.addEventListener('input', () => {
-      clearTimeout(timeoutId);
-      const val = searchInput.value;
-
-      if (clearSearchBtn) {
-        clearSearchBtn.style.display = val.length > 0 ? 'block' : 'none';
-      }
-
-      timeoutId = setTimeout(() => {
-        STATE.filters.search = val;
-        renderCatalog();
-      }, 200);
-    });
-
-    if (clearSearchBtn) {
-      clearSearchBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        STATE.filters.search = '';
-        clearSearchBtn.style.display = 'none';
-        renderCatalog();
-        searchInput.focus();
-      });
-    }
-  }
-
-  // 5. Botón restablecer filtros en estado vacío
-  document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
-    if (searchInput) searchInput.value = '';
-    STATE.filters.search = '';
-    if (clearSearchBtn) clearSearchBtn.style.display = 'none';
-
-    if (brandSelect) brandSelect.value = 'all';
-    STATE.filters.brand = 'all';
-
-    const allGenderBtn = document.querySelector('.gender-filter-btn[data-gender="all"]');
-    if (allGenderBtn) allGenderBtn.click();
-
-    const allBtn = document.querySelector('.filter-btn[data-family="all"]');
-    if (allBtn) allBtn.click();
-  });
-
-  // 6. Ordenamiento
-  const sortSelect = document.getElementById('sortSelect');
-  if (sortSelect) {
-    sortSelect.addEventListener('change', () => {
-      STATE.filters.sort = sortSelect.value;
-      renderCatalog();
-    });
-  }
-
-  // 7. Botones de Apertura y Cierre del Carrito
-  document.getElementById('cartBtn')?.addEventListener('click', openCartDrawer);
-  document.getElementById('footerCartLink')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    openCartDrawer();
-  });
-  document.getElementById('closeCartBtn')?.addEventListener('click', closeCartDrawer);
-  document.getElementById('cartOverlay')?.addEventListener('click', closeCartDrawer);
-  document.getElementById('continueShoppingBtn')?.addEventListener('click', () => {
-    closeCartDrawer();
-    document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // 8. Controles internos del Carrito (steppers y eliminar)
-  const cartItemsList = document.getElementById('cartItemsList');
-  if (cartItemsList) {
-    cartItemsList.addEventListener('click', (e) => {
-      const plusBtn = e.target.closest('[data-action="cart-plus"]');
-      const minusBtn = e.target.closest('[data-action="cart-minus"]');
-      const removeBtn = e.target.closest('[data-action="cart-remove"]');
-
-      if (plusBtn) {
-        const id = plusBtn.dataset.id;
-        const current = STATE.cart.find(i => i.id === id);
-        if (current) updateCartItemQuantity(id, current.quantity + 1);
-      } else if (minusBtn) {
-        const id = minusBtn.dataset.id;
-        const current = STATE.cart.find(i => i.id === id);
-        if (current) updateCartItemQuantity(id, current.quantity - 1);
-      } else if (removeBtn) {
-        const id = removeBtn.dataset.id;
-        removeFromCart(id);
-      }
-    });
-  }
-
-  // 9. Checkout WhatsApp y Simulación
-  document.getElementById('checkoutWhatsappBtn')?.addEventListener('click', checkoutViaWhatsApp);
-  document.getElementById('checkoutSimulateBtn')?.addEventListener('click', async () => {
-    if (STATE.cart.length === 0) return;
-    const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const giftCheckbox = document.getElementById('giftPackagingCheckbox')?.checked;
-
-    if (window.location.protocol.startsWith('http')) {
-      try {
-        fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            customerName: STATE.currentUser ? STATE.currentUser.name : 'Cliente Alabastro',
-            customerEmail: STATE.currentUser ? STATE.currentUser.email : 'cliente.web@alabastro.com',
-            customerPhone: STATE.currentUser ? (STATE.currentUser.phone || '+57 311 254 9053') : '+57 311 254 9053',
-            shippingAddress: 'Carrera 7 # 116-50',
-            city: 'Bogotá D.C.',
-            paymentMethod: 'Tarjeta de Crédito / PSE',
-            giftPackaging: giftCheckbox,
-            items: STATE.cart.map(i => ({ id: i.id, quantity: i.quantity }))
-          })
-        }).catch(() => {});
-      } catch {}
-    }
-
-    showToast(`Demostración: Orden por ${formatCOP(subtotal)} registrada con éxito`, '✨');
-    setTimeout(() => {
-      STATE.cart = [];
-      saveCartToStorage();
-      updateCartUI();
-      closeCartDrawer();
-    }, 1400);
-  });
-
-  // 10. Botones de Favoritos
-  document.getElementById('favoritesBtn')?.addEventListener('click', openFavoritesDrawer);
-  document.getElementById('footerFavLink')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    openFavoritesDrawer();
-  });
-  document.getElementById('closeFavoritesBtn')?.addEventListener('click', closeFavoritesDrawer);
-  document.getElementById('favoritesOverlay')?.addEventListener('click', closeFavoritesDrawer);
-
-  const favList = document.getElementById('favoritesList');
-  if (favList) {
-    favList.addEventListener('click', (e) => {
-      const addCart = e.target.closest('[data-action="fav-add-cart"]');
-      const removeFav = e.target.closest('[data-action="fav-remove"]');
-
-      if (addCart) {
-        addToCart(addCart.dataset.id, 1);
-        openCartDrawer();
-      } else if (removeFav) {
-        toggleFavorite(removeFav.dataset.id);
-      }
-    });
-  }
-
-  // 11. Modal de Detalle
-  document.getElementById('closeProductModalBtn')?.addEventListener('click', closeProductModal);
-  document.getElementById('productModalBackdrop')?.addEventListener('click', (e) => {
-    if (e.target.id === 'productModalBackdrop') {
-      closeProductModal();
-    }
-  });
-
-  // Stepper dentro del Modal
-  const modalQtyCount = document.getElementById('modalQtyCount');
-  document.getElementById('modalQtyMinus')?.addEventListener('click', () => {
-    if (STATE.modalQuantity > 1) {
-      STATE.modalQuantity--;
-      if (modalQtyCount) modalQtyCount.textContent = STATE.modalQuantity;
-    }
-  });
-
-  document.getElementById('modalQtyPlus')?.addEventListener('click', () => {
-    STATE.modalQuantity++;
-    if (modalQtyCount) modalQtyCount.textContent = STATE.modalQuantity;
-  });
-
-  document.getElementById('modalAddToCartBtn')?.addEventListener('click', () => {
-    if (STATE.activeModalProduct) {
-      addToCart(STATE.activeModalProduct.id, STATE.modalQuantity);
-      closeProductModal();
-      openCartDrawer();
-    }
-  });
-
-  document.getElementById('modalToggleFavBtn')?.addEventListener('click', () => {
-    if (STATE.activeModalProduct) {
-      toggleFavorite(STATE.activeModalProduct.id);
-    }
-  });
-
-  // 12. Menú móvil
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const mainNav = document.getElementById('mainNav');
-  if (mobileMenuBtn && mainNav) {
-    mobileMenuBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = mainNav.classList.toggle('active');
-      mobileMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-
-    // Cerrar menú al hacer click en cualquier link
-    mainNav.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        mainNav.classList.remove('active');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      });
-    });
-
-    // Cerrar menú si el usuario toca fuera de él en móviles
-    document.addEventListener('click', (e) => {
-      if (mainNav.classList.contains('active')) {
-        if (!mainNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-          mainNav.classList.remove('active');
-          mobileMenuBtn.setAttribute('aria-expanded', 'false');
-        }
-      }
-    });
-
-    // Cerrar menú automáticamente al redimensionar a desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768 && mainNav.classList.contains('active')) {
-        mainNav.classList.remove('active');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
-  // 13. Botón de búsqueda rápida en el header
-  document.getElementById('searchToggleBtn')?.addEventListener('click', () => {
-    const catalogSection = document.getElementById('catalogo');
-    if (catalogSection) {
-      catalogSection.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => {
-        searchInput?.focus();
-      }, 400);
-    }
-  });
-
-  // 13.b Enlaces Inteligentes a la Consola de Administración
-  async function navigateToAdminConsole(e) {
-    e.preventDefault();
-    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && window.location.port === '3000') {
-      window.location.href = '/consola/';
-      return;
-    }
-    try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 500);
-      const res = await fetch('http://localhost:3000/api/health', { signal: ctrl.signal });
-      clearTimeout(timer);
-      if (res.ok) {
-        window.location.href = 'http://localhost:3000/consola/';
-        return;
-      }
-    } catch {}
-    window.location.href = 'consola/index.html';
-  }
-  document.getElementById('headerAdminConsoleBtn')?.addEventListener('click', navigateToAdminConsole);
-  document.getElementById('navAdminConsoleLink')?.addEventListener('click', navigateToAdminConsole);
-  document.getElementById('btnGoToConsola')?.addEventListener('click', navigateToAdminConsole);
-  document.getElementById('footerAdminConsoleLink')?.addEventListener('click', navigateToAdminConsole);
-  document.getElementById('footerAdminConsoleItem')?.addEventListener('click', navigateToAdminConsole);
-  document.querySelector('#footerAdminConsoleItem a')?.addEventListener('click', navigateToAdminConsole);
-
-  // 14. Autenticación y Registro de Clientes
-  document.getElementById('authBtn')?.addEventListener('click', openAuthModal);
-  document.getElementById('closeAuthModalBtn')?.addEventListener('click', closeAuthModal);
-  document.getElementById('authModalBackdrop')?.addEventListener('click', (e) => {
-    if (e.target.id === 'authModalBackdrop') closeAuthModal();
-  });
-
-  document.getElementById('tabLoginBtn')?.addEventListener('click', () => switchAuthTab('login'));
-  document.getElementById('tabRegisterBtn')?.addEventListener('click', () => switchAuthTab('register'));
-  document.getElementById('switchToRegister')?.addEventListener('click', () => switchAuthTab('register'));
-  document.getElementById('switchToLogin')?.addEventListener('click', () => switchAuthTab('login'));
-
-  document.getElementById('loginForm')?.addEventListener('submit', handleLoginSubmit);
-  document.getElementById('registerForm')?.addEventListener('submit', handleRegisterSubmit);
-  document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
-
-  document.getElementById('profileViewFavsBtn')?.addEventListener('click', () => {
-    closeAuthModal();
-    openFavoritesDrawer();
-  });
-
-  document.getElementById('profileGoShoppingBtn')?.addEventListener('click', () => {
-    closeAuthModal();
-    document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  document.getElementById('forgotPassLink')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    showToast('Para restablecer tu contraseña, contáctanos vía WhatsApp o correo.', '🔑');
-  });
-
-  // 15. Cerrar con tecla Escape
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeProductModal();
-      closeAuthModal();
-      closeCartDrawer();
-      closeFavoritesDrawer();
-      mainNav?.classList.remove('active');
-    }
-  });
-
-  // 16. Efecto de cabecera translúcida al hacer scroll
-  const siteHeader = document.getElementById('header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 30) {
-      siteHeader?.classList.add('scrolled');
-    } else {
-      siteHeader?.classList.remove('scrolled');
-    }
-  }, { passive: true });
-}
-
-/**
- * Monitor de inactividad de sesión (Auto-logout de seguridad).
- * Cierra automáticamente la sesión tras 25 minutos de inactividad del usuario.
- */
-function setupInactivityWatcher() {
-  let inactivityTimer;
-  const INACTIVITY_LIMIT_MS = 25 * 60 * 1000; // 25 minutos
-
-  function resetTimer() {
-    clearTimeout(inactivityTimer);
-    if (STATE.currentUser) {
-      inactivityTimer = setTimeout(() => {
-        if (STATE.currentUser) {
-          console.warn('[Seguridad] Sesión cerrada automáticamente por inactividad.');
-          handleLogout();
-          showToast('Tu sesión ha finalizado por inactividad para proteger tu privacidad.', '🔒');
-        }
-      }, INACTIVITY_LIMIT_MS);
-    }
-  }
-
-  ['click', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
-    window.addEventListener(evt, resetTimer, { passive: true });
-  });
-  resetTimer();
-}
-
-/* ==========================================================================
-   12. Inicialización de la Aplicación
-   ========================================================================== */
-document.addEventListener('DOMContentLoaded', async () => {
-  // Inicializar módulo de seguridad y usuarios con hashing
-  await initDefaultUsers();
-
-  loadStateFromStorage();
-  await loadProductsFromBackend();
-  renderCatalog();
-  updateCartUI();
-  updateFavoritesUI();
-  updateAuthUI();
-  setupQuiz();
-  setupNewsletter();
-  setupEventListeners();
-  setupInactivityWatcher();
-
-  // Seguridad: Advertencia contra ataques Self-XSS para usuarios que abren la consola
-  console.log('%c¡ALTO! / STOP!', 'color: #D32F2F; font-size: 28px; font-weight: bold; background: #FFF; padding: 4px 8px; border-radius: 4px;');
-  console.log('%cEsta consola está destinada exclusivamente a desarrolladores. Si alguien te indicó que copiaras o pegaras código aquí para obtener "descuentos" o "créditos", se trata de un fraude (Self-XSS) y podrían tomar control de tu cuenta.', 'font-size: 13px; color: #555; font-weight: 500;');
-
-  // Seguridad: Detectar herramientas de desarrollo abiertas (anti-tampering)
-  const devToolsWarningShown = { shown: false };
-  const devToolsChecker = setInterval(() => {
-    const widthThreshold = window.outerWidth - window.innerWidth > 160;
-    const heightThreshold = window.outerHeight - window.innerHeight > 160;
-    if ((widthThreshold || heightThreshold) && !devToolsWarningShown.shown) {
-      console.log('%c🔒 ALABASTRO SEGURIDAD', 'color:#E8D5B5;font-size:18px;font-weight:bold;background:#141210;padding:10px 20px;border-radius:6px;');
-      console.log('%cLa aplicación está operando en modo protegido. Cualquier intento de alteración de precios o estado será rechazado.', 'color:#C5A059;font-size:13px;');
-      devToolsWarningShown.shown = true;
-    }
-  }, 2500);
-
-  // Seguridad: Protección contra manipulación del objeto window.PRODUCTS
-  if (Object.freeze) {
-    Object.freeze(PRODUCTS);
-    PRODUCTS.forEach(p => Object.freeze(p));
-  }
-
-  console.log('✨ ALABASTRO Alta Perfumería iniciada con éxito. [Modo Seguro Activo]');
-});
-
-/* ==========================================================================
-   13. API Global de ALABASTRO (Testing Suite & Extensibilidad)
-   ========================================================================== */
-window.Alabastro = {
-  PRODUCTS,
-  STATE,
-  STORAGE_KEYS,
-  FREE_SHIPPING_THRESHOLD,
-  MAX_CART_ITEM_QTY,
-  SecurityModule,
-  formatCOP,
-  createBottleSvg,
-  addToCart,
-  updateCartItemQuantity,
-  removeFromCart,
-  toggleFavorite,
-  filterAndSortProducts,
-  renderCatalog,
-  updateCartUI,
-  updateFavoritesUI,
-  updateAuthUI,
-  openProductModal,
-  closeProductModal,
-  openCartDrawer,
-  closeCartDrawer,
-  openFavoritesDrawer,
-  closeFavoritesDrawer,
-  openAuthModal,
-  closeAuthModal,
-  switchAuthTab,
-  getRegisteredUsers,
-  saveRegisteredUsers,
-  handleLoginSubmit,
-  handleRegisterSubmit,
-  handleLogout,
-  loadStateFromStorage,
-  saveCartToStorage,
-  saveFavoritesToStorage,
-  findBestFragranceMatch,
-  calculateAndDisplayQuizResult
-};
- + totalFmt + ' COP</div>' +
-            '</div>';
+              '<div style="font-weight:600;">' + totalFmt + ' COP</div></div>';
           }).join('');
         }
         return;
@@ -3272,7 +2751,7 @@ function setupEventListeners() {
   // 13.b Enlaces Inteligentes a la Consola de Administración
   async function navigateToAdminConsole(e) {
     e.preventDefault();
-    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && window.location.port === '3000') {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
       window.location.href = '/consola/';
       return;
     }

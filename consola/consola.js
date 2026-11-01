@@ -23,7 +23,7 @@ const CONSOLA_STATE = {
 // Detección inteligente del endpoint backend (soporta port 3000, Live Server en otros puertos o file://)
 const API_BASE = (function() {
   if (typeof window !== 'undefined' && window.location) {
-    if ((window.location.protocol === 'http:' || window.location.protocol === 'https:') && window.location.port === '3000') {
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
       return '';
     }
   }

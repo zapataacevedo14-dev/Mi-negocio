@@ -1421,7 +1421,7 @@ async function initDatabase() {
 
   } catch (err) {
     usePostgres = false;
-    console.warn('⚡ [Alabastro DB] Contenedor PostgreSQL / Supabase no disponible en puerto 5432.');
+    console.warn('⚡ [Alabastro DB] Conexión a PostgreSQL / Supabase no disponible:', err.message);
     console.log('🛡️  [Alabastro DB] Activando Motor Embebido de Alta Resiliencia (JSON Store compatible con formato Supabase).');
     localEngine.load();
     console.log(`✨ [Alabastro DB] ${localEngine.data.products.length} fragancias árabes cargadas en memoria.`);
