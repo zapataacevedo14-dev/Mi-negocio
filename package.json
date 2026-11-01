@@ -1,0 +1,15 @@
+{
+  "name": "alabastro-perfumeria",
+  "version": "1.0.0",
+  "description": "ALABASTRO Alta Perfumería — E-commerce & Consola de Administración",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix backend install",
+    "build": "npm --prefix backend install",
+    "start": "node backend/server.js",
+    "dev": "npm --prefix backend run dev"
+  },
+  "keywords": ["alabastro", "perfumes", "ecommerce", "supabase", "render"],
+  "author": "ALABASTRO",
+  "license": "ISC"
+}
